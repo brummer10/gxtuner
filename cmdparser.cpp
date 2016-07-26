@@ -1,0 +1,199 @@
+/*
+ * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * ---------------------------------------------------------------------------
+ *
+ *        file: comparse.cpp      guitar tuner for jack
+ *
+ * ----------------------------------------------------------------------------
+ */
+
+
+#include "./cmdparser.h"
+#include "./config.h"
+
+CmdParse::CmdParse() {}
+CmdParse::~CmdParse() {}
+
+void CmdParse::init() {
+    error           = NULL;
+    infostring      = "\n        version ";
+    infostring      += VERSION;
+    infostring      += "\n    A simple (linux) guitar and bass tuner for jack\n"; 
+    infostring      += "    with full jack session management support";
+    opt_context     = g_option_context_new(infostring.c_str());
+    jack_uuid       = NULL;
+    jack_input      = NULL;
+    size_x          = NULL;
+    size_y          = NULL;
+    pos_x           = NULL;
+    pos_y           = NULL;
+    desktop         = NULL;
+    pitch           = NULL;
+    threshold       = NULL;
+}
+
+void CmdParse::write_optvar() {
+    // *** process UUID (hidden option)
+    if (jack_uuid != NULL) {
+        optvar[JACK_UUID] = jack_uuid; // leads to no automatic connection
+        g_free(jack_uuid);
+    } else if (!optvar[JACK_UUID].empty()) {
+        optvar[JACK_UUID] = ""; 
+    }
+
+    // *** process ENGINE options
+    if (pitch != NULL) {
+        optvar[PITCH] = pitch;
+        g_free(pitch);
+    } else if (!optvar[PITCH].empty()) {
+        optvar[PITCH] = ""; 
+    }
+
+    if (threshold != NULL) {
+        optvar[THRESHOLD] = threshold;
+        g_free(threshold);
+    } else if (!optvar[THRESHOLD].empty()) {
+        optvar[THRESHOLD] = ""; 
+    }
+
+    // *** process GTK options
+    if (size_y != NULL) {
+        optvar[SIZE_Y] = size_y;
+        g_free(size_y);
+    } else if (!optvar[SIZE_Y].empty()) {
+        optvar[SIZE_Y] = ""; 
+    }
+
+    if (size_x != NULL) {
+        optvar[SIZE_X] = size_x;
+        g_free(size_x);
+    } else if (!optvar[SIZE_X].empty()) {
+        optvar[SIZE_X] = ""; 
+    }
+
+    if (pos_y != NULL) {
+        optvar[POS_Y] = pos_y;
+        g_free(pos_y);
+    } else if (!optvar[POS_Y].empty()) {
+        optvar[POS_Y] = ""; 
+    }
+
+    if (pos_x != NULL) {
+        optvar[POS_X] = pos_x;
+        g_free(pos_x);
+    } else if (!optvar[POS_X].empty()) {
+        optvar[POS_X] = ""; 
+    }
+
+    if (desktop != NULL) {
+        optvar[DESK] = desktop;
+        g_free(desktop);
+    } else if (!optvar[DESK].empty()) {
+        optvar[DESK] = ""; 
+    }
+    
+    // *** process JACK options
+    if (jack_input != NULL) {
+        optvar[JACK_INP] = jack_input;
+        g_free(jack_input);
+    } else if (!optvar[JACK_INP].empty()) {
+        optvar[JACK_INP] = ""; // leads to no automatic connection
+    }
+}
+
+void CmdParse::parse(int& argc, char**& argv) {
+    // parsing command options
+    if (!g_option_context_parse(opt_context, &argc, &argv, &error)) {
+        g_print ("option parsing failed: %s\n", error->message);
+        error = NULL;
+    }
+    g_option_context_free(opt_context);
+}
+
+void CmdParse::setup_groups() {
+    optgroup_gtk = g_option_group_new("gtk",
+          "\033[1;32mGTK configuration options\033[0m",
+          "\033[1;32mGTK configuration options\033[0m",
+          NULL, NULL);
+    GOptionEntry opt_entries_gtk[] =
+    {
+        { "posx", 'x', 0, G_OPTION_ARG_STRING, &pos_x,
+            "window position x-axis ( -x 1 -> . .)", "POSITION_X"},
+        { "posy", 'y', 0, G_OPTION_ARG_STRING, &pos_y,
+            "window position y-axis ( -y 1 -> . . )", "POSITION_Y" },
+        { "wigth", 'w', 0, G_OPTION_ARG_STRING, &size_x,
+            "'default' width ( -w 120 -> . .)", "WIDTH"},
+        { "height", 'l', 0, G_OPTION_ARG_STRING, &size_y,
+            "'default' height ( -l 100 -> . .)", "HEIGHT" },
+        { "desktop", 'd', 0, G_OPTION_ARG_STRING, &desktop,
+            "set to virtual desktop num ( -d 0 -> . .)", "NUM" },
+        { NULL }
+    };
+    g_option_group_add_entries(optgroup_gtk, opt_entries_gtk);
+
+    optgroup_jack = g_option_group_new("jack",
+          "\033[1;32mJACK configuration options\033[0m",
+          "\033[1;32mJACK configuration options\033[0m",
+          NULL, NULL);
+    GOptionEntry opt_entries_jack[] =
+    {
+        { "jack-input", 'i', 0, G_OPTION_ARG_STRING, &jack_input,
+            "connect to JACK port name (-i system:capture_1)", "PORT" },
+        { NULL }
+    };
+    g_option_group_add_entries(optgroup_jack, opt_entries_jack);
+
+    GOptionEntry opt_entries_uuid[] =
+    {
+        { "jack-uuid", 'U', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &jack_uuid,
+            "JACK session UUID (set by session manager)", "UUID" },
+        { NULL }
+    };
+    g_option_group_add_entries(optgroup_jack, opt_entries_uuid);
+
+    optgroup_engine = g_option_group_new("engine",
+          "\033[1;32mENGINE configuration options\033[0m",
+          "\033[1;32mENGINE configuration options\033[0m",
+          NULL, NULL);
+    GOptionEntry opt_entries_engine[] =
+    {
+        { "pitch", 'p', 0, G_OPTION_ARG_STRING, &pitch,
+            "set reference pitch ( -p 415,0 <-> 467,0)", "PITCH"},
+        { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
+            "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
+        { NULL }
+    };
+    g_option_group_add_entries(optgroup_engine, opt_entries_engine);
+    
+    g_option_context_add_group(opt_context, optgroup_gtk);
+    g_option_context_add_group(opt_context, optgroup_jack);
+    g_option_context_add_group(opt_context, optgroup_engine);
+    g_option_context_set_ignore_unknown_options(opt_context, true);
+}
+
+// ---- parse command line options
+void CmdParse::process_cmdline_options(int& argc, char**& argv)
+{
+    init();
+    setup_groups();
+    parse(argc, argv);
+    write_optvar();
+}
+
+CmdParse cmd;
+
+
