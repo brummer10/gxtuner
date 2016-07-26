@@ -10,7 +10,7 @@
 	PIXMAPS_DIR = $(SHARE_DIR)/pixmaps
 	INCLUDE_DIR = /usr/include/
 	INCLUDE_L_DIR = /usr/local/include/
-	VER = 2.1
+	VER = 2.2
 	NAME = gxtuner
 	LIBS = `pkg-config --libs jack gtk+-2.0 gthread-2.0 fftw3f x11` -lzita-resampler
 	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-2.0 gthread-2.0 fftw3f`
