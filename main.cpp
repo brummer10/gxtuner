@@ -22,7 +22,7 @@
  */
 
 #include "./cmdparser.h"
-#include "./pitchtracker.h"
+#include "./gx_pitch_tracker.h"
 #include "./gxtuner.h"
 #include "./jacktuner.h"
 #include "./tuner.h"
@@ -67,7 +67,7 @@ static jack_client_t* wrap_client() {
 }
 
 static float wrap_estimated_freq() {
-    return pitch_tracker.estimated_freq;
+    return pitch_tracker.get_estimated_freq();
 }
 
 static void wrap_set_threshold(float x) {

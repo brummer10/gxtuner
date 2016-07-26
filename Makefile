@@ -10,11 +10,11 @@
 	PIXMAPS_DIR = $(SHARE_DIR)/pixmaps
 	INCLUDE_DIR = /usr/include/
 	INCLUDE_L_DIR = /usr/local/include/
-	VER = 2.2
+	VER = 2.3
 	NAME = gxtuner
 	LIBS = `pkg-config --libs jack gtk+-2.0 gthread-2.0 fftw3f x11` -lzita-resampler
 	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-2.0 gthread-2.0 fftw3f`
-	OBJS = jacktuner.o gxtuner.o cmdparser.o pitchtracker.o gtkknob.o \
+	OBJS = jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
            paintbox.o tuner.o deskpager.o main.o
 	DEBNAME = $(NAME)_$(VER)
 	CREATEDEB = yes '' | dh_make -s -n -e $(USER)@org -p $(DEBNAME) -c gpl >/dev/null
@@ -105,9 +105,9 @@ cmdparser.o : cmdparser.cpp cmdparser.h config.h
 	@rm -rf cmdparser.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) -c cmdparser.cpp
 
-pitchtracker.o : pitchtracker.cpp pitchtracker.h resample.h
-	@rm -rf pitchtracker.o
-	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c pitchtracker.cpp
+gx_pitch_tracker.o : gx_pitch_tracker.cpp gx_pitch_tracker.h resample.h
+	@rm -rf gx_pitch_tracker.o
+	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c gx_pitch_tracker.cpp
 
 gtkknob.o : gtkknob.cc gtkknob.h
 	@rm -rf gtkknob.o
@@ -125,7 +125,7 @@ deskpager.o : deskpager.cpp deskpager.h
 	@rm -rf deskpager.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c deskpager.cpp
 
-main.o : main.cpp jacktuner.h gxtuner.h cmdparser.h pitchtracker.h tuner.h deskpager.h
+main.o : main.cpp jacktuner.h gxtuner.h cmdparser.h gx_pitch_tracker.h tuner.h deskpager.h
 	@rm -rf main.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c main.cpp
 
