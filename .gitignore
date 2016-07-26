@@ -1,3 +1,4 @@
 *.o
 config.h
+resample.h
 gxtuner
