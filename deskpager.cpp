@@ -51,16 +51,16 @@ void DeskPager::move_window_to_desktop(guint desktop_num, GtkWidget * window) {
 
     if (desktop_num+1 > get_all_desktops()) return;
 
-    display = GDK_DISPLAY();
-    root_win = GDK_WINDOW_XWINDOW(gdk_get_default_root_window());
-    displays = gdk_drawable_get_display (window->window);
+    display = gdk_x11_get_default_xdisplay();
+    root_win = GDK_WINDOW_XID(gdk_get_default_root_window());
+    displays = gdk_window_get_display (gtk_widget_get_window(window));
 
     xevent.type              = ClientMessage;
     xevent.xclient.type      = ClientMessage; 
     xevent.xclient.serial = 0;
     xevent.xclient.send_event = True;
     xevent.xclient.display   = display;
-    xevent.xclient.window    = GDK_WINDOW_XWINDOW (window->window); 
+    xevent.xclient.window    = GDK_WINDOW_XID (gtk_widget_get_window(window)); 
     xevent.xclient.message_type = gdk_x11_get_xatom_by_name_for_display (displays, "_NET_WM_DESKTOP"); //atom_net_current_desktop;
     xevent.xclient.format    = 32;
     xevent.xclient.data.l[0] = desktop_num;
@@ -77,7 +77,7 @@ void DeskPager::move_window_to_desktop(guint desktop_num, GtkWidget * window) {
 gint DeskPager::get_active_desktop_for_window (GtkWidget * window) {
     data = NULL;
 
-    if (!gdk_property_get (window->window, gdk_atom_intern ("_NET_WM_DESKTOP", FALSE),
+    if (!gdk_property_get (gtk_widget_get_window(window), gdk_atom_intern ("_NET_WM_DESKTOP", FALSE),
             gdk_atom_intern ("CARDINAL", FALSE), 0, G_MAXLONG, FALSE, &actual_property_type,
             &actual_format, &actual_length, reinterpret_cast<guchar **>(&data))) {
         gchar *actual_property_type_name;

@@ -27,6 +27,7 @@
 #include "./gtkknob.h"
 #include "./gxtuner.h"
 #include "./deskpager.h"
+#include "./resources.h"
 
 
 TunerWidget::TunerWidget() {}
@@ -93,9 +94,10 @@ void TunerWidget::create_window() {
     // create main window and set icon to use
     err = NULL;
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_icon_from_file(GTK_WINDOW(window),
-        (std::string(PIXMAPS_DIR) + "/gxtuner.png").c_str(),&err);
+    GdkPixbuf  *icon = gdk_pixbuf_new_from_resource("/gxtuner/gxtuner.png", NULL);
+    gtk_window_set_icon(GTK_WINDOW(window),icon);
     if (err != NULL) g_error_free(err);
+    g_object_unref(icon);
     // create all used widgets
     tuner = gx_tuner_new();
     box = gx_paint_box_new(GTK_ORIENTATION_VERTICAL,false, 0);
@@ -136,9 +138,9 @@ void TunerWidget::create_window() {
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
     // connect the signal handlers 
-    g_signal_connect(GTK_OBJECT(adj), "value-changed",
+    g_signal_connect(G_OBJECT(adj), "value-changed",
         G_CALLBACK(ref_freq_changed),(gpointer)adj);
-    g_signal_connect(GTK_OBJECT(adjt), "value-changed",
+    g_signal_connect(G_OBJECT(adjt), "value-changed",
         G_CALLBACK(threshold_changed),(gpointer)adjt);
     g_signal_connect (window, "delete-event",
             G_CALLBACK (delete_event), NULL);

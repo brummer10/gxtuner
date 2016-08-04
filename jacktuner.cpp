@@ -115,7 +115,7 @@ int JackTuner::gx_jack_session_callback_helper(void* arg) {
 }
 
 void JackTuner::gx_jack_session_callback(jack_session_event_t *event, void *arg) {
-    gtk_idle_add(jt.gx_jack_session_callback_helper, static_cast<void *>(event));
+    g_idle_add(jt.gx_jack_session_callback_helper, static_cast<void *>(event));
 }
 #endif
 

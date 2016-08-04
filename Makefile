@@ -14,7 +14,7 @@
 	NAME = gxtuner
 	LIBS = `pkg-config --libs jack gtk+-2.0 gthread-2.0 fftw3f x11` -lzita-resampler
 	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-2.0 gthread-2.0 fftw3f`
-	OBJS = jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
+	OBJS = resources.o jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
            paintbox.o tuner.o deskpager.o main.o
 	DEBNAME = $(NAME)_$(VER)
 	CREATEDEB = yes '' | dh_make -s -n -e $(USER)@org -p $(DEBNAME) -c gpl >/dev/null
@@ -30,9 +30,16 @@
 	RED =  "\033[1;31m"
 	NONE = "\033[0m"
 
+
     #@default build with jack session support
 all : config
 	@$(MAKE) check
+
+    #@build resource file
+resources : resource.xml
+	@echo $(LGREEN)"generate resource file,"$(NONE)
+	-@glib-compile-resources --target=resources.c --generate-source resource.xml
+	-@glib-compile-resources --target=resources.h --generate-header resource.xml
 
     #@build without jack session support
 nosession : nconf
@@ -51,7 +58,7 @@ check : link
 	@echo $(NONE)
 
     #@create resampler.h to set the used zita-resamper version
-resamp:
+resamp :
 	-@if [ -f ./resample.h ] ; then \
     echo ''; else \
 	if [ -f $(INCLUDE_DIR)zita-resampler/resampler.h 2>/dev/null ]; then \
@@ -93,6 +100,10 @@ nconf : resamp
 	@echo  ""
 
     #@build object files
+resources.o : resources.c resources.h
+	@rm -rf resources.o
+	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c resources.c
+
 jacktuner.o : jacktuner.cpp jacktuner.h config.h
 	@rm -rf jacktuner.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c jacktuner.cpp
@@ -117,7 +128,7 @@ tuner.o :tuner.cpp tuner.h config.h paintbox.h gtkknob.h gxtuner.h deskpager.h
 	@rm -rf tuner.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c tuner.cpp
 
-paintbox.o : paintbox.cpp paintbox.h frame.h
+paintbox.o : paintbox.cpp paintbox.h 
 	@rm -rf paintbox.o
 	-$(CXX) $(LDFLAGS) $(CFLAGS) $(CPPFLAGS) -c paintbox.cpp
 

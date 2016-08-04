@@ -96,7 +96,8 @@ GType gx_tuner_get_type(void) {
 
 static void gx_tuner_class_init(GxTunerClass *klass) {
     GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
-    GTK_WIDGET_CLASS(klass)->expose_event = gtk_tuner_expose;
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
+    widget_class->expose_event = gtk_tuner_expose;
     gobject_class->set_property = gx_tuner_set_property;
     gobject_class->get_property = gx_tuner_get_property;
     g_object_class_install_property(
@@ -126,8 +127,10 @@ static void gx_tuner_init (GxTuner *tuner) {
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
     GtkWidget *widget = GTK_WIDGET(tuner);
-    widget->requisition.width = tuner_width;
-    widget->requisition.height = tuner_height;
+    GtkRequisition requisition;
+    gtk_widget_get_requisition(GTK_WIDGET(widget), &requisition); 
+    requisition.width = tuner_width;
+    requisition.height = tuner_height;
 }
 
 void gx_tuner_set_freq(GxTuner *tuner, double freq) {
@@ -233,24 +236,26 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, GdkEventExpose *event) {
     static int indicate_oc = 0;
     GxTuner *tuner = GX_TUNER(widget);
     cairo_t *cr;
+    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
 
-    double x0      = (widget->allocation.width - 100) * 0.5;
-    double y0      = (widget->allocation.height - 60) * 0.5;
+    double x0      = (allocation->width - 100) * 0.5;
+    double y0      = (allocation->height - 60) * 0.5;
 
-    cr = gdk_cairo_create(widget->window);
+    cr = gdk_cairo_create(gtk_widget_get_window(widget));
     cairo_save(cr);
     static double grow_w = 1.;
     static double grow_h = 1.;
     static double grow   = 0.;
 
-    if(widget->allocation.width > widget->allocation.height +(10.*grow*3)) {
-        grow = (widget->allocation.height/60.)/10.;
+    if(allocation->width > allocation->height +(10.*grow*3)) {
+        grow = (allocation->height/60.)/10.;
     } else {
-        grow =  (widget->allocation.width/100.)/10.;
+        grow =  (allocation->width/100.)/10.;
     }
     
-    grow_h = (widget->allocation.height/60.)/3.;
-    grow_w =  (widget->allocation.width/100.)/3.;
+    grow_h = (allocation->height/60.)/3.;
+    grow_w =  (allocation->width/100.)/3.;
     
     cairo_translate(cr, -x0*grow_w, -y0*grow_h);
     cairo_scale(cr, grow_w, grow_h);
@@ -350,6 +355,7 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, GdkEventExpose *event) {
     cairo_stroke(cr);   
     cairo_destroy(cr);
 
+    g_free (allocation); 
     return FALSE;
 }
 

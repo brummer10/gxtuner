@@ -27,7 +27,7 @@
 #define _TUNER_H_
 
 #include <gtk/gtk.h>
-#include <gtk/gtkprivate.h>
+//#include <gtk/gtkprivate.h>
 
 #include <jack/jack.h>
 

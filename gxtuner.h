@@ -30,6 +30,7 @@
 extern "C" {
 #endif
 
+#include <glib-object.h>
 #include <gtk/gtk.h>
 
 
@@ -47,8 +48,8 @@ typedef struct _GxTunerClass GxTunerClass;
 struct _GxTuner
 {
     GtkDrawingArea parent;
-    double GSEAL (freq);
-    double GSEAL (reference_pitch);
+    double freq;
+    double reference_pitch;
 };
 
 struct _GxTunerClass

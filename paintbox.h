@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#include <gtk/gtkbox.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -47,7 +47,7 @@ struct _GxPaintBox {
 	void (*expose_func)(GtkWidget*, GdkEventExpose*);
 	GdkPixbuf *gxr_image;
     GdkPixbuf *stock_image;
-	guint GSEAL(icon_set);
+	guint icon_set;
 };
 
 struct _GxPaintBoxClass {
