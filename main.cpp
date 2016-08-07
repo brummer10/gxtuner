@@ -122,8 +122,6 @@ int main(int argc, char *argv[]) {
                                 jack_client_thread_id(cptr->gc()));
     // create window
     tw.create_window();
-    tw.parse_cmd();
-    tw.show();
     // start thread to update the frequency
     tw.g_threads    = g_timeout_add(
         100, tw.gx_update_frequency, 0);

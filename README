@@ -19,7 +19,7 @@ in a half tone range: 415Hz <-> 467Hz
 
 gxtuner use a default threshold level at 0.001
 threshold can adjusted at command line and/or runtime
-in a range of 0.001 <-> 0.5
+in a range of 0.001 <-> 0.2
 
 ############# COMMANDLINE OPTIONS ################
 
@@ -57,7 +57,7 @@ libcairo2-dev
 libfftw3-3-dev
 libgcc1-dev
 libglib2.0-0-dev
-libgtk2.0-0-dev
+libgtk3.0-0-dev
 libstdc++6-dev
 libzita-resampler0-dev
 libjack-jackd2-0-dev 

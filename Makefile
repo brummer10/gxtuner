@@ -12,8 +12,8 @@
 	INCLUDE_L_DIR = /usr/local/include/
 	VER = 2.3
 	NAME = gxtuner
-	LIBS = `pkg-config --libs jack gtk+-2.0 gthread-2.0 fftw3f x11` -lzita-resampler
-	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-2.0 gthread-2.0 fftw3f`
+	LIBS = `pkg-config --libs jack gtk+-3.0 gthread-2.0 fftw3f x11` -lzita-resampler
+	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-3.0 gthread-2.0 fftw3f`
 	OBJS = resources.o jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
            paintbox.o tuner.o deskpager.o main.o
 	DEBNAME = $(NAME)_$(VER)

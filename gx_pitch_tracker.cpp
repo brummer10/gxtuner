@@ -380,7 +380,7 @@ void PitchTracker::run() {
                                  m_fftwBufferTime[maxAutocorrIndex+1],
                                  maxAutocorrIndex+1, &x);
             x = m_sampleRate / x;
-            if (x > 999.0) {  // precision drops above 1000 Hz
+            if (x > 1050.0) {  // precision drops above (C6) 1045 Hz
                 x = 0.0;
             }
         }

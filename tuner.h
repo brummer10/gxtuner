@@ -51,8 +51,8 @@ typedef void (*setptvar)
 class TunerWidget {
  private:
     int                 desk;
-    GtkObject*          adjt;
-    GtkObject*          adj;
+    GtkAdjustment*      adjt;
+    GtkAdjustment*      adj;
     GtkWidget*          window;
     GtkWidget*          tuner;
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,

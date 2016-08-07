@@ -13,7 +13,7 @@ the following packages are needed to build gxtuner :
 - libfftw3-3-dev
 - libgcc1-dev
 - libglib2.0-0-dev
-- libgtk2.0-0-dev
+- libgtk3.0-0-dev
 - libstdc++6-dev
 - libzita-resampler0-dev
 - libjack-jackd2-0-dev 

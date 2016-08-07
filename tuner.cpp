@@ -85,12 +85,14 @@ void TunerWidget::create_window() {
     GError*             err;
     GtkWidget*          box;
     GtkWidget*          box1;
+    GtkWidget*          box2;
     GtkWidget*          hbox;
     GtkWidget*          abox;
     GtkWidget*          bbox;
     GtkWidget*          fbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
+
     // create main window and set icon to use
     err = NULL;
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -98,45 +100,57 @@ void TunerWidget::create_window() {
     gtk_window_set_icon(GTK_WINDOW(window),icon);
     if (err != NULL) g_error_free(err);
     g_object_unref(icon);
+
     // create all used widgets
     tuner = gx_tuner_new();
     box = gx_paint_box_new(GTK_ORIENTATION_VERTICAL,false, 0);
-    box1 = gtk_vbox_new(false, 0);
+    box1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(box1),false);
+    box2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(box2),false);
     set_expose_func(GX_PAINT_BOX(box),"rahmen_expose");
-    gtk_container_set_border_width(GTK_CONTAINER(box1),5);
-    gtk_container_set_border_width(GTK_CONTAINER(box),12);
-    hbox = gtk_hbox_new(false, 0);
-    fbox = gtk_hbox_new(false, 0);
-    abox = gtk_alignment_new (1.0,1.0,0.0,0.0);
-    bbox = gtk_alignment_new (0.0,0.0,0.0,0.0);
-    adj = gtk_adjustment_new(440, 427, 453, 0.1, 1.0, 0);
+    gtk_container_set_border_width(GTK_CONTAINER(box1),15);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(hbox),false);
+    fbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(fbox),false);
+    abox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(abox),false);
+    bbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(bbox),false);
+    adj = gtk_adjustment_new(440, 415, 467, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
+    gtk_widget_set_valign(spinner, GTK_ALIGN_END);
+    gtk_widget_set_margin_end(spinner, 4);
+    gtk_widget_set_margin_bottom(spinner, 2);
     adjt = gtk_adjustment_new(0.001, 0.001, 0.2, 0.001, 1.0, 0);
     spinnert = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adjt), 1);
+    gtk_widget_set_valign(spinnert, GTK_ALIGN_START);
+    gtk_widget_set_margin_start(spinnert, 4);
+    gtk_widget_set_margin_bottom(spinnert, 2);
+
     // set some options to widgets
     gtk_widget_set_app_paintable(window, TRUE);
     gtk_widget_set_redraw_on_allocate(GTK_WIDGET(window), TRUE); 
-    gtk_widget_set_can_focus(GTK_WIDGET(spinner), false);
-    gtk_widget_set_can_focus(GTK_WIDGET(spinnert), false);
+    gtk_widget_set_can_focus(GTK_WIDGET(spinner), true);
+    gtk_widget_set_can_focus(GTK_WIDGET(spinnert), true);
     gtk_widget_set_can_default(GTK_WIDGET(spinner), true);
     gtk_widget_set_can_default(GTK_WIDGET(spinnert), true);
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinner),"reference pitch");
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinnert),"threshold");
-    // set bg colour for widgets
-    GdkColor colorOwn;
-    gdk_color_parse("#000000", &colorOwn);
-    gtk_widget_modify_bg(window, GTK_STATE_NORMAL, &colorOwn);
-
+ 
     // stack all together
-    gtk_container_add (GTK_CONTAINER(window), box);
+    gtk_container_add (GTK_CONTAINER(window), box2);
+    gtk_box_pack_start(GTK_BOX(box2), box,true,true,0);
     gtk_box_pack_start(GTK_BOX(box), box1,true,true,0);
     gtk_box_pack_start(GTK_BOX(box1), tuner,true,true,0);
-    gtk_box_pack_end(GTK_BOX(box), hbox, false,false,0);
+    gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     gtk_container_add (GTK_CONTAINER (bbox), spinnert);
     gtk_box_pack_start(GTK_BOX(hbox),bbox,false,false,0);
     gtk_box_pack_start(GTK_BOX(hbox),fbox,false,false,5);
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
+
     // connect the signal handlers 
     g_signal_connect(G_OBJECT(adj), "value-changed",
         G_CALLBACK(ref_freq_changed),(gpointer)adj);
@@ -146,6 +160,9 @@ void TunerWidget::create_window() {
             G_CALLBACK (delete_event), NULL);
     g_signal_connect (window, "destroy",
             G_CALLBACK (destroy), NULL);
+            
+    parse_cmd();
+    show();
 }
 
 void TunerWidget::parse_cmd() {
@@ -173,7 +190,6 @@ void TunerWidget::parse_cmd() {
     if (!cptr->cv(2).empty()) {
         y = atoi(cptr->cv(2).c_str());
     }
-    //gtk_window_set_default_size(GTK_WINDOW(window), x,y);
     gtk_window_resize(GTK_WINDOW(window), x,y);
     // set reference pitch and threshold by command line options
     double p,t;

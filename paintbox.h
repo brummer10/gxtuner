@@ -44,7 +44,7 @@ typedef struct _GxPaintBoxClass GxPaintBoxClass;
 struct _GxPaintBox {
 	GtkBox box;
 	gchar *paint_func;
-	void (*expose_func)(GtkWidget*, GdkEventExpose*);
+	void (*expose_func)(GtkWidget*, cairo_t *);
 	GdkPixbuf *gxr_image;
     GdkPixbuf *stock_image;
 	guint icon_set;

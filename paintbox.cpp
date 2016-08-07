@@ -19,7 +19,6 @@
 
 #include "paintbox.h"
 
-#include <gtk/gtkprivate.h>
 #include <gtk/gtk.h>
 #include <cmath>
 #include <cstring>
@@ -33,28 +32,57 @@ enum {
 	PROP_ICON_SET = 2,
 };
 
-static void gx_paint_box_destroy(GtkObject *object);
+static void gx_paint_box_destroy(GtkWidget *object);
 static void gx_paint_box_set_property(
 	GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void gx_paint_box_get_property(
 	GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
-static gboolean gx_paint_box_expose(GtkWidget *widget, GdkEventExpose *event);
+static gboolean gx_paint_box_expose(GtkWidget *widget, cairo_t *cr);
 static void gx_paint_box_style_set (GtkWidget *widget, GtkStyle  *previous_style);
 
 G_DEFINE_TYPE(GxPaintBox, gx_paint_box, GTK_TYPE_BOX)
 
-#define get_stock_id(widget) (GX_PAINT_BOX_CLASS(GTK_OBJECT_GET_CLASS(widget))->stock_id)
+#define get_stock_id(widget) (GX_PAINT_BOX_CLASS(GTK_WIDGET_GET_CLASS(widget))->stock_id)
+
+
+static void gx_paint_box_get_preferred_size (GtkWidget *widget,
+	GtkOrientation orientation, gint *minimal_size, gint *natural_size)
+{
+	if (orientation == GTK_ORIENTATION_HORIZONTAL)
+	{
+		*minimal_size = *natural_size = 100;
+	}
+	else
+	{
+		*minimal_size = *natural_size = 100;
+	}
+}
+
+static void gx_paint_box_get_preferred_width (
+	GtkWidget *widget, gint *minimal_width, gint *natural_width)
+{
+	gx_paint_box_get_preferred_size (widget,
+		GTK_ORIENTATION_HORIZONTAL, minimal_width, natural_width);
+}
+
+static void gx_paint_box_get_preferred_height (
+	GtkWidget *widget, gint *minimal_height, gint *natural_height)
+{
+  gx_paint_box_get_preferred_size (widget,
+	GTK_ORIENTATION_VERTICAL, minimal_height, natural_height);
+}
 
 static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 {
 	GObjectClass   *gobject_class = G_OBJECT_CLASS(klass);
-	GtkObjectClass *object_class = (GtkObjectClass*) klass;
 	GtkWidgetClass *widget_class = (GtkWidgetClass*)klass;
 	gobject_class->set_property = gx_paint_box_set_property;
 	gobject_class->get_property = gx_paint_box_get_property;
-	object_class->destroy = gx_paint_box_destroy;
+	widget_class->destroy = gx_paint_box_destroy;
 	widget_class->style_set = gx_paint_box_style_set;
-	widget_class->expose_event = gx_paint_box_expose;
+	widget_class->draw = gx_paint_box_expose;
+	widget_class->get_preferred_width = gx_paint_box_get_preferred_width;
+	widget_class->get_preferred_height = gx_paint_box_get_preferred_height;
 	klass->stock_id = "rahmen";
 
 	g_object_class_install_property(
@@ -63,7 +91,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 		                    P_("Paint Type"),
 		                    P_("Type of paint function for background"),
 		                    "",
-		                    GParamFlags(GTK_PARAM_READWRITE)));
+		                    G_PARAM_READWRITE));
 
 	gtk_widget_class_install_style_property(
 		GTK_WIDGET_CLASS(klass),
@@ -71,7 +99,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 		                    P_("Paint Type"),
 		                    P_("Type of paint function for background"),
 		                    NULL,
-		                    GParamFlags(GTK_PARAM_READABLE)));
+		                    G_PARAM_READWRITE));
 	g_object_class_install_property(
 		gobject_class,PROP_ICON_SET,
 	    g_param_spec_int ("icon-set",
@@ -80,7 +108,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 						 0,
 						 G_MAXINT,
 						 0,
-						 GParamFlags(GTK_PARAM_READWRITE)));
+						 G_PARAM_READWRITE));
 	gtk_widget_class_install_style_property(
 		GTK_WIDGET_CLASS(klass),
 		g_param_spec_int("icon-set",
@@ -89,7 +117,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 		                 0,
 						 G_MAXINT,
 						 0,
-		                 GParamFlags(GTK_PARAM_READABLE)));
+		                 G_PARAM_READABLE));
 	gtk_widget_class_install_style_property(
 		GTK_WIDGET_CLASS(klass),
 		g_param_spec_int("width",
@@ -98,7 +126,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 		                 0,
 						 G_MAXINT,
 						 0,
-		                 GParamFlags(GTK_PARAM_READABLE)));
+		                 G_PARAM_READABLE));
 	gtk_widget_class_install_style_property(
 		GTK_WIDGET_CLASS(klass),
 		g_param_spec_int("height",
@@ -107,7 +135,7 @@ static void gx_paint_box_class_init (GxPaintBoxClass *klass)
 		                 0,
 						 G_MAXINT,
 						 0,
-		                 GParamFlags(GTK_PARAM_READABLE)));
+		                 G_PARAM_READABLE));
 
 }
 
@@ -145,24 +173,17 @@ static void gx_paint_box_style_set(GtkWidget *widget, GtkStyle  *previous_style)
 
 static void gx_paint_box_init (GxPaintBox *paint_box)
 {
-    GtkIconFactory *factory = gtk_icon_factory_new();
-		gtk_icon_factory_add(
-			factory, "rahmen",
-			gtk_icon_set_new_from_pixbuf(
-				gdk_pixbuf_new_from_resource(
-					"/gxtuner/rahmen.png", NULL)));
-	gtk_icon_factory_add_default(factory);
+
 	gtk_widget_set_redraw_on_allocate(GTK_WIDGET(paint_box), TRUE);
 	paint_box->paint_func = g_strdup("");
 	set_paint_func(paint_box, NULL);
 	paint_box->gxr_image = NULL;
 	paint_box->icon_set = 0;
-    paint_box->stock_image = gtk_widget_render_icon(GTK_WIDGET(paint_box),
-        get_stock_id(GTK_WIDGET(paint_box)),(GtkIconSize)-1,NULL);
-   // gdk_pixbuf_save(paint_box->stock_image,"rahmen.png","png",NULL);
+    paint_box->stock_image = gdk_pixbuf_new_from_resource(
+					"/gxtuner/rahmen.png", NULL);
 }
 
-static void gx_paint_box_destroy(GtkObject *object)
+static void gx_paint_box_destroy(GtkWidget *object)
 {
 	GxPaintBox *paint_box = GX_PAINT_BOX(object);
 	if (paint_box->paint_func) {
@@ -177,16 +198,16 @@ static void gx_paint_box_destroy(GtkObject *object)
 		g_object_unref(paint_box->stock_image);
 	}
 	paint_box->stock_image = NULL;
-	GTK_OBJECT_CLASS(gx_paint_box_parent_class)->destroy(object);
+	GTK_WIDGET_CLASS(gx_paint_box_parent_class)->destroy(object);
 }
 
-static gboolean gx_paint_box_expose(GtkWidget *widget, GdkEventExpose *event)
+static gboolean gx_paint_box_expose(GtkWidget *widget, cairo_t *cr)
 {
 	GxPaintBox *paint_box = GX_PAINT_BOX(widget);
 	if (paint_box->expose_func) {
-		paint_box->expose_func(widget, event);
+		paint_box->expose_func(widget, cr);
 	}
-	GTK_WIDGET_CLASS(GTK_OBJECT_CLASS(gx_paint_box_parent_class))->expose_event(widget, event);
+	GTK_WIDGET_CLASS(gx_paint_box_parent_class)->draw(widget, cr);
 	return FALSE;
 }
 static void set_icon(GxPaintBox *paint_box, int value)
@@ -242,7 +263,7 @@ GtkWidget *gx_paint_box_new (GtkOrientation orientation, gboolean homogeneous, g
  ** Paint functions
  */
 
-static void rahmen_expose(GtkWidget *wi, GdkEventExpose *ev)
+static void rahmen_expose(GtkWidget *wi, cairo_t *cr)
 {
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(wi), allocation); 
@@ -251,18 +272,11 @@ static void rahmen_expose(GtkWidget *wi, GdkEventExpose *ev)
 	if (rect_width <= 0 || rect_height <= 0) {
 	    return;
 	}
-	cairo_t *cr;
 	GxPaintBox *paintbox = GX_PAINT_BOX(wi);
 	/* create a cairo context */
-	cr = gdk_cairo_create(gtk_widget_get_window(wi));
-	GdkRegion *region;
-	region = gdk_region_rectangle (allocation);
-	gdk_region_intersect (region, ev->region);
-	gdk_cairo_region (cr, region);
-	cairo_clip (cr);
 	
-	gint x0      = allocation->x+1;
-	gint y0      = allocation->y+1;
+	gint x0      = 1;
+	gint y0      = 1;
 
 	static double ne_w = 0.;
 	if (ne_w != rect_width*rect_height || !(GDK_IS_PIXBUF (paintbox-> gxr_image))) {
@@ -334,12 +348,6 @@ static void rahmen_expose(GtkWidget *wi, GdkEventExpose *ev)
 		g_object_unref(paintbox->stock_image);
 		g_object_unref(frame);
 	}
-	
-	// draw to display
-	// gdk_draw_pixbuf(GDK_DRAWABLE(gtk_widget_get_window(wi)), gdk_gc_new(GDK_DRAWABLE(gtk_widget_get_window(wi))),
-	//                 paintbox->gxr_image, 0, 0,
-	//                 x0, y0, rect_width,rect_height,
-	//                 GDK_RGB_DITHER_NORMAL, 0, 0);
 
 	// base 
 	gdk_cairo_set_source_pixbuf(cr,paintbox->gxr_image, x0, y0);
@@ -361,8 +369,6 @@ static void rahmen_expose(GtkWidget *wi, GdkEventExpose *ev)
 	cairo_fill (cr);
 
 	cairo_pattern_destroy (pat);
-	cairo_destroy(cr);
-	gdk_region_destroy (region);                
     g_free (allocation); 
 }
 
