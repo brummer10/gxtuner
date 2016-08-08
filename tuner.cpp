@@ -82,16 +82,6 @@ void TunerWidget::signal_handler(int sig) {
 }
 
 void TunerWidget::create_window() {
-    GError*             err;
-    GtkWidget*          box;
-    GtkWidget*          box1;
-    GtkWidget*          box2;
-    GtkWidget*          hbox;
-    GtkWidget*          abox;
-    GtkWidget*          bbox;
-    GtkWidget*          fbox;
-    GtkWidget*          spinner;
-    GtkWidget*          spinnert;
 
     // create main window and set icon to use
     err = NULL;

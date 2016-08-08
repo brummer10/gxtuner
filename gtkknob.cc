@@ -143,11 +143,11 @@ static void knob_expose(GtkWidget *widget, cairo_t *cr, int knob_x, int knob_y, 
 	cairo_arc(cr,knobx1+arc_offset, knoby1+arc_offset, knob_x/2.1, 0, 2 * M_PI );
 	cairo_pattern_t*pat =
 		cairo_pattern_create_radial (knobx1+arc_offset-knob_x/6,knoby1+arc_offset-knob_x/6, 1,knobx1+arc_offset,knoby1+arc_offset,knob_x/2.1 );
-	if(gtk_adjustment_get_lower(adj)<428 && gtk_adjustment_get_value(adj)>440.) {
+	if(gtk_adjustment_get_lower(adj)<416 && gtk_adjustment_get_value(adj)>440.) {
 		cairo_pattern_add_color_stop_rgb (pat, 0, 0.4 +( knobstate-0.5), 0.4, 0.4);
 		cairo_pattern_add_color_stop_rgb (pat, 0.7, 0.15+( knobstate-0.3), 0.15 , 0.15);
 		cairo_pattern_add_color_stop_rgb (pat, 1, 0.15,0.15,0.15);
-	} else if(gtk_adjustment_get_lower(adj)>425 && gtk_adjustment_get_value(adj)<440.) {
+	} else if(gtk_adjustment_get_lower(adj)>414 && gtk_adjustment_get_value(adj)<440.) {
 		cairo_pattern_add_color_stop_rgb (pat, 0, 0.4 , 0.4, 0.4 + (0.5 - knobstate));
 		cairo_pattern_add_color_stop_rgb (pat, 0.7, 0.15 , 0.15, 0.15 + (0.7 - knobstate));
 		cairo_pattern_add_color_stop_rgb (pat, 1, 0.15,0.15,0.15);

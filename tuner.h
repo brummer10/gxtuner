@@ -55,6 +55,17 @@ class TunerWidget {
     GtkAdjustment*      adj;
     GtkWidget*          window;
     GtkWidget*          tuner;
+    GError*             err;
+    GtkWidget*          box;
+    GtkWidget*          box1;
+    GtkWidget*          box2;
+    GtkWidget*          hbox;
+    GtkWidget*          abox;
+    GtkWidget*          bbox;
+    GtkWidget*          fbox;
+    GtkWidget*          spinner;
+    GtkWidget*          spinnert;
+
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
     static gboolean     ref_freq_changed(gpointer arg);
