@@ -26,7 +26,7 @@
 
 #include <string.h> 
 #include <math.h>
-
+#include <stdlib.h>
 #define P_(s) (s)   // FIXME -> gettext
 
 enum {
@@ -50,6 +50,7 @@ static const double rect_width = 100;
 static const double rect_height = 60;
 
 static int cents = 0;
+static float mini_cents = 0.0;
 
 static const double dashes[] = {
     0.0,                      /* ink  */
@@ -257,6 +258,20 @@ static double log_scale(int cent, double set) {
     } else return set;
 }
 
+static void gx_tuner_triangle(cairo_t *cr, double posx, double posy, double width, double height)
+{
+	double h2 = height/2.0;
+    cairo_move_to(cr, posx, posy-h2);
+    if (width > 0) {
+        cairo_curve_to(cr,posx, posy-h2, posx+10, posy, posx, posy+h2);
+    } else {
+        cairo_curve_to(cr,posx, posy-h2, posx-10, posy, posx, posy+h2);
+    }
+    cairo_curve_to(cr,posx, posy+h2, posx+width/2, posy+h2, posx+width, posy);
+    cairo_curve_to(cr, posx+width, posy, posx+width/2, posy-h2, posx, posy-h2);
+	cairo_fill(cr);
+}
+
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
     static const char* octave[9] = {"0","1","2","3","4","4","6","7"," "};
@@ -347,12 +362,30 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     cairo_show_text(cr, s);
     // display cent
     if(scale>-0.4) {
-        if(scale>-0.002) {
+        if(scale>0.004) {
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
-        } else {
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+        } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+        } else {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            mini_cents = (scale * 10000) / 50;
+            if (mini_cents<0)
+                snprintf(s, sizeof(s)-4, "%f", mini_cents);
+            else
+                snprintf(s, sizeof(s)-4, "+%f", mini_cents);
+            cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
         }
     } else {
         cents = 100;
@@ -464,6 +497,12 @@ static void draw_background(cairo_surface_t *surface) {
     cairo_set_source (cr, pat);
     cairo_set_line_width(cr, 1.0);
     cairo_stroke(cr);
+    
+    cairo_set_source_rgb(cr,0.1,0.1,0.1);
+    gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+    gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+    cairo_stroke(cr);
+
     
     // indicator shaft (circle)
     /*cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 0);
