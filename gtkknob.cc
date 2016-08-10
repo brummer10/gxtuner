@@ -134,9 +134,9 @@ static void knob_expose(GtkWidget *widget, cairo_t *cr, int knob_x, int knob_y, 
 	double g = 0.6;
 
 	/** paint focus **/
+	//GtkStyleContext *contex = gtk_widget_get_style_context (widget);
 	//if (gtk_widget_has_focus(widget)== TRUE) {
-	//	gtk_paint_focus(style, cr, GTK_STATE_NORMAL, widget, NULL,
-	//	                knobx-2, knoby-2, knob_x+4, knob_y+4);
+	//	gtk_render_focus(contex, cr, knobx-2, knoby-2, knob_x+4, knob_y+4);
 	//}
 	/** create clowing knobs with cairo **/
 	

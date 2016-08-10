@@ -52,6 +52,10 @@ static const double rect_height = 60;
 static int cents = 0;
 static float mini_cents = 0.0;
 
+static const double dashline[] = {
+    3.0                
+};
+
 static const double dashes[] = {
     0.0,                      /* ink  */
     rect_height,              /* skip */
@@ -61,7 +65,7 @@ static const double dashes[] = {
 
 static const double dash_ind[] = {
     0,                         /* ink  */
-    14,                         /* skip */
+    14,                        /* skip */
     rect_height-18,            /* ink  */
     100.0                      /* skip */
 };
@@ -158,6 +162,8 @@ static void gx_tuner_init (GxTuner *tuner) {
     g_assert(GX_IS_TUNER(tuner));
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
+    tuner->scale_w = 1.;
+    tuner->scale_h = 1.;
     //GtkWidget *widget = GTK_WIDGET(tuner);
 }
 
@@ -272,9 +278,54 @@ static void gx_tuner_triangle(cairo_t *cr, double posx, double posy, double widt
 	cairo_fill(cr);
 }
 
+static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
+    static double move = 0;
+    static double hold_l = 0;
+    cairo_pattern_t *pat = cairo_pattern_create_linear (x0+50, y0,x0, y0);
+    cairo_pattern_set_extend(pat, CAIRO_EXTEND_REFLECT);
+    cairo_pattern_add_color_stop_rgb (pat, 0, 0.1, 0.8, 0.1);
+    cairo_pattern_add_color_stop_rgb (pat, 0.1, 0.1, 0.6, 0.1);
+    cairo_pattern_add_color_stop_rgb (pat, 0.2, 0.3, 0.6, 0.1);
+    cairo_pattern_add_color_stop_rgb (pat, 0.3, 0.4, 0.4, 0.1);
+    cairo_pattern_add_color_stop_rgb (pat, 1, 0.8, 0.1, 0.1);
+    cairo_set_source (cr, pat);
+
+    if (abs(cents)>0) {
+        if(hold_l>0 )
+            hold_l -= 10.0 ;
+        if (cents>0)
+            move += sqrt(sqrt(abs(cents)));
+        else if (cents<0)
+            move -= sqrt(sqrt(abs(cents)));
+    } else if (fabs(cents)>0.015){
+        move += cents;
+        if(hold_l>0 )
+            hold_l -= 10.0 ;
+    } else {
+        move = 0;
+        if(hold_l<rect_width/2 )
+            hold_l += 10.0 ;
+        else if(hold_l<rect_width/2 +1.5)
+            hold_l = rect_width/2+1.5 ;
+    }
+    if(move<0)
+        move = rect_width;
+    else if (move>rect_width)
+        move = 0;
+
+    cairo_set_dash (cr, dashline, sizeof(dashline)/sizeof(dashline[0]), move);
+    cairo_set_line_width(cr, 2.0);
+    cairo_move_to(cr,x0+hold_l, y0+1);
+    cairo_line_to(cr, x0+rect_width-hold_l , y0+1);
+    cairo_stroke(cr);   
+    cairo_pattern_destroy(pat);
+
+}
+
+
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
-    static const char* octave[9] = {"0","1","2","3","4","4","6","7"," "};
+    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
     static int indicate_oc = 0;
     GxTuner *tuner = GX_TUNER(widget);
     
@@ -284,8 +335,6 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     double x0      = (allocation->width - 100) * 0.5;
     double y0      = (allocation->height - 60) * 0.5;
 
-    static double grow_w = 1.;
-    static double grow_h = 1.;
     static double grow   = 0.;
 
     if(allocation->width > allocation->height +(10.*grow*3)) {
@@ -294,18 +343,18 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
         grow =  (allocation->width/100.)/10.;
     }
     
-    grow_h = (allocation->height/60.)/3.;
-    grow_w =  (allocation->width/100.)/3.;
+    tuner->scale_h = (allocation->height/60.)/3.;
+    tuner->scale_w =  (allocation->width/100.)/3.;
     
-    cairo_translate(cr, -x0*grow_w, -y0*grow_h);
-    cairo_scale(cr, grow_w, grow_h);
+    cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
+    cairo_scale(cr, tuner->scale_w, tuner->scale_h);
     cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
     cairo_paint (cr);
     cairo_restore(cr);
 
     cairo_save(cr);
-    cairo_translate(cr, -x0*grow_w*3., -y0*grow_h*3.);
-    cairo_scale(cr, grow_w*3., grow_h*3.);
+    cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
+    cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
     
     float scale = -0.4;
     if (tuner->freq) {
@@ -353,12 +402,12 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
 
     // display frequency
     char s[10];
-    snprintf(s, sizeof(s), "%.0f Hz", tuner->freq);
+    snprintf(s, sizeof(s), "%.1f Hz", tuner->freq);
     cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
-    cairo_set_font_size (cr, 8.0);
+    cairo_set_font_size (cr, 7.5);
     cairo_text_extents_t ex;
     cairo_text_extents(cr, s, &ex);
-    cairo_move_to (cr, x0+95-ex.width, y0+58);
+    cairo_move_to (cr, x0+98-ex.width, y0+58);
     cairo_show_text(cr, s);
     // display cent
     if(scale>-0.4) {
@@ -369,6 +418,7 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
             gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
             gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
@@ -376,16 +426,18 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
             gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
             gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             mini_cents = (scale * 10000) / 50;
             if (mini_cents<0)
-                snprintf(s, sizeof(s)-4, "%f", mini_cents);
+                snprintf(s, sizeof(s), "%.2f", mini_cents);
             else
-                snprintf(s, sizeof(s)-4, "+%f", mini_cents);
+                snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
             gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
             gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
         cents = 100;

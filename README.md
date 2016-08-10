@@ -38,6 +38,9 @@ $ make install
 to uninstall gxtuner run
 $ make uninstall
 
+to build a Debian package, run 
+$ make deb
+
 you can run gxtuner from any location you choose without installation.
 [1] but to work propper with jack_session manager
 you need to install it

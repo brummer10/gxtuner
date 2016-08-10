@@ -50,6 +50,8 @@ struct _GxTuner
     GtkDrawingArea parent;
     double freq;
     double reference_pitch;
+    double scale_w;
+    double scale_h;
 };
 
 struct _GxTunerClass
