@@ -10,14 +10,14 @@
 	PIXMAPS_DIR = $(SHARE_DIR)/pixmaps
 	INCLUDE_DIR = /usr/include/
 	INCLUDE_L_DIR = /usr/local/include/
-	VER = 2.3
+	VER = 2.4
 	NAME = gxtuner
 	LIBS = `pkg-config --libs jack gtk+-3.0 gthread-2.0 fftw3f x11` -lzita-resampler
 	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-3.0 gthread-2.0 fftw3f`
 	OBJS = resources.o jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
            paintbox.o tuner.o deskpager.o main.o
 	DEBNAME = $(NAME)_$(VER)
-	CREATEDEB = yes '' | dh_make -s -n -e $(USER)@org -p $(DEBNAME) -c gpl >/dev/null
+	CREATEDEB = dh_make -y -s -n -e $(USER)@org -p $(DEBNAME) -c gpl >/dev/null
 	DIRS = $(BIN_DIR)  $(DESKAPPS_DIR)  $(PIXMAPS_DIR) 
 	BUILDDEB = dpkg-buildpackage -rfakeroot -b 2>/dev/null | grep dpkg-deb 
 	#SOURCES =$(OBJS:%.o=%.cpp)

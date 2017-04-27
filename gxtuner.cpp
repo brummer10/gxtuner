@@ -294,9 +294,9 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
         if(hold_l>0 )
             hold_l -= 10.0 ;
         if (cents>0)
-            move += sqrt(sqrt(abs(cents)));
+            move += pow(abs(cents),0.25);
         else if (cents<0)
-            move -= sqrt(sqrt(abs(cents)));
+            move -= pow(abs(cents),0.25);
     } else if (fabs(cents)>0.015){
         move += cents;
         if(hold_l>0 )
