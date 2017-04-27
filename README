@@ -3,9 +3,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2011-2016 Hermann Meyer, Andreas Degert
 
-gxtuner 2.1
+gxtuner 2.3
 
 A simple (linux) guitar and bass tuner for jack
 with full jack session managment support
