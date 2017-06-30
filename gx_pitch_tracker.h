@@ -28,6 +28,7 @@
 #include <semaphore.h>
 #include <assert.h> 
 #include <pthread.h>
+//#include <glibmm.h>
 
 #include <cstring> 
 #include <cmath>
@@ -36,6 +37,34 @@
 #include "resample.h"
 
 /* ------------- Pitch Tracker ------------- */
+
+
+class Dsp {
+private:
+	int 	fSamplingFreq;
+	int 	iVec0[2];
+	int 	iConst0;
+	double 	fConst1;
+	double 	fConst2;
+	double 	fConst3;
+	double 	fConst4;
+	double 	fConst5;
+	double 	fConst6;
+	double 	fConst7;
+	double 	fConst8;
+	double 	fConst9;
+	double 	fRec4[2];
+	double 	fVec1[2];
+	double 	fConst10;
+	double 	fRec3[2];
+	double 	fRec2[2];
+	double 	fRec1[3];
+	double 	fRec0[3];
+public:
+	void clear_state_f();
+	void init(int samplingFreq);
+	void compute(int count, float *input0, float *output0);
+};
 
 class PitchTracker {
  public:
@@ -52,6 +81,7 @@ class PitchTracker {
     void            set_fast_note_detection(bool v);
     //Glib::Dispatcher new_freq;
  private:
+    Dsp             low_high_cut;
     bool            setParameters(int sampleRate, int buffersize, pthread_t j_thread);
     void            run();
     static void     *static_run(void* p);

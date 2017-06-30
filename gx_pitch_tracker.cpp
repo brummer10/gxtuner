@@ -18,6 +18,7 @@
  * --------------------------------------------------------------------------
  */
 
+/* ------- This is the guitarix tuner, part of gx_engine_audio.cpp ------- */
 
 /****************************************************************
  ** Pitch Tracker
@@ -36,6 +37,61 @@ static const float SIGNAL_THRESHOLD_OFF = 0.0009;
 static const float TRACKER_PERIOD = 0.1;
 // The size of the read buffer
 static const int FFT_SIZE = 2048;
+
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
+
+inline void Dsp::clear_state_f()
+{
+	for (int i=0; i<2; i++) iVec0[i] = 0;
+	for (int i=0; i<2; i++) fRec4[i] = 0;
+	for (int i=0; i<2; i++) fVec1[i] = 0;
+	for (int i=0; i<2; i++) fRec3[i] = 0;
+	for (int i=0; i<2; i++) fRec2[i] = 0;
+	for (int i=0; i<3; i++) fRec1[i] = 0;
+	for (int i=0; i<3; i++) fRec0[i] = 0;
+}
+
+inline void Dsp::init(int samplingFreq)
+{
+	fSamplingFreq = samplingFreq;
+	iConst0 = min(192000, max(1, fSamplingFreq));
+	fConst1 = tan((3138.4510609362032 / double(iConst0)));
+	fConst2 = (2 * (1 - (1.0 / pow(fConst1,2))));
+	fConst3 = (1.0 / fConst1);
+	fConst4 = (1 + ((fConst3 - 0.7653668647301795) / fConst1));
+	fConst5 = (1.0 / (1 + ((0.7653668647301795 + fConst3) / fConst1)));
+	fConst6 = (1 + ((fConst3 - 1.8477590650225735) / fConst1));
+	fConst7 = (1.0 / (1 + ((fConst3 + 1.8477590650225735) / fConst1)));
+	fConst8 = (72.25663103256524 / double(iConst0));
+	fConst9 = (1 - fConst8);
+	fConst10 = (1.0 / (1 + fConst8));
+	clear_state_f();
+}
+
+void Dsp::compute(int count, float *input0, float *output0)
+{
+	for (int i=0; i<count; i++) {
+		iVec0[0] = 1;
+		fRec4[0] = ((1e-20 * (1 - iVec0[1])) - fRec4[1]);
+		double fTemp0 = ((double)input0[i] + fRec4[0]);
+		fVec1[0] = fTemp0;
+		fRec3[0] = (fConst10 * ((fVec1[0] - fVec1[1]) + (fConst9 * fRec3[1])));
+		fRec2[0] = (fConst10 * ((fRec3[0] - fRec3[1]) + (fConst9 * fRec2[1])));
+		fRec1[0] = (fRec2[0] - (fConst7 * ((fConst6 * fRec1[2]) + (fConst2 * fRec1[1]))));
+		fRec0[0] = ((fConst7 * (fRec1[2] + (fRec1[0] + (2 * fRec1[1])))) - (fConst5 * ((fConst4 * fRec0[2]) + (fConst2 * fRec0[1]))));
+		output0[i] = (fConst5 * (fRec0[2] + (fRec0[0] + (2 * fRec0[1]))));
+		// post processing
+		fRec0[2] = fRec0[1]; fRec0[1] = fRec0[0];
+		fRec1[2] = fRec1[1]; fRec1[1] = fRec1[0];
+		fRec2[1] = fRec2[0];
+		fRec3[1] = fRec3[0];
+		fVec1[1] = fVec1[0];
+		fRec4[1] = fRec4[0];
+		iVec0[1] = iVec0[0];
+	}
+}
 
 
 void *PitchTracker::static_run(void *p) {
@@ -145,6 +201,7 @@ bool PitchTracker::setParameters(int sampleRate, int buffersize, pthread_t j_thr
     if (!m_pthr) {
         start_thread();
     }
+    low_high_cut.init(sampleRate);
     return !error;
 }
 
@@ -196,8 +253,10 @@ void PitchTracker::add(int count, float* input) {
     if (error) {
         return;
     }
+    float output[count];
+    low_high_cut.compute(count,input,output);
     resamp.inp_count = count;
-    resamp.inp_data = input;
+    resamp.inp_data = output;
     for (;;) {
         resamp.out_data = &m_buffer[m_bufferIndex];
         int n = FFT_SIZE - m_bufferIndex;
@@ -380,7 +439,7 @@ void PitchTracker::run() {
                                  m_fftwBufferTime[maxAutocorrIndex+1],
                                  maxAutocorrIndex+1, &x);
             x = m_sampleRate / x;
-            if (x > 1050.0) {  // precision drops above (C6) 1045 Hz
+            if (x > 1060.0) {  // precision drops above 1000 Hz
                 x = 0.0;
             }
         }

@@ -52,6 +52,7 @@ struct _GxTuner
     double reference_pitch;
     double scale_w;
     double scale_h;
+    int mode;
 };
 
 struct _GxTunerClass
@@ -66,6 +67,7 @@ GType gx_tuner_get_type();
 void gx_tuner_set_freq(GxTuner *tuner, double freq);
 void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch);
 double gx_tuner_get_reference_pitch(GxTuner *tuner);
+void gx_tuner_set_mode(GxTuner *tuner, int mode);
 GtkWidget *gx_tuner_new(void);
 
 G_END_DECLS

@@ -32,6 +32,7 @@
 enum {
     PROP_FREQ = 1,
     PROP_REFERENCE_PITCH = 2,
+    PROP_MODE = 3,
 };
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr);
@@ -146,6 +147,11 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
             "reference-pitch", P_("Reference Pitch"),
             P_("The frequency for which tuning is displayed"),
             400.0, 500.0, 440.0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_MODE, g_param_spec_int (
+            "mode", P_("Tuning Mode"),
+            P_("The Mode for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
     klass->surface_tuner = cairo_image_surface_create(
         CAIRO_FORMAT_ARGB32, tuner_width*3., tuner_height*3.);
     g_assert(klass->surface_tuner != NULL);
@@ -162,6 +168,7 @@ static void gx_tuner_init (GxTuner *tuner) {
     g_assert(GX_IS_TUNER(tuner));
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
+    tuner->mode = 0;
     tuner->scale_w = 1.;
     tuner->scale_h = 1.;
     //GtkWidget *widget = GTK_WIDGET(tuner);
@@ -181,6 +188,13 @@ void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch) {
     tuner->reference_pitch = reference_pitch;
     gtk_widget_queue_draw(GTK_WIDGET(tuner));
     g_object_notify(G_OBJECT(tuner), "reference-pitch");
+}
+
+void gx_tuner_set_mode(GxTuner *tuner, int mode) {
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->mode = mode;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "mode");
 }
 
 double gx_tuner_get_reference_pitch(GxTuner *tuner) {
@@ -203,6 +217,9 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     case PROP_REFERENCE_PITCH:
         gx_tuner_set_reference_pitch(tuner, g_value_get_double(value));
         break;
+    case PROP_MODE:
+        gx_tuner_set_mode(tuner, g_value_get_int(value));
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -219,6 +236,9 @@ static void gx_tuner_get_property(GObject *object, guint prop_id,
         break;
     case PROP_REFERENCE_PITCH:
         g_value_set_double(value, tuner->reference_pitch);
+        break;
+    case PROP_MODE:
+        g_value_set_int(value, tuner->mode);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -322,12 +342,241 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 
 }
 
+static gboolean fequal(float a, float b) {
+ return fabs(a-b) < 0.001;
+}
+
+static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
+    static const char* shruti_note[22] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
+    float multiply = 1.0;
+    float percent = 0.0;
+    int display_note = 0;
+    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    static int indicate_oc = 0;
+    
+    GxTuner *tuner = GX_TUNER(widget);
+    
+    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
+
+    double x0      = (allocation->width - 100) * 0.5;
+    double y0      = (allocation->height - 60) * 0.5;
+
+    static double grow   = 0.;
+
+    if(allocation->width > allocation->height +(10.*grow*3)) {
+        grow = (allocation->height/60.)/10.;
+    } else {
+        grow =  (allocation->width/100.)/10.;
+    }
+    
+    tuner->scale_h = (allocation->height/60.)/3.;
+    tuner->scale_w =  (allocation->width/100.)/3.;
+    
+    cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
+    cairo_scale(cr, tuner->scale_w, tuner->scale_h);
+    cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
+    cairo_paint (cr);
+    cairo_restore(cr);
+
+    cairo_save(cr);
+    cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
+    cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
+    
+    
+    
+    float scale = -0.4;
+    if (tuner->freq) {
+        float freq_is = tuner->freq;
+    if (freq_is < (tuner->reference_pitch/8.0)-5.1 && freq_is >0.0) {
+        indicate_oc = 0; // standart 27,5hz == 6,25%
+        multiply = 16;
+    } else if (freq_is < (tuner->reference_pitch/4.0)-5.1) {
+        indicate_oc = 1; // standart 55hz == 12,5%
+        multiply = 8;
+    } else if (freq_is < (tuner->reference_pitch/2.0)-5.1) {
+        indicate_oc = 2; // standart 110hz == 25&
+        multiply = 4;
+    } else if (freq_is < (tuner->reference_pitch)-5.1) {
+        indicate_oc = 3; // standart 220hz == 50%
+        multiply = 2;
+    } else if (freq_is < (tuner->reference_pitch*2.0)-5.1) {
+        indicate_oc = 4; // standart 440hz == 100%
+        multiply = 1;
+    } else if (freq_is < (tuner->reference_pitch*4.0)-5.1) {
+        indicate_oc = 5; // standart 880hz == 200%
+        multiply = 0.5;
+    } else if (freq_is < (tuner->reference_pitch*8.0)-5.1) {
+        indicate_oc = 6; // standart 1760hz == 400%
+        multiply = 0.25;
+    } else if (freq_is < (tuner->reference_pitch*16.0)-5.1) {
+        indicate_oc = 7; // standart 3520hz == 800%
+        multiply = 0.125;
+    } else {
+        indicate_oc = 8;
+        multiply = 0.0625;
+    }
+
+    percent = (tuner->reference_pitch/(freq_is*multiply)) * 100.0;
+
+    if (fequal(percent,100.00) || percent > 97.46) {
+        display_note = 0;
+        scale = ((percent-100.00)/100.0)/2.0;
+    } else if (fequal(percent,94.92) || percent > 94.34) {
+        display_note = 1;
+        scale = ((percent-94.92)/100.0)/2.0;
+    } else if (fequal(percent,93.75) || percent > 91.86) {
+        display_note = 2;
+        scale = ((percent-93.75)/100.0)/2.0;
+    } else if (fequal(percent,90.00) || percent > 89.5) {
+        display_note = 3;
+        scale = ((percent-90.00)/100.0)/2.0;
+    } else if (fequal(percent,88.88) || percent > 86.62){
+        display_note = 4;
+        scale = ((percent-88.88)/100.0)/2.0;
+    } else if (fequal(percent,84.37) || percent > 83.85) {
+        display_note = 5;
+        scale = ((percent-84.37)/100.0)/2.0;
+    } else if (fequal(percent,83.33) || percent > 81.67) {
+        display_note = 6;
+        scale = ((percent-83.33)/100.0)/2.0;
+    } else if (fequal(percent,80.00) || percent > 79.51) {
+        display_note = 7;
+        scale = ((percent-80.00)/100.0)/2.0;
+    } else if (fequal(percent,79.01) || percent > 77.01) {
+        display_note = 8;
+        scale = ((percent-79.01)/100.0)/2.0;
+    } else if (fequal(percent,75.00) || percent > 74.54) {
+        display_note = 9;
+        scale = ((percent-75.00)/100.0)/2.0;
+    } else if (fequal(percent,74.07) || percent > 72.59) {
+        display_note = 10;
+        scale = ((percent-74.07)/100.0)/2.0;
+    } else if (fequal(percent,71.11) || percent > 70.67) {
+        display_note = 11;
+        scale = ((percent-71.11)/100.0)/2.0;
+    } else if (fequal(percent,70.23) || percent > 68.45) {
+        display_note = 12;
+        scale = ((percent-70.23)/100.0)/2.0;
+    } else if (fequal(percent,66.66) || percent > 64.97) {
+        display_note = 13;
+        scale = ((percent-66.66)/100.0)/2.0;
+    } else if (fequal(percent,63.28) || percent > 62.89) {
+        display_note = 14;
+        scale = ((percent-63.28)/100.0)/2.0;
+    } else if (fequal(percent,62.50) || percent > 61.25) {
+        display_note = 15;
+        scale = ((percent-62.50)/100.0)/2.0;
+    } else if (fequal(percent,60.00) || percent > 59.63) {
+        display_note = 16;
+        scale = ((percent-60.00)/100.0)/2.0;
+    } else if (fequal(percent,59.25) || percent > 57.75) {
+        display_note = 17;
+        scale = ((percent-59.25)/100.0)/2.0;
+    } else if (fequal(percent,56.25) || percent > 55.90) {
+        display_note = 18;
+        scale = ((percent-56.25)/100.0)/2.0;
+    } else if (fequal(percent,55.55) || percent > 54.44) {
+        display_note = 19;
+        scale = ((percent-55.55)/100.0)/2.0;
+    } else if (fequal(percent,53.33) || percent > 53.00) {
+        display_note = 20;
+        scale = ((percent-53.33)/100.0)/2.0;
+    } else if (fequal(percent,52.67) || percent > 51.34) {
+        display_note = 21;
+        scale = ((percent-52.67)/100.0)/2.0;
+    }// else if (fequal(percent,50.00) || percent > 49.00)  {
+     //   display_note = 22;
+     //   scale = log2f((percent*tuner->reference_pitch) / (100.00*tuner->reference_pitch))/2.0;
+    //}
+   // fprintf(stderr,"percent = %f Note = %i scale = %f octave = %i fvis = %f freq = %f\n",percent,display_note,scale, indicate_oc, fvis, freq_is);
+        // display note
+        cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
+        cairo_set_font_size(cr, 18.0);
+        cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
+        cairo_show_text(cr, shruti_note[display_note]);
+        cairo_set_font_size(cr, 8.0);
+        cairo_move_to(cr,x0+54  , y0+30 +16 );
+        cairo_show_text(cr, octave[indicate_oc]);
+    }
+
+    // display frequency
+    char s[10];
+    snprintf(s, sizeof(s), "%.1f Hz", tuner->freq);
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 7.5);
+    cairo_text_extents_t ex;
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+98-ex.width, y0+58);
+    cairo_show_text(cr, s);
+    // display cent
+    if(scale>-0.4) {
+        if(scale>0.004) {
+            cents = static_cast<int>((floorf(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "+%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else if(scale<-0.004) {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            mini_cents = (scale * 10000) / 50;
+            if (mini_cents<0)
+                snprintf(s, sizeof(s), "%.2f", mini_cents);
+            else
+                snprintf(s, sizeof(s), "+%.2f", mini_cents);
+            cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, mini_cents);
+        }
+    } else {
+        cents = 100;
+        snprintf(s, sizeof(s), "+ - cent");
+    }    
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 6.0);
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+28-ex.width, y0+58);
+    cairo_show_text(cr, s);
+
+    double ux=2., uy=2.;
+    cairo_device_to_user_distance (cr, &ux, &uy);
+    if (ux < uy)
+        ux = uy;
+    cairo_set_line_width (cr, ux + grow);
+
+    // indicator (line)
+    cairo_move_to(cr,x0+50, y0+rect_height+5);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 1);
+    cairo_line_to(cr, (log_scale(cents, scale)*2*rect_width)+x0+50, y0+(scale*scale*30)+2);
+    cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
+    cairo_stroke(cr);   
+
+    g_free (allocation); 
+    return FALSE;
+}
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
+    GxTuner *tuner = GX_TUNER(widget);
+
+    if (tuner->mode) {
+        if (!gtk_tuner_expose_shruti (widget, cr)) return FALSE;
+    }
     static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
     static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
     static int indicate_oc = 0;
-    GxTuner *tuner = GX_TUNER(widget);
     
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 

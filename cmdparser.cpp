@@ -44,6 +44,7 @@ void CmdParse::init() {
     desktop         = NULL;
     pitch           = NULL;
     threshold       = NULL;
+    mode            = NULL;
 }
 
 void CmdParse::write_optvar() {
@@ -68,6 +69,13 @@ void CmdParse::write_optvar() {
         g_free(threshold);
     } else if (!optvar[THRESHOLD].empty()) {
         optvar[THRESHOLD] = ""; 
+    }
+
+    if (mode != NULL) {
+        optvar[MODE] = mode;
+        g_free(mode);
+    } else if (!optvar[MODE].empty()) {
+        optvar[MODE] = ""; 
     }
 
     // *** process GTK options
@@ -175,6 +183,8 @@ void CmdParse::setup_groups() {
             "set reference pitch ( -p 415,0 <-> 467,0)", "PITCH"},
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
+        { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
+            "set tuner mode (-m chromatic <-> shruti)", "MODE" },
         { NULL }
     };
     g_option_group_add_entries(optgroup_engine, opt_entries_engine);

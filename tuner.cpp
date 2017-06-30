@@ -108,7 +108,7 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(abox),false);
     bbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(bbox),false);
-    adj = gtk_adjustment_new(440, 415, 467, 0.1, 1.0, 0);
+    adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
     gtk_widget_set_valign(spinner, GTK_ALIGN_END);
     gtk_widget_set_margin_end(spinner, 4);
@@ -192,6 +192,11 @@ void TunerWidget::parse_cmd() {
         t = atof(cptr->cv(6).c_str());
     } else {
         t = 0.001;
+    }
+    if (!cptr->cv(9).empty()) {
+        std::string m = cptr->cv(9).c_str();
+        if(m == "shruti") 
+            gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),1);
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adjt),t);

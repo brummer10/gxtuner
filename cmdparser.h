@@ -40,6 +40,7 @@
 #define THRESHOLD       (6)
 #define JACK_UUID       (7)
 #define DESK            (8)
+#define MODE            (9)
 
 class CmdParse {
  private:
@@ -57,13 +58,14 @@ class CmdParse {
     gchar*              desktop;
     gchar*              pitch;
     gchar*              threshold;
+    gchar*              mode;
     std::string         infostring;
     void                init();
     void                setup_groups();
     void                parse(int& argc, char**& argv);
     void                write_optvar();
  protected:
-    std::string         optvar[9];
+    std::string         optvar[10];
 
  public:
     explicit CmdParse();
