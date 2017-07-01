@@ -156,6 +156,8 @@ void TunerWidget::create_window() {
 }
 
 void TunerWidget::parse_cmd() {
+    GdkScreen * sc = gdk_screen_get_default ();
+    GdkWindow * wd = gdk_screen_get_root_window (sc);
     // *** commandline parsing ***
     // set default window position optional by command line options
     int x = 120;
@@ -163,12 +165,12 @@ void TunerWidget::parse_cmd() {
     if (!cptr->cv(3).empty()) {
         x = atoi(cptr->cv(3).c_str());
     } else {
-        x = gdk_screen_width()/2 -x;
+        x = gdk_window_get_width(wd)/2 -x;
     }
     if (!cptr->cv(4).empty()) {
         y = atoi(cptr->cv(4).c_str());
     } else {
-        y = gdk_screen_height()/2 -y;
+        y = gdk_window_get_height(wd)/2 -y;
     }
     gtk_window_move(GTK_WINDOW(window),x,y);
     // set default window size optional by command line options

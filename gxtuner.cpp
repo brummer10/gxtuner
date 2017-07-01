@@ -342,10 +342,6 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 
 }
 
-static gboolean fequal(float a, float b) {
- return fabs(a-b) < 0.001;
-}
-
 static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     static const char* shruti_note[22] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
     float multiply = 1.0;
@@ -417,79 +413,75 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
         multiply = 0.0625;
     }
 
-    percent = (tuner->reference_pitch/(freq_is*multiply)) * 100.0;
+    percent = ((tuner->reference_pitch/multiply)/freq_is) * 100.0;
 
-    if (fequal(percent,100.00) || percent > 97.46) {
+    if (percent > 97.46) {
         display_note = 0;
         scale = ((percent-100.00)/100.0)/2.0;
-    } else if (fequal(percent,94.92) || percent > 94.34) {
+    } else if (percent > 94.34) {
         display_note = 1;
         scale = ((percent-94.92)/100.0)/2.0;
-    } else if (fequal(percent,93.75) || percent > 91.86) {
+    } else if (percent > 91.86) {
         display_note = 2;
         scale = ((percent-93.75)/100.0)/2.0;
-    } else if (fequal(percent,90.00) || percent > 89.5) {
+    } else if (percent > 89.5) {
         display_note = 3;
         scale = ((percent-90.00)/100.0)/2.0;
-    } else if (fequal(percent,88.88) || percent > 86.62){
+    } else if (percent > 86.62){
         display_note = 4;
         scale = ((percent-88.88)/100.0)/2.0;
-    } else if (fequal(percent,84.37) || percent > 83.85) {
+    } else if (percent > 83.85) {
         display_note = 5;
         scale = ((percent-84.37)/100.0)/2.0;
-    } else if (fequal(percent,83.33) || percent > 81.67) {
+    } else if (percent > 81.67) {
         display_note = 6;
         scale = ((percent-83.33)/100.0)/2.0;
-    } else if (fequal(percent,80.00) || percent > 79.51) {
+    } else if (percent > 79.51) {
         display_note = 7;
         scale = ((percent-80.00)/100.0)/2.0;
-    } else if (fequal(percent,79.01) || percent > 77.01) {
+    } else if (percent > 77.01) {
         display_note = 8;
         scale = ((percent-79.01)/100.0)/2.0;
-    } else if (fequal(percent,75.00) || percent > 74.54) {
+    } else if (percent > 74.54) {
         display_note = 9;
         scale = ((percent-75.00)/100.0)/2.0;
-    } else if (fequal(percent,74.07) || percent > 72.59) {
+    } else if (percent > 72.59) {
         display_note = 10;
         scale = ((percent-74.07)/100.0)/2.0;
-    } else if (fequal(percent,71.11) || percent > 70.67) {
+    } else if (percent > 70.67) {
         display_note = 11;
         scale = ((percent-71.11)/100.0)/2.0;
-    } else if (fequal(percent,70.23) || percent > 68.45) {
+    } else if (percent > 68.45) {
         display_note = 12;
         scale = ((percent-70.23)/100.0)/2.0;
-    } else if (fequal(percent,66.66) || percent > 64.97) {
+    } else if (percent > 64.97) {
         display_note = 13;
         scale = ((percent-66.66)/100.0)/2.0;
-    } else if (fequal(percent,63.28) || percent > 62.89) {
+    } else if (percent > 62.89) {
         display_note = 14;
         scale = ((percent-63.28)/100.0)/2.0;
-    } else if (fequal(percent,62.50) || percent > 61.25) {
+    } else if (percent > 61.25) {
         display_note = 15;
         scale = ((percent-62.50)/100.0)/2.0;
-    } else if (fequal(percent,60.00) || percent > 59.63) {
+    } else if (percent > 59.63) {
         display_note = 16;
         scale = ((percent-60.00)/100.0)/2.0;
-    } else if (fequal(percent,59.25) || percent > 57.75) {
+    } else if (percent > 57.75) {
         display_note = 17;
         scale = ((percent-59.25)/100.0)/2.0;
-    } else if (fequal(percent,56.25) || percent > 55.90) {
+    } else if (percent > 55.90) {
         display_note = 18;
         scale = ((percent-56.25)/100.0)/2.0;
-    } else if (fequal(percent,55.55) || percent > 54.44) {
+    } else if (percent > 54.44) {
         display_note = 19;
         scale = ((percent-55.55)/100.0)/2.0;
-    } else if (fequal(percent,53.33) || percent > 53.00) {
+    } else if (percent > 53.00) {
         display_note = 20;
         scale = ((percent-53.33)/100.0)/2.0;
-    } else if (fequal(percent,52.67) || percent > 51.34) {
+    } else if (percent > 51.34) {
         display_note = 21;
         scale = ((percent-52.67)/100.0)/2.0;
-    }// else if (fequal(percent,50.00) || percent > 49.00)  {
-     //   display_note = 22;
-     //   scale = log2f((percent*tuner->reference_pitch) / (100.00*tuner->reference_pitch))/2.0;
-    //}
-   // fprintf(stderr,"percent = %f Note = %i scale = %f octave = %i fvis = %f freq = %f\n",percent,display_note,scale, indicate_oc, fvis, freq_is);
+    }
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);

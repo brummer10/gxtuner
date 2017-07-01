@@ -180,7 +180,7 @@ void CmdParse::setup_groups() {
     GOptionEntry opt_entries_engine[] =
     {
         { "pitch", 'p', 0, G_OPTION_ARG_STRING, &pitch,
-            "set reference pitch ( -p 415,0 <-> 467,0)", "PITCH"},
+            "set reference pitch ( -p 200,0 <-> 600,0)", "PITCH"},
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
