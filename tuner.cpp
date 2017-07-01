@@ -150,7 +150,7 @@ void TunerWidget::create_window() {
             G_CALLBACK (delete_event), NULL);
     g_signal_connect (window, "destroy",
             G_CALLBACK (destroy), NULL);
-            
+    
     parse_cmd();
     show();
 }
@@ -195,10 +195,13 @@ void TunerWidget::parse_cmd() {
     } else {
         t = 0.001;
     }
+    gtk_window_set_title(GTK_WINDOW(window),"gxtuner-chromatic");
     if (!cptr->cv(9).empty()) {
         std::string m = cptr->cv(9).c_str();
-        if(m == "shruti") 
+        if(m == "shruti") {
             gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),1);
+            gtk_window_set_title(GTK_WINDOW(window),"gxtuner-shruti");
+        }
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adjt),t);
