@@ -75,6 +75,16 @@ gboolean TunerWidget::threshold_changed(gpointer arg) {
     return true;
 }
 
+gboolean TunerWidget::mode_changed(gpointer arg) {
+    int m = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    GtkWidget *top = gtk_widget_get_toplevel(GTK_WIDGET(arg));
+    std::string title ="gxtuner-";
+    title +=gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(arg));
+    gtk_window_set_title(GTK_WINDOW(top),title.c_str());
+    gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),m);
+    return true;
+}
+
 void TunerWidget::signal_handler(int sig) {
     // print out a warning
     g_print ("signal: %i received, exiting ...\n", sig);
@@ -104,13 +114,17 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(hbox),false);
     fbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(fbox),false);
+    cbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(cbox),false);
+    dbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(dbox),false);
     abox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(abox),false);
     bbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(bbox),false);
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
-    gtk_widget_set_valign(spinner, GTK_ALIGN_END);
+    gtk_widget_set_valign(spinner, GTK_ALIGN_START);
     gtk_widget_set_margin_end(spinner, 4);
     gtk_widget_set_margin_bottom(spinner, 2);
     adjt = gtk_adjustment_new(0.001, 0.001, 0.2, 0.001, 1.0, 0);
@@ -118,6 +132,13 @@ void TunerWidget::create_window() {
     gtk_widget_set_valign(spinnert, GTK_ALIGN_START);
     gtk_widget_set_margin_start(spinnert, 4);
     gtk_widget_set_margin_bottom(spinnert, 2);
+    selector = gtk_combo_box_text_new();
+    //gtk_widget_set_opacity(GTK_WIDGET(selector),0.25);
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "chromatic");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "shruti");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "diatonic");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 0);
+    gtk_widget_set_opacity(GTK_WIDGET(selector), 0.1);
 
     // set some options to widgets
     gtk_widget_set_app_paintable(window, TRUE);
@@ -137,7 +158,10 @@ void TunerWidget::create_window() {
     gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     gtk_container_add (GTK_CONTAINER (bbox), spinnert);
     gtk_box_pack_start(GTK_BOX(hbox),bbox,false,false,0);
+    gtk_container_add (GTK_CONTAINER (fbox), selector);
+    gtk_box_pack_start(GTK_BOX(hbox),cbox,true,false,0);
     gtk_box_pack_start(GTK_BOX(hbox),fbox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(hbox),dbox,true,false,0);
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
 
@@ -146,6 +170,8 @@ void TunerWidget::create_window() {
         G_CALLBACK(ref_freq_changed),(gpointer)adj);
     g_signal_connect(G_OBJECT(adjt), "value-changed",
         G_CALLBACK(threshold_changed),(gpointer)adjt);
+    g_signal_connect(GTK_COMBO_BOX(selector), "changed",
+        G_CALLBACK(mode_changed),(gpointer)selector);
     g_signal_connect (window, "delete-event",
             G_CALLBACK (delete_event), NULL);
     g_signal_connect (window, "destroy",
@@ -156,8 +182,22 @@ void TunerWidget::create_window() {
 }
 
 void TunerWidget::parse_cmd() {
-    GdkScreen * sc = gdk_screen_get_default ();
+    GtkCssProvider* provider = gtk_css_provider_new();
+    GdkDisplay * display = gdk_display_get_default ();
+    GdkScreen * sc = gdk_display_get_default_screen (display);
     GdkWindow * wd = gdk_screen_get_root_window (sc);
+
+    gtk_style_context_add_provider_for_screen(sc, GTK_STYLE_PROVIDER(provider),
+                                      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+    gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(provider),
+                "  * {  \n"
+                " color:  #fff; \n"
+                " background-color: black;  \n"
+                "} \n", -1, NULL);
+
+    g_object_unref(provider);
+   
     // *** commandline parsing ***
     // set default window position optional by command line options
     int x = 120;
@@ -199,8 +239,9 @@ void TunerWidget::parse_cmd() {
     if (!cptr->cv(9).empty()) {
         std::string m = cptr->cv(9).c_str();
         if(m == "shruti") {
-            gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),1);
-            gtk_window_set_title(GTK_WINDOW(window),"gxtuner-shruti");
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 1);
+        } else if(m == "diatonic") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 2);
         }
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);

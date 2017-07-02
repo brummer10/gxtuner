@@ -63,13 +63,17 @@ class TunerWidget {
     GtkWidget*          abox;
     GtkWidget*          bbox;
     GtkWidget*          fbox;
+    GtkWidget*          cbox;
+    GtkWidget*          dbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
+    GtkWidget*          selector;
 
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
     static gboolean     ref_freq_changed(gpointer arg);
     static gboolean     threshold_changed(gpointer arg);
+    static gboolean     mode_changed(gpointer arg);
     static void         destroy( GtkWidget *widget, gpointer data);
  public:
     explicit TunerWidget();

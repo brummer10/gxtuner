@@ -184,7 +184,7 @@ void CmdParse::setup_groups() {
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
-            "set tuner mode (-m chromatic <-> shruti)", "MODE" },
+            "set tuner mode (-m chromatic / shruti / diatonic)", "MODE" },
         { NULL }
     };
     g_option_group_add_entries(optgroup_engine, opt_entries_engine);

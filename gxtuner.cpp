@@ -342,6 +342,181 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 
 }
 
+static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
+    static const char* diatonic_note[7] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
+    float multiply = 1.0;
+    float percent = 0.0;
+    int display_note = 0;
+    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    static int indicate_oc = 0;
+    
+    GxTuner *tuner = GX_TUNER(widget);
+    
+    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
+
+    double x0      = (allocation->width - 100) * 0.5;
+    double y0      = (allocation->height - 60) * 0.5;
+
+    static double grow   = 0.;
+
+    if(allocation->width > allocation->height +(10.*grow*3)) {
+        grow = (allocation->height/60.)/10.;
+    } else {
+        grow =  (allocation->width/100.)/10.;
+    }
+    
+    tuner->scale_h = (allocation->height/60.)/3.;
+    tuner->scale_w =  (allocation->width/100.)/3.;
+    
+    cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
+    cairo_scale(cr, tuner->scale_w, tuner->scale_h);
+    cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
+    cairo_paint (cr);
+    cairo_restore(cr);
+
+    cairo_save(cr);
+    cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
+    cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
+    
+    
+    
+    float scale = -0.4;
+    if (tuner->freq) {
+        float freq_is = tuner->freq;
+        float ref_c = tuner->reference_pitch / 1.666666667;
+    if (freq_is < (ref_c/8.0)-5.1 && freq_is >0.0) {
+        indicate_oc = 0; // standart 27,5hz == 6,25%
+        multiply = 16;
+    } else if (freq_is < (ref_c/4.0)-5.1) {
+        indicate_oc = 1; // standart 55hz == 12,5%
+        multiply = 8;
+    } else if (freq_is < (ref_c/2.0)-5.1) {
+        indicate_oc = 2; // standart 110hz == 25&
+        multiply = 4;
+    } else if (freq_is < (ref_c)-5.1) {
+        indicate_oc = 3; // standart 220hz == 50%
+        multiply = 2;
+    } else if (freq_is < (ref_c*2.0)-5.1) {
+        indicate_oc = 4; // standart 440hz == 100%
+        multiply = 1;
+    } else if (freq_is < (ref_c*4.0)-5.1) {
+        indicate_oc = 5; // standart 880hz == 200%
+        multiply = 0.5;
+    } else if (freq_is < (ref_c*8.0)-5.1) {
+        indicate_oc = 6; // standart 1760hz == 400%
+        multiply = 0.25;
+    } else if (freq_is < (ref_c*16.0)-5.1) {
+        indicate_oc = 7; // standart 3520hz == 800%
+        multiply = 0.125;
+    } else {
+        indicate_oc = 8;
+        multiply = 0.0625;
+    }
+
+    percent = (freq_is/(ref_c/multiply)) ;
+    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
+
+    if (percent < 1.06) { //Do
+        display_note = 0;
+        scale = ((percent-1.0))/2.0;
+    } else if (percent < 1.18) { // Re
+        display_note = 1;
+        scale = ((percent-1.125))/2.0;
+    } else if (percent < 1.29) { // Mi
+        display_note = 2;
+        scale = ((percent-1.25))/2.0;
+    } else if (percent < 1.42) { // Fa
+        display_note = 3;
+        scale = ((percent-1.3333))/2.0;
+    } else if (percent < 1.58){ // Sol
+        display_note = 4;
+        scale = ((percent-1.5))/2.0;
+    } else if (percent < 1.77) { // La
+        display_note = 5;
+        scale = ((percent-1.6667))/2.0;
+    } else if (percent < 1.94) { // Ti
+        display_note = 6;
+        scale = ((percent-1.875))/2.0;
+    }
+        // display note
+        cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
+        cairo_set_font_size(cr, 18.0);
+        cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
+        cairo_show_text(cr, diatonic_note[display_note]);
+        cairo_set_font_size(cr, 8.0);
+        cairo_move_to(cr,x0+54  , y0+30 +16 );
+        cairo_show_text(cr, octave[indicate_oc]);
+    }
+
+    // display frequency
+    char s[10];
+    snprintf(s, sizeof(s), "%.1f Hz", tuner->freq);
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 7.5);
+    cairo_text_extents_t ex;
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+98-ex.width, y0+58);
+    cairo_show_text(cr, s);
+    // display cent
+    if(scale>-0.4) {
+        if(scale>0.004) {
+            cents = static_cast<int>((floorf(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "+%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else if(scale<-0.004) {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            mini_cents = (scale * 10000) / 50;
+            if (mini_cents<0)
+                snprintf(s, sizeof(s), "%.2f", mini_cents);
+            else
+                snprintf(s, sizeof(s), "+%.2f", mini_cents);
+            cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, mini_cents);
+        }
+    } else {
+        cents = 100;
+        snprintf(s, sizeof(s), "+ - cent");
+    }    
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 6.0);
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+28-ex.width, y0+58);
+    cairo_show_text(cr, s);
+
+    double ux=2., uy=2.;
+    cairo_device_to_user_distance (cr, &ux, &uy);
+    if (ux < uy)
+        ux = uy;
+    cairo_set_line_width (cr, ux + grow);
+
+    // indicator (line)
+    cairo_move_to(cr,x0+50, y0+rect_height+5);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 1);
+    cairo_line_to(cr, (log_scale(cents, scale)*2*rect_width)+x0+50, y0+(scale*scale*30)+2);
+    cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
+    cairo_stroke(cr);   
+
+    g_free (allocation); 
+    return FALSE;
+}
+
 static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     static const char* shruti_note[22] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
     float multiply = 1.0;
@@ -563,8 +738,10 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     GxTuner *tuner = GX_TUNER(widget);
 
-    if (tuner->mode) {
+    if (tuner->mode == 1) {
         if (!gtk_tuner_expose_shruti (widget, cr)) return FALSE;
+    } else if (tuner->mode == 2) {
+        if (!gtk_tuner_expose_diatonic (widget, cr)) return FALSE;
     }
     static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
     static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
