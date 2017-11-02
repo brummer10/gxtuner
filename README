@@ -5,7 +5,7 @@
 
  * Copyright (C) 2011-2016 Hermann Meyer, Andreas Degert
 
-gxtuner 2.3
+gxtuner 2.4
 
 A simple (linux) guitar and bass tuner for jack
 with full jack session managment support

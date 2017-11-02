@@ -415,7 +415,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     }
 
     percent = (freq_is/(ref_c/multiply)) ;
-    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
+    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
 
     if (percent < 1.06) { //Do
         display_note = 0;
