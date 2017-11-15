@@ -134,6 +134,7 @@ void TunerWidget::create_window() {
     gtk_widget_set_margin_bottom(spinnert, 2);
     selector = gtk_combo_box_text_new();
     //gtk_widget_set_opacity(GTK_WIDGET(selector),0.25);
+    // here you could add new tunning modes, add them always as last one!!
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "shruti");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "diatonic");
@@ -236,6 +237,8 @@ void TunerWidget::parse_cmd() {
         t = 0.001;
     }
     gtk_window_set_title(GTK_WINDOW(window),"gxtuner-chromatic");
+    // here we check if a special mode is given on commandline, 
+    // add your mode here as well.
     if (!cptr->cv(9).empty()) {
         std::string m = cptr->cv(9).c_str();
         if(m == "shruti") {

@@ -342,16 +342,23 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 
 }
 
+// copy the following block and edit it to your needs to add a new tuning mode
 static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
+    // Note names for display
     static const char* diatonic_note[7] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
+    // Frequency Octave divider 
     float multiply = 1.0;
+    // ratio 
     float percent = 0.0;
+    // Note indicator
     int display_note = 0;
+    // Octave names for display
     static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    // Octave indicator
     static int indicate_oc = 0;
     
     GxTuner *tuner = GX_TUNER(widget);
-    
+    // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
 
@@ -368,7 +375,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     
     tuner->scale_h = (allocation->height/60.)/3.;
     tuner->scale_w =  (allocation->width/100.)/3.;
-    
+    // translate widget size to standart size
     cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
     cairo_scale(cr, tuner->scale_w, tuner->scale_h);
     cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
@@ -380,11 +387,23 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
     
     
-    
+    // fetch Octave we are in, 
     float scale = -0.4;
     if (tuner->freq) {
+        // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
+        // Now we translate reference_pitch from LA to DO 
+        // to get the reference pitch of the first Note in Octave 4
+        // La hvae a ratio of 5/3 = 1.666666667
+        // so divide the reference_pitch by 1.666666667 will
+        // give us the reference pitch for DO in Octave 4
         float ref_c = tuner->reference_pitch / 1.666666667;
+        // now check in which Octave we are with the tracked frequency
+        // and set the Frequency Octave divider
+        // ref_c is now the frequency of the first note in Octave, 
+        // but we wont to check if the frequency is below the last Note in Octave
+        // so, for example if freq_is is below ref_c we are in octave 3
+        // if freq_is is below ref_c/2 we are in octave 2, etc.
     if (freq_is < (ref_c/8.0)-5.1 && freq_is >0.0) {
         indicate_oc = 0; // standart 27,5hz == 6,25%
         multiply = 16;
@@ -413,10 +432,26 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
         indicate_oc = 8;
         multiply = 0.0625;
     }
-
+    // we divide ref_c (refernce frequency of DO in Octave 4) 
+    // with the multiply var, to get the frequency of DO in the Octave we are in.
+    // then we devide the fetched frequency by the frequency of this (DO in this octave)
+    // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
     //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
 
+    // now we chould check which ratio we have
+    // we split the range between the nearest two ratios by half, 
+    // so, that we know if we are below Re or above Do, for example
+    // so, the ratio of DO is 1/1 = 1.0, the ratio of Re is 1/8 = 1.125
+    // then we get 1.125 - 1 = 0.125 / 2 = 0.0625
+    // so, if our ratio is below 1.0625, we have a frequency near Do.
+    // we could display note 0. 
+    // If it is above 1.0625 we check for the next ratio, usw.
+    // If we've found the nearest ratio, we need to know how far we are away
+    // from the wonted ratio, so we substract the wonted ratio from the fetched one.
+    // for example if we get a ratio of 1.025 we are near DO, so we substarct
+    // the ratio of DO from "percent" means 1.025 - 1.0 = 0.025 
+    // by divide to the half we get the scale factor for display cents. 
     if (percent < 1.06) { //Do
         display_note = 0;
         scale = ((percent-1.0))/2.0;
@@ -461,6 +496,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     // display cent
     if(scale>-0.4) {
         if(scale>0.004) {
+            // here we translate the scale factor to cents and display them
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
@@ -737,7 +773,7 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     GxTuner *tuner = GX_TUNER(widget);
-
+    // here we check in which mode we are add your mode here.
     if (tuner->mode == 1) {
         if (!gtk_tuner_expose_shruti (widget, cr)) return FALSE;
     } else if (tuner->mode == 2) {
