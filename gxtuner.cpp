@@ -771,6 +771,392 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     return FALSE;
 }
 
+// copy the following block and edit it to your needs to add a new tuning mode
+// Ben Johnston 65 just scale ♭♯𝄪 ㄥ
+static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
+    // Note names for display
+    static const char* johnston65_note[65] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
+    // Frequency Octave divider 
+    float multiply = 1.0;
+    // ratio 
+    float percent = 0.0;
+    // Note indicator
+    int display_note = 0;
+    // Octave names for display
+    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    // Octave indicator
+    static int indicate_oc = 0;
+    
+    GxTuner *tuner = GX_TUNER(widget);
+    // fetch widget size and location
+    GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
+
+    double x0      = (allocation->width - 100) * 0.5;
+    double y0      = (allocation->height - 60) * 0.5;
+
+    static double grow   = 0.;
+
+    if(allocation->width > allocation->height +(10.*grow*3)) {
+        grow = (allocation->height/60.)/10.;
+    } else {
+        grow =  (allocation->width/100.)/10.;
+    }
+    
+    tuner->scale_h = (allocation->height/60.)/3.;
+    tuner->scale_w =  (allocation->width/100.)/3.;
+    // translate widget size to standart size
+    cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
+    cairo_scale(cr, tuner->scale_w, tuner->scale_h);
+    cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
+    cairo_paint (cr);
+    cairo_restore(cr);
+
+    cairo_save(cr);
+    cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
+    cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
+    
+    
+    // fetch Octave we are in, 
+    float scale = -0.4;
+    if (tuner->freq) {
+        // this is the frequency we get from the pitch tracker
+        float freq_is = tuner->freq;
+        // Now we translate reference_pitch from A to C 
+        // to get the reference pitch of the first Note in Octave 4
+        // A has a ratio of 5/3 = 1.666666667
+        // so divide the reference_pitch by 1.666666667 will
+        // give us the reference pitch for C in Octave 4
+        float ref_c = tuner->reference_pitch / 1.666666667;
+        // now check in which Octave we are with the tracked frequency
+        // and set the Frequency Octave divider
+        // ref_c is now the frequency of the first note in Octave, 
+        // but we wont to check if the frequency is below the last Note in Octave
+        // so, for example if freq_is is below ref_c we are in octave 3
+        // if freq_is is below ref_c/2 we are in octave 2, etc.
+    if (freq_is < (ref_c/8.0)-5.1 && freq_is >0.0) {
+        indicate_oc = 0; // standart 27,5hz == 6,25%
+        multiply = 16;
+    } else if (freq_is < (ref_c/4.0)-5.1) {
+        indicate_oc = 1; // standart 55hz == 12,5%
+        multiply = 8;
+    } else if (freq_is < (ref_c/2.0)-5.1) {
+        indicate_oc = 2; // standart 110hz == 25&
+        multiply = 4;
+    } else if (freq_is < (ref_c)-5.1) {
+        indicate_oc = 3; // standart 220hz == 50%
+        multiply = 2;
+    } else if (freq_is < (ref_c*2.0)-5.1) {
+        indicate_oc = 4; // standart 440hz == 100%
+        multiply = 1;
+    } else if (freq_is < (ref_c*4.0)-5.1) {
+        indicate_oc = 5; // standart 880hz == 200%
+        multiply = 0.5;
+    } else if (freq_is < (ref_c*8.0)-5.1) {
+        indicate_oc = 6; // standart 1760hz == 400%
+        multiply = 0.25;
+    } else if (freq_is < (ref_c*16.0)-5.1) {
+        indicate_oc = 7; // standart 3520hz == 800%
+        multiply = 0.125;
+    } else {
+        indicate_oc = 8;
+        multiply = 0.0625;
+    }
+    // we divide ref_c (reference frequency of C in Octave 4) 
+    // with the multiply var, to get the frequency of C in the Octave we are in.
+    // then we devide the fetched frequency by the frequency of this (C in this octave)
+    // we get the ratio of the fetched frequency to the first Note in octave
+    percent = (freq_is/(ref_c/multiply)) ;
+    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
+
+    // now we chould check which ratio we have
+    // we split the range between the nearest two ratios by half, 
+    // so, that we know if we are below Re or above Do, for example
+    // so, the ratio of DO is 1/1 = 1.0, the ratio of Re is 1/8 = 1.125
+    // then we get 1.125 - 1 = 0.125 / 2 = 0.0625
+    // so, if our ratio is below 1.0625, we have a frequency near Do.
+    // we could display note 0. 
+    // If it is above 1.0625 we check for the next ratio, usw.
+    // If we've found the nearest ratio, we need to know how far we are away
+    // from the wanted ratio, so we substract the wanted ratio from the fetched one.
+    // for example if we get a ratio of 1.025 we are near DO, so we substract
+    // the ratio of C from "percent" means 1.025 - 1.0 = 0.025 
+    // by divide to the half we get the scale factor for display cents. 
+    if (percent < 1.00625) { //#1 see example above 
+        display_note = 0;
+        scale = ((percent-1.0))/2.0; // 1.0 = ratio of first note
+    } else if (percent < 1.01825) { 
+        display_note = 1;
+        scale = ((percent-1.0125))/2.0;
+    } else if (percent < 1.0276135419) { 
+        display_note = 2;
+        scale = ((percent-1.024))/2.0;
+    } else if (percent < 1.0364468753) { 
+        display_note = 3;
+        scale = ((percent-1.0312271))/2.0;
+    } else if (percent < 1.0481770833){ 
+        display_note = 4;
+        scale = ((percent-1.0416666667))/2.0;
+    } else if (percent < 1.0606770833) { 
+        display_note = 5;
+        scale = ((percent- 1.0546875))/2.0;
+    } else if (percent < 1.0733333333) { 
+        display_note = 6;
+        scale = ((percent-1.0666666667))/2.0;
+    } else if (percent < 1.0861333333) { 
+        display_note = 7 ;
+        scale = ((percent- 1.08))/2.0;
+    } else if (percent < 1.0954497396) { 
+        display_note = 8 ;
+        scale = ((percent- 1.0922666667))/2.0;
+    } else if (percent < 1.1048719618) { 
+        display_note = 9 ;
+        scale = ((percent- 1.0986328125))/2.0;
+    } else if (percent < 1.1180555556) { 
+        display_note = 10 ;
+        scale = ((percent-1.1111111111))/2.0;
+    } else if (percent < 1.1313888889 ) { 
+        display_note = 11 ;
+        scale = ((percent- 1.125 ))/2.0; // D
+    } else if (percent < 1.1448888889) { 
+        display_note = 12 ;
+        scale = ((percent- 1.1377777778))/2.0;
+    } else if (percent < 1.1585422222) { 
+        display_note = 13 ;
+        scale = ((percent- 1.152))/2.0;
+    } else if (percent < 1.1684797222) { 
+        display_note = 14 ;
+        scale = ((percent- 1.1650844444))/2.0;
+    } else if (percent < 1.1785300926) { 
+        display_note = 15 ;
+        scale = ((percent- 1.171875))/2.0;
+    } else if (percent < 1.1925925926) { 
+        display_note = 16 ;
+        scale = ((percent- 1.1851851852))/2.0;
+    } else if (percent < 1.2075) { 
+        display_note = 17 ;
+        scale = ((percent-1.2))/2.0;
+    } else if (percent < 1.2219 ) { 
+        display_note = 18 ;
+        scale = ((percent-1.215))/2.0;
+    } else if (percent < 1.232380957) { 
+        display_note = 19 ;
+        scale = ((percent- 1.2288))/2.0;
+    } else if (percent < 1.242980957 ) { 
+        display_note = 20 ;
+        scale = ((percent- 1.2359619141))/2.0;
+    } else if (percent < 1.2578125 ) { 
+        display_note = 21 ;
+        scale = ((percent-1.25 ))/2.0; // E
+    } else if (percent < 1.2728125 ) { 
+        display_note = 22 ;
+        scale = ((percent-1.265625))/2.0;
+    } else if (percent < 1.2837301636) { 
+        display_note = 23 ;
+        scale = ((percent- 1.28))/2.0;
+    } else if (percent < 1.2947718302 ) { 
+        display_note = 24 ;
+        scale = ((percent- 1.2874603271))/2.0;
+    } else if (percent < 1.3102213542) { 
+        display_note = 25 ;
+        scale = ((percent- 1.3020833333))/2.0;
+    } else if (percent < 1.3258463542) { 
+        display_note = 26;
+        scale = ((percent- 1.318359375))/2.0;
+    } else if (percent < 1.3416666667) { 
+        display_note = 27 ;
+        scale = ((percent- 1.3333333333 ))/2.0; // F
+    } else if (percent < 1.3576666667) { 
+        display_note = 28 ;
+        scale = ((percent- 1.35 ))/2.0;
+    } else if (percent < 1.3693121745) { 
+        display_note = 29 ;
+        scale = ((percent- 1.3653333333 ))/2.0;
+    } else if (percent < 1.3810899523 ) { 
+        display_note = 30 ;
+        scale = ((percent- 1.3732910156 ))/2.0;
+    } else if (percent < 1.3975694444) { 
+        display_note = 31 ;
+        scale = ((percent- 1.3888888889))/2.0;
+    } else if (percent < 1.4142361111) { 
+        display_note = 32 ;
+        scale = ((percent- 1.40625))/2.0;
+    } else if (percent < 1.4311111111 ) { 
+        display_note = 33 ;
+        scale = ((percent- 1.4222222222 ))/2.0;
+    } else if (percent < 1.4481777778) { 
+        display_note = 34 ;
+        scale = ((percent- 1.44))/2.0;
+    } else if (percent < 1.4605996528 ) { 
+        display_note = 35 ;
+        scale = ((percent-1.4563555556))/2.0;
+    } else if (percent < 1.4731626157 ) { 
+        display_note = 36 ;
+        scale = ((percent- 1.46484375))/2.0;
+    } else if (percent < 1.4907407407) { 
+        display_note = 37 ;
+        scale = ((percent- 1.4814814815))/2.0;
+    } else if (percent < 1.509375) { 
+        display_note = 38 ;
+        scale = ((percent- 1.5))/2.0; // G
+    } else if (percent < 1.527375 ) { 
+        display_note = 39 ;
+        scale = ((percent- 1.51875 ))/2.0;
+    } else if (percent < 1.54925 ) { 
+        display_note = 40 ;
+        scale = ((percent- 1.536 ))/2.0;
+    } else if (percent < 1.5713734568 ) { 
+        display_note = 41 ;
+        scale = ((percent- 1.5625 ))/2.0;
+    } else if (percent < 1.5901234568 ) { 
+        display_note = 42 ;
+        scale = ((percent- 1.5802469136))/2.0;
+    } else if (percent < 1.6046627045 ) { 
+        display_note = 43 ;
+        scale = ((percent-1.6))/2.0;
+    } else if (percent < 1.6184647878) { 
+        display_note = 44 ;
+        scale = ((percent- 1.6093254089 ))/2.0;
+    } else if (percent < 1.6377766927 ) { 
+        display_note = 45 ;
+        scale = ((percent- 1.6276041667 ))/2.0;
+    } else if (percent < 1.6536712646 ) { 
+        display_note = 46 ;
+        scale = ((percent- 1.6479492188))/2.0;
+    } else if (percent < 1.6630299886 ) { 
+        display_note = 47 ;
+        scale = ((percent- 1.6593933105 ))/2.0;
+    } else if (percent < 1.6770833333) { 
+        display_note = 48 ;
+        scale = ((percent- 1.6666666667 ))/2.0; // A
+    } else if (percent < 1.6970833333 ) { 
+        display_note = 49 ;
+        scale = ((percent- 1.6875))/2.0;
+    } else if (percent < 1.7116402181 ) { 
+        display_note = 50 ;
+        scale = ((percent- 1.7066666667))/2.0;
+    } else if (percent < 1.7263624403 ) { 
+        display_note = 51 ;
+        scale = ((percent- 1.7166137695))/2.0;
+    } else if (percent < 1.7469618056 ) { 
+        display_note = 52 ;
+        scale = ((percent- 1.7361111111 ))/2.0;
+    } else if (percent < 1.7677951389 ) { 
+        display_note = 53 ;
+        scale = ((percent-1.7578125 ))/2.0;
+    } else if (percent < 1.7888888889 ) { 
+        display_note = 54 ;
+        scale = ((percent- 1.7777777778 ))/2.0;
+    } else if (percent < 1.8102222222) { 
+        display_note = 55 ;
+        scale = ((percent- 1.8 ))/2.0;
+    } else if (percent < 1.8318222222 ) { 
+        display_note = 56 ;
+        scale = ((percent- 1.8204444444 ))/2.0;
+    } else if (percent < 1.8485714355 ) { 
+        display_note = 57 ;
+        scale = ((percent- 1.8432 ))/2.0;
+    } else if (percent < 1.8644714355 ) { 
+        display_note = 58 ;
+        scale = ((percent- 1.8539428711))/2.0;
+    } else if (percent < 1.8930555556 ) { 
+        display_note = 59 ;
+        scale = ((percent- 1.875 ))/2.0; // B
+    } else if (percent < 1.9155555556 ) { 
+        display_note = 60 ;
+        scale = ((percent- 1.9111111111 ))/2.0;
+    } else if (percent < 1.9309037037 ) { 
+        display_note = 61 ;
+        scale = ((percent- 1.92 ))/2.0;
+    } else if (percent < 1.9474662037 ) { 
+        display_note = 62 ;
+        scale = ((percent- 1.9418074074 ))/2.0;
+    } else if (percent < 1.964216821 ) { 
+        display_note = 63 ;
+        scale = ((percent- 1.953125 ))/2.0;
+    } else if (percent < 1.964216821 ) { 
+        display_note = 64 ;
+        scale = ((percent- 1.953125 ))/2.0;
+    }
+        // display note
+        cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
+        cairo_set_font_size(cr, 18.0);
+        cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
+        cairo_show_text(cr, johnston65_note[display_note]);
+        cairo_set_font_size(cr, 8.0);
+        cairo_move_to(cr,x0+54  , y0+30 +16 );
+        cairo_show_text(cr, octave[indicate_oc]);
+    }
+
+    // display frequency
+    char s[10];
+    snprintf(s, sizeof(s), "%.1f Hz", tuner->freq);
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 7.5);
+    cairo_text_extents_t ex;
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+98-ex.width, y0+58);
+    cairo_show_text(cr, s);
+    // display cent
+    if(scale>-0.4) {
+        if(scale>0.004) {
+            // here we translate the scale factor to cents and display them
+            cents = static_cast<int>((floorf(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "+%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else if(scale<-0.004) {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            snprintf(s, sizeof(s), "%i", cents);
+            cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
+        } else {
+            cents = static_cast<int>((ceil(scale * 10000) / 50));
+            mini_cents = (scale * 10000) / 50;
+            if (mini_cents<0)
+                snprintf(s, sizeof(s), "%.2f", mini_cents);
+            else
+                snprintf(s, sizeof(s), "+%.2f", mini_cents);
+            cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
+            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_strobe(cr, x0, y0, mini_cents);
+        }
+    } else {
+        cents = 100;
+        snprintf(s, sizeof(s), "+ - cent");
+    }    
+    cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
+    cairo_set_font_size (cr, 6.0);
+    cairo_text_extents(cr, s, &ex);
+    cairo_move_to (cr, x0+28-ex.width, y0+58);
+    cairo_show_text(cr, s);
+
+    double ux=2., uy=2.;
+    cairo_device_to_user_distance (cr, &ux, &uy);
+    if (ux < uy)
+        ux = uy;
+    cairo_set_line_width (cr, ux + grow);
+
+    // indicator (line)
+    cairo_move_to(cr,x0+50, y0+rect_height+5);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 1);
+    cairo_line_to(cr, (log_scale(cents, scale)*2*rect_width)+x0+50, y0+(scale*scale*30)+2);
+    cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
+    cairo_stroke(cr);   
+
+    g_free (allocation); 
+    return FALSE;
+}
+
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     GxTuner *tuner = GX_TUNER(widget);
     // here we check in which mode we are add your mode here.
@@ -778,6 +1164,8 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
         if (!gtk_tuner_expose_shruti (widget, cr)) return FALSE;
     } else if (tuner->mode == 2) {
         if (!gtk_tuner_expose_diatonic (widget, cr)) return FALSE;
+    } else if (tuner->mode == 3) {
+        if (!gtk_tuner_expose_johnston65 (widget, cr)) return FALSE;
     }
     static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
     static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
