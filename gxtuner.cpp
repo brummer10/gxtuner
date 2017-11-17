@@ -27,7 +27,7 @@
 #include <string.h> 
 #include <math.h>
 #include <stdlib.h>
-#include <cmath>
+#include <math.h>
 #define P_(s) (s)   // FIXME -> gettext
 
 enum {
@@ -348,7 +348,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     // Note names for display
     static const char* diatonic_note[] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
     // ratios of notes + 2/1
-    float noteratio[] = {1/1.0, 9/8.0, 5/4.0, 3/2.0, 4/3.0, 5/3.0, 15/8.0, 2/1.0};
+    float noteratio[] = {1/1.0, 9/8.0, 5/4.0, 4/3.0, 3/2.0, 5/3.0, 15/8.0, 2/1.0};
     int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
     // Frequency Octave divider 
     float multiply = 1.0;
@@ -357,7 +357,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     // Note indicator
     int display_note = 0;
     // Octave names for display
-    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
     // Octave indicator
     static int indicate_oc = 0;
     
@@ -389,8 +389,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
-    
-    
+        
     // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
@@ -406,52 +405,30 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
         // but we wont to check if the frequency is below the last Note in Octave
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
-    if (freq_is < (ref_c/8.0)-5.1 && freq_is >0.0) {
-        indicate_oc = 0; // standart 27,5hz == 6,25%
-        multiply = 16;
-    } else if (freq_is < (ref_c/4.0)-5.1) {
-        indicate_oc = 1; // standart 55hz == 12,5%
-        multiply = 8;
-    } else if (freq_is < (ref_c/2.0)-5.1) {
-        indicate_oc = 2; // standart 110hz == 25&
-        multiply = 4;
-    } else if (freq_is < (ref_c)-5.1) {
-        indicate_oc = 3; // standart 220hz == 50%
-        multiply = 2;
-    } else if (freq_is < (ref_c*2.0)-5.1) {
-        indicate_oc = 4; // standart 440hz == 100%
-        multiply = 1;
-    } else if (freq_is < (ref_c*4.0)-5.1) {
-        indicate_oc = 5; // standart 880hz == 200%
-        multiply = 0.5;
-    } else if (freq_is < (ref_c*8.0)-5.1) {
-        indicate_oc = 6; // standart 1760hz == 400%
-        multiply = 0.25;
-    } else if (freq_is < (ref_c*16.0)-5.1) {
-        indicate_oc = 7; // standart 3520hz == 800%
-        multiply = 0.125;
-    } else {
-        indicate_oc = 8;
-        multiply = 0.0625;
-    }
+    for (int n=0 ; n <= 8 ; ++n )
+         { float ratiodiffhighnoteandoctave = exp((log(noteratio[numberofnotes-1])+log(noteratio[numberofnotes]))/2) ;  
+            if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
+                 indicate_oc = n; 
+                 multiply = pow(2, 4-n);
+                 break;
+                }
+         }
     // we divide ref_c (reference frequency of DO in Octave 4) 
     // with the multiply var, to get the frequency of DO in the Octave we are in.
     // then we devide the fetched frequency by the frequency of this (DO in this octave)
     // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
-    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
-
     // now we chould check which ratio we have
     // we split the range using log-average
-    // pow(10, (log10(noteratio[n])+log10(noteratio[n+1])/2)) ((noteratio[n]+noteratio[n+1])/2)
-        for (int n=0 ; n <= numberofnotes ; ++n )
-         { float ratiodiff = pow(10, (log10(noteratio[n])+log10(noteratio[n+1])/2)) ;  
+     for (int n=0 ; n <= numberofnotes ; ++n )
+         { float ratiodiff = exp((log(noteratio[n])+log(noteratio[n+1]))/2) ;  
                  if (percent < ratiodiff) {
                      display_note = n;
                      scale = ((percent-noteratio[n]))/2.0;
                      break;
                  }
          }
+   // fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, numberofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
@@ -532,15 +509,24 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
 }
 
 static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
+    // Note names for display
     static const char* shruti_note[22] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
+    // ratios of notes + 2/1
+    float noteratio[] = {1/1.0, 256/243.0, 16/15.0, 10/9.0, 9/8.0, 32/27.0, 6/5.0, 81/64.0, 4/3.0, 27/20.0, 45/32.0, 729/512.0, 3/2.0, 128/81.0, 8/5.0, 5/3.0, 27/16.0, 16/9.0, 9/5.0, 15/8.0, 243/128.0, 2/1.0};
+    int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
+    // Frequency Octave divider 
     float multiply = 1.0;
+    // ratio 
     float percent = 0.0;
+    // Note indicator
     int display_note = 0;
-    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    // Octave names for display
+    static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
+    // Octave indicator
     static int indicate_oc = 0;
     
     GxTuner *tuner = GX_TUNER(widget);
-    
+    // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
 
@@ -557,7 +543,7 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     
     tuner->scale_h = (allocation->height/60.)/3.;
     tuner->scale_w =  (allocation->width/100.)/3.;
-    
+    // translate widget size to standard size
     cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
     cairo_scale(cr, tuner->scale_w, tuner->scale_h);
     cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
@@ -567,110 +553,43 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
-    
-    
-    
+        
+    // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
+        // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
-    if (freq_is < (tuner->reference_pitch/8.0)-5.1 && freq_is >0.0) {
-        indicate_oc = 0; // standart 27,5hz == 6,25%
-        multiply = 16;
-    } else if (freq_is < (tuner->reference_pitch/4.0)-5.1) {
-        indicate_oc = 1; // standart 55hz == 12,5%
-        multiply = 8;
-    } else if (freq_is < (tuner->reference_pitch/2.0)-5.1) {
-        indicate_oc = 2; // standart 110hz == 25&
-        multiply = 4;
-    } else if (freq_is < (tuner->reference_pitch)-5.1) {
-        indicate_oc = 3; // standart 220hz == 50%
-        multiply = 2;
-    } else if (freq_is < (tuner->reference_pitch*2.0)-5.1) {
-        indicate_oc = 4; // standart 440hz == 100%
-        multiply = 1;
-    } else if (freq_is < (tuner->reference_pitch*4.0)-5.1) {
-        indicate_oc = 5; // standart 880hz == 200%
-        multiply = 0.5;
-    } else if (freq_is < (tuner->reference_pitch*8.0)-5.1) {
-        indicate_oc = 6; // standart 1760hz == 400%
-        multiply = 0.25;
-    } else if (freq_is < (tuner->reference_pitch*16.0)-5.1) {
-        indicate_oc = 7; // standart 3520hz == 800%
-        multiply = 0.125;
-    } else {
-        indicate_oc = 8;
-        multiply = 0.0625;
-    }
-
-    percent = ((tuner->reference_pitch/multiply)/freq_is) * 100.0;
-
-    if (percent > 97.46) {
-        display_note = 0;
-        scale = ((percent-100.00)/100.0)/2.0;
-    } else if (percent > 94.34) {
-        display_note = 1;
-        scale = ((percent-94.92)/100.0)/2.0;
-    } else if (percent > 91.86) {
-        display_note = 2;
-        scale = ((percent-93.75)/100.0)/2.0;
-    } else if (percent > 89.5) {
-        display_note = 3;
-        scale = ((percent-90.00)/100.0)/2.0;
-    } else if (percent > 86.62){
-        display_note = 4;
-        scale = ((percent-88.88)/100.0)/2.0;
-    } else if (percent > 83.85) {
-        display_note = 5;
-        scale = ((percent-84.37)/100.0)/2.0;
-    } else if (percent > 81.67) {
-        display_note = 6;
-        scale = ((percent-83.33)/100.0)/2.0;
-    } else if (percent > 79.51) {
-        display_note = 7;
-        scale = ((percent-80.00)/100.0)/2.0;
-    } else if (percent > 77.01) {
-        display_note = 8;
-        scale = ((percent-79.01)/100.0)/2.0;
-    } else if (percent > 74.54) {
-        display_note = 9;
-        scale = ((percent-75.00)/100.0)/2.0;
-    } else if (percent > 72.59) {
-        display_note = 10;
-        scale = ((percent-74.07)/100.0)/2.0;
-    } else if (percent > 70.67) {
-        display_note = 11;
-        scale = ((percent-71.11)/100.0)/2.0;
-    } else if (percent > 68.45) {
-        display_note = 12;
-        scale = ((percent-70.23)/100.0)/2.0;
-    } else if (percent > 64.97) {
-        display_note = 13;
-        scale = ((percent-66.66)/100.0)/2.0;
-    } else if (percent > 62.89) {
-        display_note = 14;
-        scale = ((percent-63.28)/100.0)/2.0;
-    } else if (percent > 61.25) {
-        display_note = 15;
-        scale = ((percent-62.50)/100.0)/2.0;
-    } else if (percent > 59.63) {
-        display_note = 16;
-        scale = ((percent-60.00)/100.0)/2.0;
-    } else if (percent > 57.75) {
-        display_note = 17;
-        scale = ((percent-59.25)/100.0)/2.0;
-    } else if (percent > 55.90) {
-        display_note = 18;
-        scale = ((percent-56.25)/100.0)/2.0;
-    } else if (percent > 54.44) {
-        display_note = 19;
-        scale = ((percent-55.55)/100.0)/2.0;
-    } else if (percent > 53.00) {
-        display_note = 20;
-        scale = ((percent-53.33)/100.0)/2.0;
-    } else if (percent > 51.34) {
-        display_note = 21;
-        scale = ((percent-52.67)/100.0)/2.0;
-    }
+        float ref_c = tuner->reference_pitch / noteratio[0];
+        // now check in which Octave we are with the tracked frequency
+        // and set the Frequency Octave divider
+        // ref_c is now the frequency of the first note in Octave, 
+        // but we wont to check if the frequency is below the last Note in Octave
+        // so, for example if freq_is is below ref_c we are in octave 3
+        // if freq_is is below ref_c/2 we are in octave 2, etc.
+    for (int n=0 ; n <= 8 ; ++n )
+         { float ratiodiffhighnoteandoctave = exp((log(noteratio[numberofnotes-1])+log(noteratio[numberofnotes]))/2) ;  
+            if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
+                 indicate_oc = n; 
+                 multiply = pow(2, 4-n);
+                 break;
+                }
+         }
+    // we divide ref_c (reference frequency of DO in Octave 4) 
+    // with the multiply var, to get the frequency of DO in the Octave we are in.
+    // then we devide the fetched frequency by the frequency of this (DO in this octave)
+    // we get the ratio of the fetched frequency to the first Note in octave
+    percent = (freq_is/(ref_c/multiply)) ;
+    // now we chould check which ratio we have
+    // we split the range using log-average
+     for (int n=0 ; n <= numberofnotes ; ++n )
+         { float ratiodiff = exp((log(noteratio[n])+log(noteratio[n+1]))/2) ;  
+                 if (percent < ratiodiff) {
+                     display_note = n;
+                     scale = ((percent-noteratio[n]))/2.0;
+                     break;
+                 }
+         }
+   // fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, numberofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
@@ -693,6 +612,7 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     // display cent
     if(scale>-0.4) {
         if(scale>0.004) {
+            // here we translate the scale factor to cents and display them
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
@@ -749,12 +669,12 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     return FALSE;
 }
 
-// copy the following block and edit it to your needs to add a new tuning mode
-// Ben Johnston 65 just scale ♭♯𝄪 ㄥ
 static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     // Note names for display
     static const char* johnston65_note[] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
-    
+    // ratios of notes + 2/1
+    float noteratio[] = {1/1.0, 81/80.0, 128/125.0, 16875/16364.0, 25/24.0, 135/128.0, 16/15.0, 27/25.0, 2048/1875.0, 1125/1024.0, 10/9.0, 9/8.0, 256/225.0, 144/125.0, 32768/28125.0, 75/64.0, 32/27.0, 6/5.0, 243/200.0, 768/625.0, 10125/8192.0, 5/4.0, 81/64.0, 32/25.0, 84375/65536.0, 125/96.0, 675/512.0, 4/3.0, 27/20.0, 512/375.0, 5625/4096.0, 25/18.0, 45/32.0, 64/45.0, 36/25.0, 8192/5625.0, 375/256.0, 40/27.0, 3/2.0, 243/160.0, 192/125.0, 25/16.0, 128/81.0, 8/5.0, 421875/262144.0, 625/384.0, 3375/2048.0, 54375/32768.0, 5/3.0, 27/16.0, 128/75.0, 28125/16385.0, 125/72.0, 225/128.0, 16/9.0, 9/5.0, 2048/1125.0, 1152/625.0, 30375/16384.0, 15/8.0, 258/135.0, 48/25.0, 32768/16875.0, 125/64.0, 160/81.0, 2/1.0};
+    int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
     // Frequency Octave divider 
     float multiply = 1.0;
     // ratio 
@@ -762,7 +682,7 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     // Note indicator
     int display_note = 0;
     // Octave names for display
-    static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
+    static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
     // Octave indicator
     static int indicate_oc = 0;
     
@@ -784,7 +704,7 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     
     tuner->scale_h = (allocation->height/60.)/3.;
     tuner->scale_w =  (allocation->width/100.)/3.;
-    // translate widget size to standart size
+    // translate widget size to standard size
     cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
     cairo_scale(cr, tuner->scale_w, tuner->scale_h);
     cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
@@ -794,269 +714,46 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
-    
-    
-    // fetch Octave we are in, 
+        
+    // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
         // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
-        // Now we translate reference_pitch from A to C 
+        // Now we translate reference_pitch from LA to DO 
         // to get the reference pitch of the first Note in Octave 4
-        // A has a ratio of 5/3 = 1.666666667
-        // so divide the reference_pitch by 1.666666667 will
-        // give us the reference pitch for C in Octave 4
-        float ref_c = tuner->reference_pitch / 1.666666667;
+        // La has a ratio of 5/3 
+        float ref_c = tuner->reference_pitch / noteratio[48];
         // now check in which Octave we are with the tracked frequency
         // and set the Frequency Octave divider
         // ref_c is now the frequency of the first note in Octave, 
         // but we wont to check if the frequency is below the last Note in Octave
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
-    if (freq_is < (ref_c/8.0)-1 && freq_is >0.0) {
-        indicate_oc = 0; // standart 27,5hz == 6,25%
-        multiply = 16;
-    } else if (freq_is < (ref_c/4.0)-1) {
-        indicate_oc = 1; // standart 55hz == 12,5%
-        multiply = 8;
-    } else if (freq_is < (ref_c/2.0)-1) {
-        indicate_oc = 2; // standart 110hz == 25&
-        multiply = 4;
-    } else if (freq_is < (ref_c)-1) {
-        indicate_oc = 3; // standart 220hz == 50%
-        multiply = 2;
-    } else if (freq_is < (ref_c*2.0)-1) {
-        indicate_oc = 4; // standart 440hz == 100%
-        multiply = 1;
-    } else if (freq_is < (ref_c*4.0)-1) {
-        indicate_oc = 5; // standart 880hz == 200%
-        multiply = 0.5;
-    } else if (freq_is < (ref_c*8.0)-1) {
-        indicate_oc = 6; // standart 1760hz == 400%
-        multiply = 0.25;
-    } else if (freq_is < (ref_c*16.0)-1) {
-        indicate_oc = 7; // standart 3520hz == 800%
-        multiply = 0.125;
-    } else {
-        indicate_oc = 8;
-        multiply = 0.0625;
-    }
-    // we divide ref_c (reference frequency of C in Octave 4) 
-    // with the multiply var, to get the frequency of C in the Octave we are in.
-    // then we devide the fetched frequency by the frequency of this (C in this octave)
+    for (int n=0 ; n <= 8 ; ++n )
+         { float ratiodiffhighnoteandoctave = exp((log(noteratio[numberofnotes-1])+log(noteratio[numberofnotes]))/2) ;  
+            if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
+                 indicate_oc = n; 
+                 multiply = pow(2, 4-n);
+                 break;
+                }
+         }
+    // we divide ref_c (reference frequency of DO in Octave 4) 
+    // with the multiply var, to get the frequency of DO in the Octave we are in.
+    // then we devide the fetched frequency by the frequency of this (DO in this octave)
     // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
-    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
-
     // now we chould check which ratio we have
-    // we split the range between the nearest two ratios by half, 
-    // so, that we know if we are below Re or above Do, for example
-    // so, the ratio of DO is 1/1 = 1.0, the ratio of Re is 1/8 = 1.125
-    // then we get 1.125 - 1 = 0.125 / 2 = 0.0625
-    // so, if our ratio is below 1.0625, we have a frequency near Do.
-    // we could display note 0. 
-    // If it is above 1.0625 we check for the next ratio, usw.
-    // If we've found the nearest ratio, we need to know how far we are away
-    // from the wanted ratio, so we substract the wanted ratio from the fetched one.
-    // for example if we get a ratio of 1.025 we are near DO, so we substract
-    // the ratio of C from "percent" means 1.025 - 1.0 = 0.025 
-    // by divide to the half we get the scale factor for display cents. 
-    if (percent < 1.00625) { //#1 see example above 
-        display_note = 0;
-        scale = ((percent-1.0))/2.0; // 1.0 = ratio of first note
-    } else if (percent < 1.01825) { 
-        display_note = 1;
-        scale = ((percent-1.0125))/2.0;
-    } else if (percent < 1.0276135419) { 
-        display_note = 2;
-        scale = ((percent-1.024))/2.0;
-    } else if (percent < 1.0364468753) { 
-        display_note = 3;
-        scale = ((percent-1.0312271))/2.0;
-    } else if (percent < 1.0481770833){ 
-        display_note = 4;
-        scale = ((percent-1.0416666667))/2.0;
-    } else if (percent < 1.0606770833) { 
-        display_note = 5;
-        scale = ((percent- 1.0546875))/2.0;
-    } else if (percent < 1.0733333333) { 
-        display_note = 6;
-        scale = ((percent-1.0666666667))/2.0;
-    } else if (percent < 1.0861333333) { 
-        display_note = 7 ;
-        scale = ((percent- 1.08))/2.0;
-    } else if (percent < 1.0954497396) { 
-        display_note = 8 ;
-        scale = ((percent- 1.0922666667))/2.0;
-    } else if (percent < 1.1048719618) { 
-        display_note = 9 ;
-        scale = ((percent- 1.0986328125))/2.0;
-    } else if (percent < 1.1180555556) { 
-        display_note = 10 ;
-        scale = ((percent-1.1111111111))/2.0;
-    } else if (percent < 1.1313888889 ) { 
-        display_note = 11 ;
-        scale = ((percent- 1.125 ))/2.0; // D
-    } else if (percent < 1.1448888889) { 
-        display_note = 12 ;
-        scale = ((percent- 1.1377777778))/2.0;
-    } else if (percent < 1.1585422222) { 
-        display_note = 13 ;
-        scale = ((percent- 1.152))/2.0;
-    } else if (percent < 1.1684797222) { 
-        display_note = 14 ;
-        scale = ((percent- 1.1650844444))/2.0;
-    } else if (percent < 1.1785300926) { 
-        display_note = 15 ;
-        scale = ((percent- 1.171875))/2.0;
-    } else if (percent < 1.1925925926) { 
-        display_note = 16 ;
-        scale = ((percent- 1.1851851852))/2.0;
-    } else if (percent < 1.2075) { 
-        display_note = 17 ;
-        scale = ((percent-1.2))/2.0;
-    } else if (percent < 1.2219 ) { 
-        display_note = 18 ;
-        scale = ((percent-1.215))/2.0;
-    } else if (percent < 1.232380957) { 
-        display_note = 19 ;
-        scale = ((percent- 1.2288))/2.0;
-    } else if (percent < 1.242980957 ) { 
-        display_note = 20 ;
-        scale = ((percent- 1.2359619141))/2.0;
-    } else if (percent < 1.2578125 ) { 
-        display_note = 21 ;
-        scale = ((percent-1.25 ))/2.0; // E
-    } else if (percent < 1.2728125 ) { 
-        display_note = 22 ;
-        scale = ((percent-1.265625))/2.0;
-    } else if (percent < 1.2837301636) { 
-        display_note = 23 ;
-        scale = ((percent- 1.28))/2.0;
-    } else if (percent < 1.2947718302 ) { 
-        display_note = 24 ;
-        scale = ((percent- 1.2874603271))/2.0;
-    } else if (percent < 1.3102213542) { 
-        display_note = 25 ;
-        scale = ((percent- 1.3020833333))/2.0;
-    } else if (percent < 1.3258463542) { 
-        display_note = 26;
-        scale = ((percent- 1.318359375))/2.0;
-    } else if (percent < 1.3416666667) { 
-        display_note = 27 ;
-        scale = ((percent- 1.3333333333 ))/2.0; // F
-    } else if (percent < 1.3576666667) { 
-        display_note = 28 ;
-        scale = ((percent- 1.35 ))/2.0;
-    } else if (percent < 1.3693121745) { 
-        display_note = 29 ;
-        scale = ((percent- 1.3653333333 ))/2.0;
-    } else if (percent < 1.3810899523 ) { 
-        display_note = 30 ;
-        scale = ((percent- 1.3732910156 ))/2.0;
-    } else if (percent < 1.3975694444) { 
-        display_note = 31 ;
-        scale = ((percent- 1.3888888889))/2.0;
-    } else if (percent < 1.4142361111) { 
-        display_note = 32 ;
-        scale = ((percent- 1.40625))/2.0;
-    } else if (percent < 1.4311111111 ) { 
-        display_note = 33 ;
-        scale = ((percent- 1.4222222222 ))/2.0;
-    } else if (percent < 1.4481777778) { 
-        display_note = 34 ;
-        scale = ((percent- 1.44))/2.0;
-    } else if (percent < 1.4605996528 ) { 
-        display_note = 35 ;
-        scale = ((percent-1.4563555556))/2.0;
-    } else if (percent < 1.4731626157 ) { 
-        display_note = 36 ;
-        scale = ((percent- 1.46484375))/2.0;
-    } else if (percent < 1.4907407407) { 
-        display_note = 37 ;
-        scale = ((percent- 1.4814814815))/2.0;
-    } else if (percent < 1.509375) { 
-        display_note = 38 ;
-        scale = ((percent- 1.5))/2.0; // G
-    } else if (percent < 1.527375 ) { 
-        display_note = 39 ;
-        scale = ((percent- 1.51875 ))/2.0;
-    } else if (percent < 1.54925 ) { 
-        display_note = 40 ;
-        scale = ((percent- 1.536 ))/2.0;
-    } else if (percent < 1.5713734568 ) { 
-        display_note = 41 ;
-        scale = ((percent- 1.5625 ))/2.0;
-    } else if (percent < 1.5901234568 ) { 
-        display_note = 42 ;
-        scale = ((percent- 1.5802469136))/2.0;
-    } else if (percent < 1.6046627045 ) { 
-        display_note = 43 ;
-        scale = ((percent-1.6))/2.0;
-    } else if (percent < 1.6184647878) { 
-        display_note = 44 ;
-        scale = ((percent- 1.6093254089 ))/2.0;
-    } else if (percent < 1.6377766927 ) { 
-        display_note = 45 ;
-        scale = ((percent- 1.6276041667 ))/2.0;
-    } else if (percent < 1.6536712646 ) { 
-        display_note = 46 ;
-        scale = ((percent- 1.6479492188))/2.0;
-    } else if (percent < 1.6630299886 ) { 
-        display_note = 47 ;
-        scale = ((percent- 1.6593933105 ))/2.0;
-    } else if (percent < 1.6770833333) { 
-        display_note = 48 ;
-        scale = ((percent- 1.6666666667 ))/2.0; // A
-    } else if (percent < 1.6970833333 ) { 
-        display_note = 49 ;
-        scale = ((percent- 1.6875))/2.0;
-    } else if (percent < 1.7116402181 ) { 
-        display_note = 50 ;
-        scale = ((percent- 1.7066666667))/2.0;
-    } else if (percent < 1.7263624403 ) { 
-        display_note = 51 ;
-        scale = ((percent- 1.7166137695))/2.0;
-    } else if (percent < 1.7469618056 ) { 
-        display_note = 52 ;
-        scale = ((percent- 1.7361111111 ))/2.0;
-    } else if (percent < 1.7677951389 ) { 
-        display_note = 53 ;
-        scale = ((percent-1.7578125 ))/2.0;
-    } else if (percent < 1.7888888889 ) { 
-        display_note = 54 ;
-        scale = ((percent- 1.7777777778 ))/2.0;
-    } else if (percent < 1.8102222222) { 
-        display_note = 55 ;
-        scale = ((percent- 1.8 ))/2.0;
-    } else if (percent < 1.8318222222 ) { 
-        display_note = 56 ;
-        scale = ((percent- 1.8204444444 ))/2.0;
-    } else if (percent < 1.8485714355 ) { 
-        display_note = 57 ;
-        scale = ((percent- 1.8432 ))/2.0;
-    } else if (percent < 1.8644714355 ) { 
-        display_note = 58 ;
-        scale = ((percent- 1.8539428711))/2.0;
-    } else if (percent < 1.8930555556 ) { 
-        display_note = 59 ;
-        scale = ((percent- 1.875 ))/2.0; // B
-    } else if (percent < 1.9155555556 ) { 
-        display_note = 60 ;
-        scale = ((percent- 1.9111111111 ))/2.0;
-    } else if (percent < 1.9309037037 ) { 
-        display_note = 61 ;
-        scale = ((percent- 1.92 ))/2.0;
-    } else if (percent < 1.9474662037 ) { 
-        display_note = 62 ;
-        scale = ((percent- 1.9418074074 ))/2.0;
-    } else if (percent < 1.964216821 ) { 
-        display_note = 63 ;
-        scale = ((percent- 1.953125 ))/2.0;
-    } else if (percent < 1.987654321 ) { 
-        display_note = 64 ;
-        scale = ((percent- 1.975308642 ))/2.0;
-    }
+    // we split the range using log-average
+     for (int n=0 ; n <= numberofnotes ; ++n )
+         { float ratiodiff = exp((log(noteratio[n])+log(noteratio[n+1]))/2) ;  
+                 if (percent < ratiodiff) {
+                     display_note = n;
+                     scale = ((percent-noteratio[n]))/2.0;
+                     break;
+                 }
+         }
+   // fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, numberofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
