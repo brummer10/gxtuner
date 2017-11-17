@@ -27,6 +27,7 @@
 #include <string.h> 
 #include <math.h>
 #include <stdlib.h>
+#include <cmath>
 #define P_(s) (s)   // FIXME -> gettext
 
 enum {
@@ -345,7 +346,10 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 // copy the following block and edit it to your needs to add a new tuning mode
 static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     // Note names for display
-    static const char* diatonic_note[7] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
+    static const char* diatonic_note[] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
+    // ratios of notes + 2/1
+    float noteratio[] = {1/1.0, 9/8.0, 5/4.0, 3/2.0, 4/3.0, 5/3.0, 15/8.0, 2/1.0};
+    int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
     // Frequency Octave divider 
     float multiply = 1.0;
     // ratio 
@@ -375,7 +379,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     
     tuner->scale_h = (allocation->height/60.)/3.;
     tuner->scale_w =  (allocation->width/100.)/3.;
-    // translate widget size to standart size
+    // translate widget size to standard size
     cairo_translate(cr, -x0*tuner->scale_w, -y0*tuner->scale_h);
     cairo_scale(cr, tuner->scale_w, tuner->scale_h);
     cairo_set_source_surface(cr, GX_TUNER_CLASS(GTK_WIDGET_GET_CLASS(widget))->surface_tuner, x0, y0);
@@ -387,17 +391,15 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
     
     
-    // fetch Octave we are in, 
+    // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
         // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
         // Now we translate reference_pitch from LA to DO 
         // to get the reference pitch of the first Note in Octave 4
-        // La hvae a ratio of 5/3 = 1.666666667
-        // so divide the reference_pitch by 1.666666667 will
-        // give us the reference pitch for DO in Octave 4
-        float ref_c = tuner->reference_pitch / 1.666666667;
+        // La has a ratio of 5/3 
+        float ref_c = tuner->reference_pitch / noteratio[5];
         // now check in which Octave we are with the tracked frequency
         // and set the Frequency Octave divider
         // ref_c is now the frequency of the first note in Octave, 
@@ -432,7 +434,7 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
         indicate_oc = 8;
         multiply = 0.0625;
     }
-    // we divide ref_c (refernce frequency of DO in Octave 4) 
+    // we divide ref_c (reference frequency of DO in Octave 4) 
     // with the multiply var, to get the frequency of DO in the Octave we are in.
     // then we devide the fetched frequency by the frequency of this (DO in this octave)
     // we get the ratio of the fetched frequency to the first Note in octave
@@ -440,40 +442,16 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n", percent, freq_is, ref_c, indicate_oc);
 
     // now we chould check which ratio we have
-    // we split the range between the nearest two ratios by half, 
-    // so, that we know if we are below Re or above Do, for example
-    // so, the ratio of DO is 1/1 = 1.0, the ratio of Re is 1/8 = 1.125
-    // then we get 1.125 - 1 = 0.125 / 2 = 0.0625
-    // so, if our ratio is below 1.0625, we have a frequency near Do.
-    // we could display note 0. 
-    // If it is above 1.0625 we check for the next ratio, usw.
-    // If we've found the nearest ratio, we need to know how far we are away
-    // from the wonted ratio, so we substract the wonted ratio from the fetched one.
-    // for example if we get a ratio of 1.025 we are near DO, so we substarct
-    // the ratio of DO from "percent" means 1.025 - 1.0 = 0.025 
-    // by divide to the half we get the scale factor for display cents. 
-    if (percent < 1.06) { //Do
-        display_note = 0;
-        scale = ((percent-1.0))/2.0;
-    } else if (percent < 1.18) { // Re
-        display_note = 1;
-        scale = ((percent-1.125))/2.0;
-    } else if (percent < 1.29) { // Mi
-        display_note = 2;
-        scale = ((percent-1.25))/2.0;
-    } else if (percent < 1.42) { // Fa
-        display_note = 3;
-        scale = ((percent-1.3333))/2.0;
-    } else if (percent < 1.58){ // Sol
-        display_note = 4;
-        scale = ((percent-1.5))/2.0;
-    } else if (percent < 1.77) { // La
-        display_note = 5;
-        scale = ((percent-1.6667))/2.0;
-    } else if (percent < 1.94) { // Ti
-        display_note = 6;
-        scale = ((percent-1.875))/2.0;
-    }
+    // we split the range using log-average
+    // pow(10, (log10(noteratio[n])+log10(noteratio[n+1])/2)) ((noteratio[n]+noteratio[n+1])/2)
+        for (int n=0 ; n <= numberofnotes ; ++n )
+         { float ratiodiff = pow(10, (log10(noteratio[n])+log10(noteratio[n+1])/2)) ;  
+                 if (percent < ratiodiff) {
+                     display_note = n;
+                     scale = ((percent-noteratio[n]))/2.0;
+                     break;
+                 }
+         }
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
@@ -775,7 +753,8 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
 // Ben Johnston 65 just scale ♭♯𝄪 ㄥ
 static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     // Note names for display
-    static const char* johnston65_note[65] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
+    static const char* johnston65_note[] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
+    
     // Frequency Octave divider 
     float multiply = 1.0;
     // ratio 
@@ -834,28 +813,28 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
         // but we wont to check if the frequency is below the last Note in Octave
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
-    if (freq_is < (ref_c/8.0)-5.1 && freq_is >0.0) {
+    if (freq_is < (ref_c/8.0)-1 && freq_is >0.0) {
         indicate_oc = 0; // standart 27,5hz == 6,25%
         multiply = 16;
-    } else if (freq_is < (ref_c/4.0)-5.1) {
+    } else if (freq_is < (ref_c/4.0)-1) {
         indicate_oc = 1; // standart 55hz == 12,5%
         multiply = 8;
-    } else if (freq_is < (ref_c/2.0)-5.1) {
+    } else if (freq_is < (ref_c/2.0)-1) {
         indicate_oc = 2; // standart 110hz == 25&
         multiply = 4;
-    } else if (freq_is < (ref_c)-5.1) {
+    } else if (freq_is < (ref_c)-1) {
         indicate_oc = 3; // standart 220hz == 50%
         multiply = 2;
-    } else if (freq_is < (ref_c*2.0)-5.1) {
+    } else if (freq_is < (ref_c*2.0)-1) {
         indicate_oc = 4; // standart 440hz == 100%
         multiply = 1;
-    } else if (freq_is < (ref_c*4.0)-5.1) {
+    } else if (freq_is < (ref_c*4.0)-1) {
         indicate_oc = 5; // standart 880hz == 200%
         multiply = 0.5;
-    } else if (freq_is < (ref_c*8.0)-5.1) {
+    } else if (freq_is < (ref_c*8.0)-1) {
         indicate_oc = 6; // standart 1760hz == 400%
         multiply = 0.25;
-    } else if (freq_is < (ref_c*16.0)-5.1) {
+    } else if (freq_is < (ref_c*16.0)-1) {
         indicate_oc = 7; // standart 3520hz == 800%
         multiply = 0.125;
     } else {
@@ -1074,9 +1053,9 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     } else if (percent < 1.964216821 ) { 
         display_note = 63 ;
         scale = ((percent- 1.953125 ))/2.0;
-    } else if (percent < 1.964216821 ) { 
+    } else if (percent < 1.987654321 ) { 
         display_note = 64 ;
-        scale = ((percent- 1.953125 ))/2.0;
+        scale = ((percent- 1.975308642 ))/2.0;
     }
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
