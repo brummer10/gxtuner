@@ -27,7 +27,6 @@
 #include <string.h> 
 #include <math.h>
 #include <stdlib.h>
-#include <math.h>
 #define P_(s) (s)   // FIXME -> gettext
 
 enum {
