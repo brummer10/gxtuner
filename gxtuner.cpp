@@ -349,6 +349,9 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     static const char* diatonic_note[] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
     // ratios of notes + 2/1
     float noteratio[] = {1/1.0, 9/8.0, 5/4.0, 4/3.0, 3/2.0, 5/3.0, 15/8.0, 2/1.0};
+    // Set which ratio is the reference pitch (note that the first ratio is 0 and the second ratio 1 and so on and so forth)
+    float refratio = noteratio[5];
+    // calculating the number of notes of the preset
     int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
     // Frequency Octave divider 
     float multiply = 1.0;
@@ -389,20 +392,18 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
     cairo_save(cr);
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
-        
+    
     // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
         // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
-        // Now we translate reference_pitch from LA to DO 
-        // to get the reference pitch of the first Note in Octave 4
-        // La has a ratio of 5/3 
-        float ref_c = tuner->reference_pitch / noteratio[5];
-        // now check in which Octave we are with the tracked frequency
-        // and set the Frequency Octave divider
-        // ref_c is now the frequency of the first note in Octave, 
-        // but we wont to check if the frequency is below the last Note in Octave
+        // Set reference frequency of the first note of the preset
+        float ref_c = tuner->reference_pitch / refratio;
+        // now check in which octave we are with the tracked frequency
+        // and set the frequency octave divider
+        // ref_c is now the frequency of the first note in octave, 
+        // but we want to check if the frequency is below the last note in octave
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
     for (int n=0 ; n <= 8 ; ++n )
@@ -413,10 +414,6 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
                  break;
                 }
          }
-    // we divide ref_c (reference frequency of DO in Octave 4) 
-    // with the multiply var, to get the frequency of DO in the Octave we are in.
-    // then we devide the fetched frequency by the frequency of this (DO in this octave)
-    // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
     // now we chould check which ratio we have
     // we split the range using log-average
@@ -509,20 +506,14 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
 }
 
 static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
-    // Note names for display
     static const char* shruti_note[22] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
-    // ratios of notes + 2/1
     float noteratio[] = {1/1.0, 256/243.0, 16/15.0, 10/9.0, 9/8.0, 32/27.0, 6/5.0, 81/64.0, 4/3.0, 27/20.0, 45/32.0, 729/512.0, 3/2.0, 128/81.0, 8/5.0, 5/3.0, 27/16.0, 16/9.0, 9/5.0, 15/8.0, 243/128.0, 2/1.0};
+    float refratio = noteratio[0];
     int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
-    // Frequency Octave divider 
     float multiply = 1.0;
-    // ratio 
     float percent = 0.0;
-    // Note indicator
     int display_note = 0;
-    // Octave names for display
     static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
-    // Octave indicator
     static int indicate_oc = 0;
     
     GxTuner *tuner = GX_TUNER(widget);
@@ -554,19 +545,13 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
         
-    // fetch Octave we are in 
+    
     float scale = -0.4;
     if (tuner->freq) {
-        // this is the frequency we get from the pitch tracker
+    
         float freq_is = tuner->freq;
-        float ref_c = tuner->reference_pitch / noteratio[0];
-        // now check in which Octave we are with the tracked frequency
-        // and set the Frequency Octave divider
-        // ref_c is now the frequency of the first note in Octave, 
-        // but we wont to check if the frequency is below the last Note in Octave
-        // so, for example if freq_is is below ref_c we are in octave 3
-        // if freq_is is below ref_c/2 we are in octave 2, etc.
-    for (int n=0 ; n <= 8 ; ++n )
+        float ref_c = tuner->reference_pitch / refratio;
+        for (int n=0 ; n <= 8 ; ++n )
          { float ratiodiffhighnoteandoctave = exp((log(noteratio[numberofnotes-1])+log(noteratio[numberofnotes]))/2) ;  
             if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
                  indicate_oc = n; 
@@ -574,13 +559,7 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
                  break;
                 }
          }
-    // we divide ref_c (reference frequency of DO in Octave 4) 
-    // with the multiply var, to get the frequency of DO in the Octave we are in.
-    // then we devide the fetched frequency by the frequency of this (DO in this octave)
-    // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
-    // now we chould check which ratio we have
-    // we split the range using log-average
      for (int n=0 ; n <= numberofnotes ; ++n )
          { float ratiodiff = exp((log(noteratio[n])+log(noteratio[n+1]))/2) ;  
                  if (percent < ratiodiff) {
@@ -589,8 +568,6 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
                      break;
                  }
          }
-   // fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, numberofnotes );   
-        // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
         cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
@@ -599,8 +576,6 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
         cairo_move_to(cr,x0+54  , y0+30 +16 );
         cairo_show_text(cr, octave[indicate_oc]);
     }
-
-    // display frequency
     char s[10];
     snprintf(s, sizeof(s), "%.1f Hz", tuner->freq);
     cairo_set_source_rgb (cr, 0.5, 0.5, 0.1);
@@ -609,10 +584,8 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
     cairo_text_extents(cr, s, &ex);
     cairo_move_to (cr, x0+98-ex.width, y0+58);
     cairo_show_text(cr, s);
-    // display cent
     if(scale>-0.4) {
         if(scale>0.004) {
-            // here we translate the scale factor to cents and display them
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
@@ -670,20 +643,14 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
 }
 
 static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
-    // Note names for display
     static const char* johnston65_note[] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
-    // ratios of notes + 2/1
     float noteratio[] = {1/1.0, 81/80.0, 128/125.0, 16875/16364.0, 25/24.0, 135/128.0, 16/15.0, 27/25.0, 2048/1875.0, 1125/1024.0, 10/9.0, 9/8.0, 256/225.0, 144/125.0, 32768/28125.0, 75/64.0, 32/27.0, 6/5.0, 243/200.0, 768/625.0, 10125/8192.0, 5/4.0, 81/64.0, 32/25.0, 84375/65536.0, 125/96.0, 675/512.0, 4/3.0, 27/20.0, 512/375.0, 5625/4096.0, 25/18.0, 45/32.0, 64/45.0, 36/25.0, 8192/5625.0, 375/256.0, 40/27.0, 3/2.0, 243/160.0, 192/125.0, 25/16.0, 128/81.0, 8/5.0, 421875/262144.0, 625/384.0, 3375/2048.0, 54375/32768.0, 5/3.0, 27/16.0, 128/75.0, 28125/16385.0, 125/72.0, 225/128.0, 16/9.0, 9/5.0, 2048/1125.0, 1152/625.0, 30375/16384.0, 15/8.0, 258/135.0, 48/25.0, 32768/16875.0, 125/64.0, 160/81.0, 2/1.0};
+    float refratio = noteratio[48];
     int numberofnotes = (sizeof(noteratio) / sizeof(noteratio[0]) - 1) ;
-    // Frequency Octave divider 
     float multiply = 1.0;
-    // ratio 
     float percent = 0.0;
-    // Note indicator
     int display_note = 0;
-    // Octave names for display
     static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
-    // Octave indicator
     static int indicate_oc = 0;
     
     GxTuner *tuner = GX_TUNER(widget);
@@ -715,22 +682,11 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
         
-    // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
-        // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
-        // Now we translate reference_pitch from LA to DO 
-        // to get the reference pitch of the first Note in Octave 4
-        // La has a ratio of 5/3 
-        float ref_c = tuner->reference_pitch / noteratio[48];
-        // now check in which Octave we are with the tracked frequency
-        // and set the Frequency Octave divider
-        // ref_c is now the frequency of the first note in Octave, 
-        // but we wont to check if the frequency is below the last Note in Octave
-        // so, for example if freq_is is below ref_c we are in octave 3
-        // if freq_is is below ref_c/2 we are in octave 2, etc.
-    for (int n=0 ; n <= 8 ; ++n )
+        float ref_c = tuner->reference_pitch / refratio;
+        for (int n=0 ; n <= 8 ; ++n )
          { float ratiodiffhighnoteandoctave = exp((log(noteratio[numberofnotes-1])+log(noteratio[numberofnotes]))/2) ;  
             if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
                  indicate_oc = n; 
@@ -738,13 +694,7 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
                  break;
                 }
          }
-    // we divide ref_c (reference frequency of DO in Octave 4) 
-    // with the multiply var, to get the frequency of DO in the Octave we are in.
-    // then we devide the fetched frequency by the frequency of this (DO in this octave)
-    // we get the ratio of the fetched frequency to the first Note in octave
     percent = (freq_is/(ref_c/multiply)) ;
-    // now we chould check which ratio we have
-    // we split the range using log-average
      for (int n=0 ; n <= numberofnotes ; ++n )
          { float ratiodiff = exp((log(noteratio[n])+log(noteratio[n+1]))/2) ;  
                  if (percent < ratiodiff) {
@@ -753,8 +703,6 @@ static gboolean gtk_tuner_expose_johnston65(GtkWidget *widget, cairo_t *cr) {
                      break;
                  }
          }
-   // fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, numberofnotes );   
-        // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
         cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
