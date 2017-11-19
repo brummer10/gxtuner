@@ -138,7 +138,8 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "shruti");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "diatonic");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston65");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston5limit");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston7limit");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 0);
     gtk_widget_set_opacity(GTK_WIDGET(selector), 0.1);
 
@@ -246,8 +247,11 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 1);
         } else if(m == "diatonic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 2);
-        } else if(m == "johnston65") {
+        } else if(m == "johnston5limit") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 3);
+        } else if(m == "johnston7limit") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 4);
+        
         }
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
