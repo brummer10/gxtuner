@@ -252,8 +252,9 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 3);
         } else if(m == "johnston7limit") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 4);
-        
-        }
+        } else if(m == "johnston7limitno5") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 5);
+         }
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adjt),t);
