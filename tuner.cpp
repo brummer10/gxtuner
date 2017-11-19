@@ -140,6 +140,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "diatonic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston5limit");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston7limit");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston7limitno5");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 0);
     gtk_widget_set_opacity(GTK_WIDGET(selector), 0.1);
 
