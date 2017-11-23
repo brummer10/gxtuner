@@ -155,10 +155,14 @@ void TunerWidget::create_window() {
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinnert),"threshold");
  
     // stack all together
+    // the main window box
     gtk_container_add (GTK_CONTAINER(window), box2);
+    // the paintbox to create the frame
     gtk_box_pack_start(GTK_BOX(box2), box,true,true,0);
+    // put the tuner inside the frame
     gtk_box_pack_start(GTK_BOX(box), box1,true,true,0);
     gtk_box_pack_start(GTK_BOX(box1), tuner,true,true,0);
+    // add a box for the controls to the bottom
     gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     gtk_container_add (GTK_CONTAINER (bbox), spinnert);
     gtk_box_pack_start(GTK_BOX(hbox),bbox,false,false,0);
@@ -168,8 +172,13 @@ void TunerWidget::create_window() {
     gtk_box_pack_start(GTK_BOX(hbox),dbox,true,false,0);
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
+    // to add more controls, you could add here a new box
+    // to box2, this will apeare on the bottom.
+    // Then add your control widgets to the box
 
     // connect the signal handlers 
+    // connect the controls with a function to do what they should do
+    // when they changed there value.
     g_signal_connect(G_OBJECT(adj), "value-changed",
         G_CALLBACK(ref_freq_changed),(gpointer)adj);
     g_signal_connect(G_OBJECT(adjt), "value-changed",

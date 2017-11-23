@@ -45,6 +45,9 @@ G_BEGIN_DECLS
 typedef struct _GxTuner GxTuner;
 typedef struct _GxTunerClass GxTunerClass;
 
+// the internal struct of the tuner widget,
+// add variables for new propertys in the struct
+
 struct _GxTuner
 {
     GtkDrawingArea parent;
@@ -63,6 +66,9 @@ struct _GxTunerClass
 };
 
 GType gx_tuner_get_type();
+
+// this are the calles which could be used from outside the widget
+// if you add a new property, add a call to set it here
 
 void gx_tuner_set_freq(GxTuner *tuner, double freq);
 void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch);
