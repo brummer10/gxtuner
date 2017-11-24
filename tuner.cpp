@@ -78,7 +78,7 @@ gboolean TunerWidget::threshold_changed(gpointer arg) {
 gboolean TunerWidget::mode_changed(gpointer arg) {
     int m = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
     GtkWidget *top = gtk_widget_get_toplevel(GTK_WIDGET(arg));
-    std::string title ="gxtuner-";
+    std::string title ="gxtuner - ";
     title +=gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(arg));
     gtk_window_set_title(GTK_WINDOW(top),title.c_str());
     gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),m);
@@ -110,18 +110,24 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(box2),false);
     set_expose_func(GX_PAINT_BOX(box),"rahmen_expose");
     gtk_container_set_border_width(GTK_CONTAINER(box1),15);
-    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_set_homogeneous(GTK_BOX(hbox),false);
-    fbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_set_homogeneous(GTK_BOX(fbox),false);
-    cbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_set_homogeneous(GTK_BOX(cbox),false);
-    dbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_set_homogeneous(GTK_BOX(dbox),false);
     abox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(abox),false);
     bbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(bbox),false);
+    cbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(cbox),false);
+    dbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(dbox),false);
+    ebox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(ebox),false);
+    fbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(fbox),false);
+    gbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(gbox),false);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(hbox),false);
+    ibox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(ibox),false);
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
     gtk_widget_set_valign(spinner, GTK_ALIGN_START);
@@ -132,6 +138,7 @@ void TunerWidget::create_window() {
     gtk_widget_set_valign(spinnert, GTK_ALIGN_START);
     gtk_widget_set_margin_start(spinnert, 4);
     gtk_widget_set_margin_bottom(spinnert, 2);
+    
     selector = gtk_combo_box_text_new();
     //gtk_widget_set_opacity(GTK_WIDGET(selector),0.25);
     // here you could add new tunning modes, add them always as last one!!
@@ -141,8 +148,43 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston5limit");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston7limit");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selector), NULL, "johnston7limitno5");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 0);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selector), 2);
     gtk_widget_set_opacity(GTK_WIDGET(selector), 0.1);
+    
+    selectorg = gtk_combo_box_text_new();
+    //gtk_widget_set_opacity(GTK_WIDGET(selector),0.25);
+    // here you could add new tunning modes, add them always as last one!!
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "-3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "-2");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "0");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "2");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "3");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 3);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
+
+    selectore = gtk_combo_box_text_new();
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "-3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "-2");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "0");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "2");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "3");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 3);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
+
+    selectori = gtk_combo_box_text_new();
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "C");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "D");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "E");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "F");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "G");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "A");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "B");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 0);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
 
     // set some options to widgets
     gtk_widget_set_app_paintable(window, TRUE);
@@ -153,6 +195,10 @@ void TunerWidget::create_window() {
     gtk_widget_set_can_default(GTK_WIDGET(spinnert), true);
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinner),"reference pitch");
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinnert),"threshold");
+    gtk_widget_set_tooltip_text(GTK_WIDGET(selector),"scale");
+    gtk_widget_set_tooltip_text(GTK_WIDGET(selectore),"Syncomma");
+    gtk_widget_set_tooltip_text(GTK_WIDGET(selectorg),"Flats or Sharps");
+    gtk_widget_set_tooltip_text(GTK_WIDGET(selectori),"Reference Note");
  
     // stack all together
     // the main window box
@@ -166,12 +212,19 @@ void TunerWidget::create_window() {
     gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     gtk_container_add (GTK_CONTAINER (bbox), spinnert);
     gtk_box_pack_start(GTK_BOX(hbox),bbox,false,false,0);
+    gtk_container_add (GTK_CONTAINER (ebox), selectore);
     gtk_container_add (GTK_CONTAINER (fbox), selector);
+    gtk_container_add (GTK_CONTAINER (gbox), selectorg);
+    gtk_container_add (GTK_CONTAINER (ibox), selectori);
     gtk_box_pack_start(GTK_BOX(hbox),cbox,true,false,0);
+    gtk_box_pack_start(GTK_BOX(hbox),ibox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(hbox),gbox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(hbox),ebox,false,false,5);
     gtk_box_pack_start(GTK_BOX(hbox),fbox,false,false,5);
     gtk_box_pack_start(GTK_BOX(hbox),dbox,true,false,0);
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
+    
     // to add more controls, you could add here a new box
     // to box2, this will apeare on the bottom.
     // Then add your control widgets to the box
@@ -227,8 +280,8 @@ void TunerWidget::parse_cmd() {
     }
     gtk_window_move(GTK_WINDOW(window),x,y);
     // set default window size optional by command line options
-    x = 240;
-    y = 180;
+    x = 1000;
+    y = 500;
     if (!cptr->cv(1).empty()) {
         x = atoi(cptr->cv(1).c_str());
     }
