@@ -29,6 +29,9 @@
 #include <stdlib.h>
 #define P_(s) (s)   // FIXME -> gettext
 
+// Use propertys to set variables for the widget from outside,
+// add new propertys here in the enum 
+
 enum {
     PROP_FREQ = 1,
     PROP_REFERENCE_PITCH = 2,
@@ -135,8 +138,12 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
     widget_class->draw = gtk_tuner_expose;
 	widget_class->get_preferred_width = gx_tuner_get_preferred_width;
 	widget_class->get_preferred_height = gx_tuner_get_preferred_height;
+	
+	// here we setup get and set methodes for the propertys
     gobject_class->set_property = gx_tuner_set_property;
     gobject_class->get_property = gx_tuner_get_property;
+    // here we install the propertys for the widget, add new 
+    // preopertys here
     g_object_class_install_property(
         gobject_class, PROP_FREQ, g_param_spec_double (
             "freq", P_("Frequency"),
@@ -165,6 +172,7 @@ static void gx_tuner_base_class_finalize(GxTunerClass *klass) {
 }
 
 static void gx_tuner_init (GxTuner *tuner) {
+    // here we set all propertys to a default value
     g_assert(GX_IS_TUNER(tuner));
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
@@ -173,6 +181,10 @@ static void gx_tuner_init (GxTuner *tuner) {
     tuner->scale_h = 1.;
     //GtkWidget *widget = GTK_WIDGET(tuner);
 }
+
+// this are the function calls to set the propertys called by
+//  gx_tuner_set_property, here we set the internal var to the 
+// value of the property
 
 void gx_tuner_set_freq(GxTuner *tuner, double freq) {
     g_assert(GX_IS_TUNER(tuner));
@@ -206,6 +218,8 @@ GtkWidget *gx_tuner_new(void) {
     return (GtkWidget*)g_object_new(GX_TYPE_TUNER, NULL);
 }
 
+// here we set propertys, add new ones here
+
 static void gx_tuner_set_property(GObject *object, guint prop_id,
                                       const GValue *value, GParamSpec *pspec) {
     GxTuner *tuner = GX_TUNER(object);
@@ -225,6 +239,8 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
         break;
     }
 }
+
+// the property get methode, return the current value
 
 static void gx_tuner_get_property(GObject *object, guint prop_id,
                                       GValue *value, GParamSpec *pspec) {
@@ -451,17 +467,17 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -471,8 +487,8 @@ static gboolean gtk_tuner_expose_diatonic(GtkWidget *widget, cairo_t *cr) {
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -588,17 +604,17 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -608,8 +624,8 @@ static gboolean gtk_tuner_expose_shruti(GtkWidget *widget, cairo_t *cr) {
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -727,17 +743,17 @@ static gboolean gtk_tuner_expose_johnston5limit(GtkWidget *widget, cairo_t *cr) 
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -747,8 +763,8 @@ static gboolean gtk_tuner_expose_johnston5limit(GtkWidget *widget, cairo_t *cr) 
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -887,17 +903,17 @@ static gboolean gtk_tuner_expose_johnston7limit(GtkWidget *widget, cairo_t *cr) 
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -907,8 +923,8 @@ static gboolean gtk_tuner_expose_johnston7limit(GtkWidget *widget, cairo_t *cr) 
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -1048,17 +1064,17 @@ static gboolean gtk_tuner_expose_johnston7limitno5(GtkWidget *widget, cairo_t *c
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -1068,8 +1084,8 @@ static gboolean gtk_tuner_expose_johnston7limitno5(GtkWidget *widget, cairo_t *c
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -1206,17 +1222,17 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
             cents = static_cast<int>((floorf(scale * 10000) / 50));
             snprintf(s, sizeof(s), "+%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else if(scale<-0.004) {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
             snprintf(s, sizeof(s), "%i", cents);
             cairo_set_source_rgb (cr, 0.05, 0.5+0.022* abs(cents), 0.1);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             cairo_set_source_rgb (cr, 0.5+ 0.022* abs(cents), 0.35, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
             gx_tuner_strobe(cr, x0, y0, static_cast<double>(cents));
         } else {
             cents = static_cast<int>((ceil(scale * 10000) / 50));
@@ -1226,8 +1242,8 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
             else
                 snprintf(s, sizeof(s), "+%.2f", mini_cents);
             cairo_set_source_rgb (cr, 0.05* abs(cents), 0.5, 0.1);
-            gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
-            gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
+            gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
+            gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
             gx_tuner_strobe(cr, x0, y0, mini_cents);
         }
     } else {
@@ -1342,8 +1358,8 @@ static void draw_background(cairo_surface_t *surface) {
     cairo_stroke(cr);
     
     cairo_set_source_rgb(cr,0.1,0.1,0.1);
-    gx_tuner_triangle(cr, x0+20, y0+40, 15, 10);
-    gx_tuner_triangle(cr, x0+80, y0+40, -15, 10);
+    gx_tuner_triangle(cr, x0+20, y0+45, 15, 10);
+    gx_tuner_triangle(cr, x0+80, y0+45, -15, 10);
     cairo_stroke(cr);
 
     

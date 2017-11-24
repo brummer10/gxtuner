@@ -48,6 +48,9 @@ typedef jack_client_t* (*getclient)
 typedef void (*setptvar)
              (float x);
 
+// the tuner widget class, add all functions and widget pointers 
+// used in the tuner class here.
+
 class TunerWidget {
  private:
     int                 desk;
