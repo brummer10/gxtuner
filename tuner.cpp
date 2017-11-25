@@ -128,6 +128,8 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(hbox),false);
     ibox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(ibox),false);
+    jbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(jbox),false);
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
     gtk_widget_set_valign(spinner, GTK_ALIGN_START);
@@ -186,6 +188,12 @@ void TunerWidget::create_window() {
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 0);
     gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
 
+    selectorj = gtk_combo_box_text_new();
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "Just Intonation");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "Equal Temperament");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 0);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
+
     // set some options to widgets
     gtk_widget_set_app_paintable(window, TRUE);
     gtk_widget_set_redraw_on_allocate(GTK_WIDGET(window), TRUE); 
@@ -224,6 +232,8 @@ void TunerWidget::create_window() {
     gtk_box_pack_start(GTK_BOX(hbox),dbox,true,false,0);
     gtk_box_pack_end(GTK_BOX(hbox),abox,false,false,0);
     gtk_container_add (GTK_CONTAINER (abox), spinner);
+    gtk_container_add (GTK_CONTAINER (jbox), selectorj);
+    gtk_box_pack_start(GTK_BOX(box2),jbox,false,false,0);
     
     // to add more controls, you could add here a new box
     // to box2, this will apeare on the bottom.

@@ -71,12 +71,14 @@ class TunerWidget {
     GtkWidget*          gbox;
     GtkWidget*          hbox;
     GtkWidget*          ibox;
+    GtkWidget*          jbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
     GtkWidget*          selector;
     GtkWidget*          selectorg;
     GtkWidget*          selectore;
     GtkWidget*          selectori;
+    GtkWidget*          selectorj;
 
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
