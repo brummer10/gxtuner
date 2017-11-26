@@ -436,7 +436,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // Octave indicator
     static int indicate_oc = 0;
     
-    fprintf(stderr, "refratio: %f mode: %i numberofnotes %i\n", tuner->refratio, tuner->mode, tuner->numberofnotes);
+    //fprintf(stderr, "refratio: %f mode: %i numberofnotes %i\n", tuner->refratio, tuner->mode, tuner->numberofnotes);
     // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
@@ -497,7 +497,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                      break;
                  }
          }
-    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->numberofnotes );   
+    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->numberofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 18.0);
