@@ -55,6 +55,10 @@ struct _GxTuner
     double reference_pitch;
     double scale_w;
     double scale_h;
+    const char **just_note;
+    const double *noteratio;
+    double refratio;
+    int numberofnotes;
     int mode;
 };
 
