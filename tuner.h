@@ -62,27 +62,53 @@ class TunerWidget {
     GtkWidget*          box;
     GtkWidget*          box1;
     GtkWidget*          box2;
-    GtkWidget*          abox;
-    GtkWidget*          bbox;
-    GtkWidget*          cbox;
-    GtkWidget*          dbox;
+    GtkWidget*          abox;  
+    GtkWidget*          bbox; 
+    GtkWidget*          cbox; 
+    GtkWidget*          dbox; 
     GtkWidget*          ebox;
     GtkWidget*          fbox;
     GtkWidget*          gbox;
     GtkWidget*          hbox;
+    GtkWidget*          hhbox;
     GtkWidget*          ibox;
+    GtkWidget*          jbox;
+    GtkWidget*          kbox;
+    GtkWidget*          lbox;
+    GtkWidget*          mbox;
+    GtkWidget*          nbox;
+    GtkWidget*          obox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
-    GtkWidget*          selector;
-    GtkWidget*          selectorg;
-    GtkWidget*          selectore;
-    GtkWidget*          selectori;
+    GtkWidget*          selectord; //changes mode
+    GtkWidget*          selectore; // changes reference note
+    GtkWidget*          selectorf; // flatsharp
+    GtkWidget*          selectorg; // 5comma
+    GtkWidget*          selectorh; // 7comma 
+    GtkWidget*          selectori; // 11comma
+    GtkWidget*          selectorj; // 13comma
+    GtkWidget*          selectork; // 17comma
+    GtkWidget*          selectorl; // 19comma
+    GtkWidget*          selectorm; // 23comma
+    GtkWidget*          selectorn; // 29comma
+    GtkWidget*          selectoro; // 29comma
     
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
     static gboolean     ref_freq_changed(gpointer arg);
     static gboolean     threshold_changed(gpointer arg);
     static gboolean     mode_changed(gpointer arg);
+    /*static gboolean     basenote_changed(gpointer arg);
+    static gboolean     flatsharp_changed(gpointer arg);
+    static gboolean     a5comma_changed(gpointer arg);
+    static gboolean     a7comma_changed(gpointer arg);
+    static gboolean     a11comma_changed(gpointer arg);
+    static gboolean     a13comma_changed(gpointer arg);
+    static gboolean     a17comma_changed(gpointer arg);
+    static gboolean     a19comma_changed(gpointer arg);
+    static gboolean     a23comma_changed(gpointer arg);
+    static gboolean     a29comma_changed(gpointer arg);
+    static gboolean     a31comma_changed(gpointer arg);*/
     static void         destroy( GtkWidget *widget, gpointer data);
  public:
     explicit TunerWidget();
