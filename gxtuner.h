@@ -60,6 +60,7 @@ struct _GxTuner
     double refratio;
     int numberofnotes;
     int mode;
+    int reference_note; //#1
 };
 
 struct _GxTunerClass
@@ -78,6 +79,7 @@ void gx_tuner_set_freq(GxTuner *tuner, double freq);
 void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch);
 double gx_tuner_get_reference_pitch(GxTuner *tuner);
 void gx_tuner_set_mode(GxTuner *tuner, int mode);
+void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note); //#2
 GtkWidget *gx_tuner_new(void);
 
 G_END_DECLS

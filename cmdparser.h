@@ -41,6 +41,7 @@
 #define JACK_UUID       (7)
 #define DESK            (8)
 #define MODE            (9)
+#define REFERENCE_NOTE  (10) //#1
 
 class CmdParse {
  private:
@@ -59,6 +60,7 @@ class CmdParse {
     gchar*              pitch;
     gchar*              threshold;
     gchar*              mode;
+    gchar*              reference_note; //#2
     std::string         infostring;
     void                init();
     void                setup_groups();
@@ -76,5 +78,3 @@ class CmdParse {
 extern CmdParse         cmd;
 
 #endif // CMD_PARSER_H_
-
-

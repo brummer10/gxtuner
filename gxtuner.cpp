@@ -36,6 +36,7 @@ enum {
     PROP_FREQ = 1,
     PROP_REFERENCE_PITCH = 2,
     PROP_MODE = 3,
+    PROP_REFERENCE_NOTE =4, //#1
 };
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr);
@@ -193,6 +194,12 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
             "mode", P_("Tuning Mode"),
             P_("The Mode for which tuning is displayed"),
             0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_NOTE, g_param_spec_int ( //#2
+            "reference-note", P_("Reference note"),
+            P_("The note for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    
     klass->surface_tuner = cairo_image_surface_create(
         CAIRO_FORMAT_ARGB32, tuner_width*3., tuner_height*3.);
     g_assert(klass->surface_tuner != NULL);
@@ -210,7 +217,8 @@ static void gx_tuner_init (GxTuner *tuner) {
     g_assert(GX_IS_TUNER(tuner));
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
-    tuner->mode = 0;
+    tuner->mode = 1;
+    tuner->reference_note = 0; //#3
     tuner->scale_w = 1.;
     tuner->scale_h = 1.;
     //GtkWidget *widget = GTK_WIDGET(tuner);
@@ -243,6 +251,13 @@ void gx_tuner_set_mode(GxTuner *tuner, int mode) {
     g_object_notify(G_OBJECT(tuner), "mode");
 }
 
+void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note) { //#4
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_note = reference_note;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-note");
+}
+
 double gx_tuner_get_reference_pitch(GxTuner *tuner) {
     g_assert(GX_IS_TUNER(tuner));
     return tuner->reference_pitch;
@@ -268,6 +283,10 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     case PROP_MODE:
         gx_tuner_set_mode(tuner, g_value_get_int(value));
         break;
+    case PROP_REFERENCE_NOTE: //#5
+        gx_tuner_set_reference_note(tuner, g_value_get_int(value));
+        break;
+    
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -289,6 +308,9 @@ static void gx_tuner_get_property(GObject *object, guint prop_id,
         break;
     case PROP_MODE:
         g_value_set_int(value, tuner->mode);
+        break;
+    case PROP_REFERENCE_NOTE: //#6
+        g_value_set_int(value, tuner->reference_note);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -436,7 +458,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // Octave indicator
     static int indicate_oc = 0;
     
-    //fprintf(stderr, "refratio: %f mode: %i numberofnotes %i\n", tuner->refratio, tuner->mode, tuner->numberofnotes);
+    fprintf(stderr, "reference_note: %d \n", tuner->reference_note);
     // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
@@ -825,5 +847,3 @@ static void draw_background(cairo_surface_t *surface) {
     cairo_pattern_destroy(pat);
     cairo_destroy(cr);
 }
-
-

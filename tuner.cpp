@@ -85,6 +85,13 @@ gboolean TunerWidget::mode_changed(gpointer arg) {
     return true;
 }
 
+gboolean TunerWidget::reference_note_changed(gpointer arg) { //#1
+    int R = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_note(GX_TUNER(tw.get_tuner()),R);
+    return true;
+}
+
+
 void TunerWidget::signal_handler(int sig) {
     // print out a warning
     g_print ("signal: %i received, exiting ...\n", sig);
@@ -358,6 +365,8 @@ void TunerWidget::create_window() {
         G_CALLBACK(threshold_changed),(gpointer)adjt);
     g_signal_connect(GTK_COMBO_BOX(selectord), "changed",
         G_CALLBACK(mode_changed),(gpointer)selectord);
+    g_signal_connect(GTK_COMBO_BOX(selectore), "changed", //#2
+        G_CALLBACK(reference_note_changed),(gpointer)selectore);
     g_signal_connect (window, "delete-event",
             G_CALLBACK (delete_event), NULL);
     g_signal_connect (window, "destroy",
@@ -438,6 +447,24 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
          }
     }
+    if (!cptr->cv(10).empty()) { //#3
+        std::string R = cptr->cv(10).c_str();
+        if(R == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(R == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(R == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(R == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(R == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(R == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(R == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adjt),t);
     // set virtual desktop to use
@@ -455,4 +482,3 @@ void TunerWidget::show() {
 
 TunerWidget tw;
 CmdPtr *cptr = 0;
-

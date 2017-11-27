@@ -45,6 +45,7 @@ void CmdParse::init() {
     pitch           = NULL;
     threshold       = NULL;
     mode            = NULL;
+    reference_note  = NULL; //#1
 }
 
 void CmdParse::write_optvar() {
@@ -76,6 +77,12 @@ void CmdParse::write_optvar() {
         g_free(mode);
     } else if (!optvar[MODE].empty()) {
         optvar[MODE] = ""; 
+    }
+    if (reference_note != NULL) { //#2
+        optvar[REFERENCE_NOTE] = reference_note;
+        g_free(reference_note);
+    } else if (!optvar[REFERENCE_NOTE].empty()) {
+        optvar[REFERENCE_NOTE] = ""; 
     }
 
     // *** process GTK options
@@ -184,7 +191,9 @@ void CmdParse::setup_groups() {
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
-            "set tuner mode (-m chromatic / shruti / diatonic)", "MODE" },
+            "set tuner mode (-m chromatic / shruti / diatonic / johnston5limit / johnston7limit / jonhston7limitno5 )", "MODE" },
+        { "ref_note", 'rn', 0, G_OPTION_ARG_STRING, &reference_note,
+            "set reference note (-rn C/D/E/F/G/A/B)", "REFERENCE_NOTE" },
         { NULL }
     };
     g_option_group_add_entries(optgroup_engine, opt_entries_engine);
@@ -205,5 +214,3 @@ void CmdParse::process_cmdline_options(int& argc, char**& argv)
 }
 
 CmdParse cmd;
-
-

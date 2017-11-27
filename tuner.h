@@ -98,8 +98,8 @@ class TunerWidget {
     static gboolean     ref_freq_changed(gpointer arg);
     static gboolean     threshold_changed(gpointer arg);
     static gboolean     mode_changed(gpointer arg);
-    /*static gboolean     basenote_changed(gpointer arg);
-    static gboolean     flatsharp_changed(gpointer arg);
+    static gboolean     reference_note_changed(gpointer arg); //#1
+    /*static gboolean     flatsharp_changed(gpointer arg);
     static gboolean     a5comma_changed(gpointer arg);
     static gboolean     a7comma_changed(gpointer arg);
     static gboolean     a11comma_changed(gpointer arg);
