@@ -37,6 +37,16 @@ enum {
     PROP_REFERENCE_PITCH = 2,
     PROP_MODE = 3,
     PROP_REFERENCE_NOTE =4, //#1
+    PROP_REFERENCE_03COMMA =5,
+    PROP_REFERENCE_05COMMA =6,
+    PROP_REFERENCE_07COMMA =7,
+    PROP_REFERENCE_11COMMA =8,
+    PROP_REFERENCE_13COMMA =9,
+    PROP_REFERENCE_17COMMA =10,
+    PROP_REFERENCE_19COMMA =11,
+    PROP_REFERENCE_23COMMA =12,
+    PROP_REFERENCE_29COMMA =13,
+    PROP_REFERENCE_31COMMA =14,
 };
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr);
@@ -199,7 +209,57 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
             "reference-note", P_("Reference note"),
             P_("The note for which tuning is displayed"),
             0, 1, 0, G_PARAM_READWRITE));
-    
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_03COMMA, g_param_spec_int (
+            "reference-03comma", P_("Reference 03 comma"),
+            P_("The 03 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_05COMMA, g_param_spec_int (
+            "reference-05comma", P_("Reference 05 comma"),
+            P_("The 05 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_07COMMA, g_param_spec_int (
+            "reference-07comma", P_("Reference 07 comma"),
+            P_("The 07 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_11COMMA, g_param_spec_int (
+            "reference-11comma", P_("Reference 11 comma"),
+            P_("The 11 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_13COMMA, g_param_spec_int (
+            "reference-13comma", P_("Reference 13 comma"),
+            P_("The 13 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_17COMMA, g_param_spec_int (
+            "reference-17comma", P_("Reference 17 comma"),
+            P_("The 17 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_19COMMA, g_param_spec_int (
+            "reference-19comma", P_("Reference 19 comma"),
+            P_("The 19 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_23COMMA, g_param_spec_int (
+            "reference-23comma", P_("Reference 23 comma"),
+            P_("The 23 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_29COMMA, g_param_spec_int (
+            "reference-29comma", P_("Reference 29 comma"),
+            P_("The 29 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_31COMMA, g_param_spec_int (
+            "reference-31comma", P_("Reference 31 comma"),
+            P_("The 31 comma for which tuning is displayed"),
+            0, 1, 0, G_PARAM_READWRITE));
+ 
     klass->surface_tuner = cairo_image_surface_create(
         CAIRO_FORMAT_ARGB32, tuner_width*3., tuner_height*3.);
     g_assert(klass->surface_tuner != NULL);
@@ -258,6 +318,67 @@ void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note) { //#4
     g_object_notify(G_OBJECT(tuner), "reference-note");
 }
 
+void gx_tuner_set_reference_03comma(GxTuner *tuner, int reference_03comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_03comma = reference_03comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-03comma");
+}
+void gx_tuner_set_reference_05comma(GxTuner *tuner, int reference_05comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_05comma = reference_05comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-05comma");
+}
+void gx_tuner_set_reference_07comma(GxTuner *tuner, int reference_07comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_07comma = reference_07comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-07comma");
+}
+void gx_tuner_set_reference_11comma(GxTuner *tuner, int reference_11comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_11comma = reference_11comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-11comma");
+}
+void gx_tuner_set_reference_13comma(GxTuner *tuner, int reference_13comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_13comma = reference_13comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-13comma");
+}
+void gx_tuner_set_reference_17comma(GxTuner *tuner, int reference_17comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_17comma = reference_17comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-17comma");
+}
+void gx_tuner_set_reference_19comma(GxTuner *tuner, int reference_19comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_19comma = reference_19comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-19comma");
+}
+void gx_tuner_set_reference_23comma(GxTuner *tuner, int reference_23comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_23comma = reference_23comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-23comma");
+}
+void gx_tuner_set_reference_29comma(GxTuner *tuner, int reference_29comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_29comma = reference_29comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-29comma");
+}
+void gx_tuner_set_reference_31comma(GxTuner *tuner, int reference_31comma) { 
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->reference_31comma = reference_31comma;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "reference-31comma");
+}
+
 double gx_tuner_get_reference_pitch(GxTuner *tuner) {
     g_assert(GX_IS_TUNER(tuner));
     return tuner->reference_pitch;
@@ -286,7 +407,6 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     case PROP_REFERENCE_NOTE: //#5
         gx_tuner_set_reference_note(tuner, g_value_get_int(value));
         break;
-    
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -458,7 +578,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // Octave indicator
     static int indicate_oc = 0;
     
-    fprintf(stderr, "reference_note: %d \n", tuner->reference_note);
+    fprintf(stderr, "reference_note: %d 03comma %d \n", tuner->reference_note, tuner->reference_03comma);
     // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 

@@ -90,7 +90,56 @@ gboolean TunerWidget::reference_note_changed(gpointer arg) { //#1
     gx_tuner_set_reference_note(GX_TUNER(tw.get_tuner()),R);
     return true;
 }
-
+gboolean TunerWidget::reference_03comma_changed(gpointer arg) { 
+    int A = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_03comma(GX_TUNER(tw.get_tuner()),A);
+    return true;
+}
+gboolean TunerWidget::reference_05comma_changed(gpointer arg) { 
+    int B = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_05comma(GX_TUNER(tw.get_tuner()),B);
+    return true;
+}
+gboolean TunerWidget::reference_07comma_changed(gpointer arg) { 
+    int C = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_07comma(GX_TUNER(tw.get_tuner()),C);
+    return true;
+}
+gboolean TunerWidget::reference_11comma_changed(gpointer arg) { 
+    int D = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_11comma(GX_TUNER(tw.get_tuner()),D);
+    return true;
+}
+gboolean TunerWidget::reference_13comma_changed(gpointer arg) { 
+    int E = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_13comma(GX_TUNER(tw.get_tuner()),E);
+    return true;
+}
+gboolean TunerWidget::reference_17comma_changed(gpointer arg) { 
+    int F = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_17comma(GX_TUNER(tw.get_tuner()),F);
+    return true;
+}
+gboolean TunerWidget::reference_19comma_changed(gpointer arg) { 
+    int G = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_19comma(GX_TUNER(tw.get_tuner()),G);
+    return true;
+}
+gboolean TunerWidget::reference_23comma_changed(gpointer arg) { 
+    int H = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_23comma(GX_TUNER(tw.get_tuner()),H);
+    return true;
+}
+gboolean TunerWidget::reference_29comma_changed(gpointer arg) { 
+    int I = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_29comma(GX_TUNER(tw.get_tuner()),I);
+    return true;
+}
+gboolean TunerWidget::reference_31comma_changed(gpointer arg) { 
+    int J = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_reference_31comma(GX_TUNER(tw.get_tuner()),J);
+    return true;
+}
 
 void TunerWidget::signal_handler(int sig) {
     // print out a warning
@@ -133,6 +182,8 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(gbox),false);
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(hbox),false);
+    hhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(hhbox),false);
     ibox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(ibox),false);
     jbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -167,7 +218,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston5limit");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston7limit");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston7limitno5");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 2);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 0);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.1);
     // Reference note
     selectore = gtk_combo_box_text_new();
@@ -178,7 +229,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "G");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "A");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "B");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
     gtk_widget_set_opacity(GTK_WIDGET(selectore), 0.1);
     // Flat or Sharps
     selectorf = gtk_combo_box_text_new();
@@ -367,6 +418,26 @@ void TunerWidget::create_window() {
         G_CALLBACK(mode_changed),(gpointer)selectord);
     g_signal_connect(GTK_COMBO_BOX(selectore), "changed", //#2
         G_CALLBACK(reference_note_changed),(gpointer)selectore);
+    g_signal_connect(GTK_COMBO_BOX(selectorf), "changed",
+        G_CALLBACK(reference_03comma_changed),(gpointer)selectorf);
+    g_signal_connect(GTK_COMBO_BOX(selectorg), "changed",
+        G_CALLBACK(reference_05comma_changed),(gpointer)selectorg);
+    g_signal_connect(GTK_COMBO_BOX(selectorh), "changed",
+        G_CALLBACK(reference_07comma_changed),(gpointer)selectorh);
+    g_signal_connect(GTK_COMBO_BOX(selectori), "changed",
+        G_CALLBACK(reference_11comma_changed),(gpointer)selectori);
+    g_signal_connect(GTK_COMBO_BOX(selectorj), "changed",
+        G_CALLBACK(reference_13comma_changed),(gpointer)selectorj);
+    g_signal_connect(GTK_COMBO_BOX(selectork), "changed",
+        G_CALLBACK(reference_17comma_changed),(gpointer)selectork);
+    g_signal_connect(GTK_COMBO_BOX(selectorl), "changed",
+        G_CALLBACK(reference_19comma_changed),(gpointer)selectorl);
+    g_signal_connect(GTK_COMBO_BOX(selectorm), "changed",
+        G_CALLBACK(reference_23comma_changed),(gpointer)selectorm);
+    g_signal_connect(GTK_COMBO_BOX(selectorn), "changed",
+        G_CALLBACK(reference_29comma_changed),(gpointer)selectorn);
+    g_signal_connect(GTK_COMBO_BOX(selectoro), "changed",
+        G_CALLBACK(reference_31comma_changed),(gpointer)selectoro);
     g_signal_connect (window, "delete-event",
             G_CALLBACK (delete_event), NULL);
     g_signal_connect (window, "destroy",
@@ -449,19 +520,199 @@ void TunerWidget::parse_cmd() {
     }
     if (!cptr->cv(10).empty()) { //#3
         std::string R = cptr->cv(10).c_str();
-        if(R == "min3") {
+        if(R == "C") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
-        } else if(R == "min2") {
+        } else if(R == "D") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
-        } else if(R == "min1") {
+        } else if(R == "E") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
-        } else if(R == "0") {
+        } else if(R == "F") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
-        } else if(R == "1") {
+        } else if(R == "G") {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
-        } else if(R == "2") {
+        } else if(R == "A") {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
-        } else if(R == "3") {
+        } else if(R == "B") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(11).empty()) {
+        std::string A = cptr->cv(11).c_str();
+        if(A == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(A == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(A == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(A == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(A == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(A == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(A == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(12).empty()) {
+        std::string B = cptr->cv(12).c_str();
+        if(B == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(B == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(B == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(B == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(B == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(B == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(B == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(13).empty()) {
+        std::string C = cptr->cv(13).c_str();
+        if(C == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(C == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(C == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(C == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(C == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(C == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(C == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(14).empty()) {
+        std::string D = cptr->cv(14).c_str();
+        if(D == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(D == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(D == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(D == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(D == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(D == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(D == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(15).empty()) {
+        std::string E = cptr->cv(15).c_str();
+        if(E == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(E == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(E == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(E == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(E == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(E == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(E == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(16).empty()) {
+        std::string F = cptr->cv(16).c_str();
+        if(F == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(F == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(F == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(F == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(F == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(F == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(F == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(17).empty()) {
+        std::string G = cptr->cv(17).c_str();
+        if(G == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(G == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(G == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(G == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(G == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(G == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(G == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(18).empty()) {
+        std::string H = cptr->cv(18).c_str();
+        if(H == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(H == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(H == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(H == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(H == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(H == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(H == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(19).empty()) {
+        std::string I = cptr->cv(19).c_str();
+        if(I == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(I == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(I == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(I == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(I == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(I == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(I == "3") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+         }   
+    }
+    if (!cptr->cv(20).empty()) {
+        std::string J = cptr->cv(20).c_str();
+        if(J == "min3") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(J == "min2") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        } else if(J == "min1") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(J == "0") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+        } else if(J == "1") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(J == "2") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+        } else if(J == "3") {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
          }   
     }
