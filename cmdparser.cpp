@@ -286,7 +286,6 @@ void CmdParse::setup_groups() {
         { NULL }
     };
     g_option_group_add_entries(optgroup_engine, opt_entries_engine);
-    
     g_option_context_add_group(opt_context, optgroup_gtk);
     g_option_context_add_group(opt_context, optgroup_jack);
     g_option_context_add_group(opt_context, optgroup_engine);

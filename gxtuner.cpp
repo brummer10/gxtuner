@@ -407,6 +407,33 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     case PROP_REFERENCE_NOTE: //#5
         gx_tuner_set_reference_note(tuner, g_value_get_int(value));
         break;
+    case PROP_REFERENCE_03COMMA:
+        gx_tuner_set_reference_03comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_07COMMA:
+        gx_tuner_set_reference_07comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_11COMMA:
+        gx_tuner_set_reference_11comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_13COMMA:
+        gx_tuner_set_reference_13comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_17COMMA:
+        gx_tuner_set_reference_17comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_19COMMA:
+        gx_tuner_set_reference_19comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_23COMMA:
+        gx_tuner_set_reference_23comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_29COMMA:
+        gx_tuner_set_reference_29comma(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_31COMMA:
+        gx_tuner_set_reference_31comma(tuner, g_value_get_int(value));
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
         break;
@@ -431,6 +458,36 @@ static void gx_tuner_get_property(GObject *object, guint prop_id,
         break;
     case PROP_REFERENCE_NOTE: //#6
         g_value_set_int(value, tuner->reference_note);
+        break;
+    case PROP_REFERENCE_03COMMA: 
+        g_value_set_int(value, tuner->reference_03comma);
+        break;
+    case PROP_REFERENCE_05COMMA: 
+        g_value_set_int(value, tuner->reference_05comma);
+        break;
+    case PROP_REFERENCE_07COMMA: 
+        g_value_set_int(value, tuner->reference_07comma);
+        break;
+    case PROP_REFERENCE_11COMMA: 
+        g_value_set_int(value, tuner->reference_11comma);
+        break;
+    case PROP_REFERENCE_13COMMA: 
+        g_value_set_int(value, tuner->reference_13comma);
+        break;
+    case PROP_REFERENCE_17COMMA: 
+        g_value_set_int(value, tuner->reference_17comma);
+        break;
+    case PROP_REFERENCE_19COMMA: 
+        g_value_set_int(value, tuner->reference_19comma);
+        break;
+    case PROP_REFERENCE_23COMMA: 
+        g_value_set_int(value, tuner->reference_23comma);
+        break;
+    case PROP_REFERENCE_29COMMA: 
+        g_value_set_int(value, tuner->reference_29comma);
+        break;
+    case PROP_REFERENCE_31COMMA: 
+        g_value_set_int(value, tuner->reference_31comma);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);

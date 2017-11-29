@@ -236,7 +236,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♭♭♭");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♭♭");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♭");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "0");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♯");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♯♯");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♯♯♯");
@@ -247,7 +247,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "---");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "--");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "-");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "0");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "+");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "++");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "+++");
@@ -255,10 +255,10 @@ void TunerWidget::create_window() {
     gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
     // 7 comma
     selectorh = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "LLL");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "LL");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "L");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "ㄥㄥㄥ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "ㄥㄥ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "ㄥ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "0");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "7");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "77");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "777");
@@ -269,7 +269,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↓↓↓");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↓↓");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↓");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "0");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↑");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↑↑");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↑↑↑");
@@ -277,68 +277,68 @@ void TunerWidget::create_window() {
     gtk_widget_set_opacity(GTK_WIDGET(selectori), 0.1);
     // 13 comma
     selectorj = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "ƐƖƐƖƐƖ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "ƐƖƐƖ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "ƐƖ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "13");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "1313");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "131313");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectorj), 0.1);
     // 17 comma
     selectork = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "ㄥƖㄥƖㄥƖ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "ㄥƖㄥƖ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "ㄥƖ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "17");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "1717");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "171717");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectork), 0.1);
     // 19 comma
     selectorl = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "6Ɩ6Ɩ6Ɩ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "6Ɩ6Ɩ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "6Ɩ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "19");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "1919");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "191919");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectorl), 0.1);
     // 23 comma
     selectorm = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "ƐᄅƐᄅƐᄅ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "ƐᄅƐᄅ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "Ɛᄅ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "23");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "2323");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "232323");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectorm), 0.1);
     // 29 comma
     selectorn = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "6ᄅ6ᄅ6ᄅ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "6ᄅ6ᄅ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "6ᄅ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "29");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "2929");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "292929");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectorn), 0.1);
     // 31 comma
     selectoro = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "-3");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "-2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "-1");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "ƖƐƖƐƖƐ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "ƖƐƖƐ");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "ƖƐ");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "0");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "1");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "2");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "3");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "31");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "3131");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "313131");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 3);
     gtk_widget_set_opacity(GTK_WIDGET(selectoro), 0.1);
     
@@ -539,181 +539,181 @@ void TunerWidget::parse_cmd() {
     if (!cptr->cv(11).empty()) {
         std::string A = cptr->cv(11).c_str();
         if(A == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 0);
         } else if(A == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 1);
         } else if(A == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 2);
         } else if(A == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 3);
         } else if(A == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 4);
         } else if(A == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 5);
         } else if(A == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 6);
          }   
     }
     if (!cptr->cv(12).empty()) {
         std::string B = cptr->cv(12).c_str();
         if(B == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 0);
         } else if(B == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 1);
         } else if(B == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 2);
         } else if(B == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 3);
         } else if(B == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 4);
         } else if(B == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 5);
         } else if(B == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 6);
          }   
     }
     if (!cptr->cv(13).empty()) {
         std::string C = cptr->cv(13).c_str();
         if(C == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 0);
         } else if(C == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 1);
         } else if(C == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 2);
         } else if(C == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 3);
         } else if(C == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 4);
         } else if(C == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 5);
         } else if(C == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 6);
          }   
     }
     if (!cptr->cv(14).empty()) {
         std::string D = cptr->cv(14).c_str();
         if(D == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 0);
         } else if(D == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 1);
         } else if(D == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 2);
         } else if(D == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 3);
         } else if(D == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 4);
         } else if(D == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 5);
         } else if(D == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 6);
          }   
     }
     if (!cptr->cv(15).empty()) {
         std::string E = cptr->cv(15).c_str();
         if(E == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 0);
         } else if(E == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 1);
         } else if(E == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 2);
         } else if(E == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 3);
         } else if(E == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 4);
         } else if(E == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 5);
         } else if(E == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 6);
          }   
     }
     if (!cptr->cv(16).empty()) {
         std::string F = cptr->cv(16).c_str();
         if(F == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 0);
         } else if(F == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 1);
         } else if(F == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 2);
         } else if(F == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 3);
         } else if(F == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 4);
         } else if(F == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 5);
         } else if(F == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 6);
          }   
     }
     if (!cptr->cv(17).empty()) {
         std::string G = cptr->cv(17).c_str();
         if(G == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 0);
         } else if(G == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 1);
         } else if(G == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 2);
         } else if(G == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 3);
         } else if(G == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 4);
         } else if(G == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 5);
         } else if(G == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 6);
          }   
     }
     if (!cptr->cv(18).empty()) {
         std::string H = cptr->cv(18).c_str();
         if(H == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 0);
         } else if(H == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 1);
         } else if(H == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 2);
         } else if(H == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 3);
         } else if(H == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 4);
         } else if(H == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 5);
         } else if(H == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 6);
          }   
     }
     if (!cptr->cv(19).empty()) {
         std::string I = cptr->cv(19).c_str();
         if(I == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 0);
         } else if(I == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 1);
         } else if(I == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 2);
         } else if(I == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 3);
         } else if(I == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 4);
         } else if(I == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 5);
         } else if(I == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 6);
          }   
     }
     if (!cptr->cv(20).empty()) {
         std::string J = cptr->cv(20).c_str();
         if(J == "min3") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 0);
         } else if(J == "min2") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 1);
         } else if(J == "min1") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 2);
         } else if(J == "0") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 3);
         } else if(J == "1") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 4);
         } else if(J == "2") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 5);
         } else if(J == "3") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 6);
          }   
     }
     gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),p);
