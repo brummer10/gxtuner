@@ -32,7 +32,7 @@ extern "C" {
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-
+#include <string> 
 
 G_BEGIN_DECLS
 
@@ -41,6 +41,7 @@ G_BEGIN_DECLS
 #define GX_IS_TUNER(obj)       (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GX_TYPE_TUNER))
 #define GX_TUNER_CLASS(klass)  (G_TYPE_CHECK_CLASS_CAST ((klass),  GX_TYPE_TUNER, GxTunerClass))
 #define GX_IS_TUNER_CLASS(obj) (G_TYPE_CHECK_CLASS_TYPE ((klass),  GX_TYPE_TUNER))
+# define NRPRIMES 12
 
 typedef struct _GxTuner GxTuner;
 typedef struct _GxTunerClass GxTunerClass;
@@ -51,14 +52,15 @@ typedef struct _GxTunerClass GxTunerClass;
 struct _GxTuner
 {
     GtkDrawingArea parent;
+    std::string tempscalenames
     double freq;
     double reference_pitch;
     double scale_w;
     double scale_h;
-    const char **just_note;
-    const double *noteratio;
-    double refratio;
+    double tempscaleratios;
+    int tempscale;
     int numberofnotes;
+    int tempreference_notepowprimes;
     int mode;
     int reference_note; //#1
     int reference_03comma;

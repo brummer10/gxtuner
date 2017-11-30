@@ -69,22 +69,22 @@ static float mini_cents = 0.0;
 // base scale: 3limit diatonic (Pythagorean)
 static int scale3base[][] = {
     //{notename,2,3,5,7,11,13,17,19,23,29,31}
-    {0,0,0,0,0,0,0,0,0,0}, //C
-    {1,-3,2,0,0,0,0,0,0,0}, //D
-    {2,-6,4,0,0,0,0,0,0,0}, //E
-    {3,2,-1,0,0,0,0,0,0,0}, //F
-    {4,-1,1,0,0,0,0,0,0,0}, //G
-    {5,-4,3,0,0,0,0,0,0,0}, //A
-    {6,-7,5,0,0,0,0,0,0,0} //B
+    {0,0,0,0,0,0,0,0,0,0,0,0}, //C
+    {1,-3,2,0,0,0,0,0,0,0,0,0}, //D
+    {2,-6,4,0,0,0,0,0,0,0,0,0}, //E
+    {3,2,-1,0,0,0,0,0,0,0,0,0}, //F
+    {4,-1,1,0,0,0,0,0,0,0,0,0}, //G
+    {5,-4,3,0,0,0,0,0,0,0,0,0}, //A
+    {6,-7,5,0,0,0,0,0,0,0,0,0} //B
 };
 static const* char scale3basenames = {"C","D","E","F","G","A","B"};
 static int a03comma[] = {0,-9,7,0,0,0,0,0,0,0,0,0};
 static int a05comma[] = {0,-4,4,-1,0,0,0,0,0,0,0,0};
 static int a07comma[] = {0,6,-2,0,-1,0,0,0,0,0,0,0}; 
 static int a11comma[] = {0,-5,1,0,0,1,0,0,0,0,0,0};
-static int a13comma[] = {0,-10,4,0,0,0,1,0,0,0,0,0}; //narekenen 13/16 Ab
+static int a13comma[] = {0,-10,4,0,0,0,1,0,0,0,0,0}; 
 static int a17comma[] = {0,7,-7,0,0,0,0,1,0,0,0,0};
-static int a19comma[] = {0,-9,3,0,0,0,0,0,1,0,0,0}; //narekenen 19/16 Eb
+static int a19comma[] = {0,-9,3,0,0,0,0,0,1,0,0,0}; 
 static int a23comma[] = {0,5,-6,0,0,0,0,0,0,1,0,0};
 static int a29comma[] = {0,-8,2,0,0,0,0,0,0,0,1,0};
 static int a31comma[] = {0,3,-5,0,0,0,0,0,0,0,0,1};
@@ -92,27 +92,28 @@ static int a31comma[] = {0,3,-5,0,0,0,0,0,0,0,0,1};
 //here we define the scales. Every row of the array has 11 digits. The first 
 static int scale3diatonic[][] = {
     //notename+integers for the comma's
-    {0,0,0,0,0,0,0,0,0,0}, //C
-    {1,0,0,0,0,0,0,0,0,0}, //D
-    {2,0,0,0,0,0,0,0,0,0}, //E
-    {3,0,0,0,0,0,0,0,0,0}, //F
-    {4,0,0,0,0,0,0,0,0,0}, //G
-    {5,0,0,0,0,0,0,0,0,0}, //A
-    {6,0,0,0,0,0,0,0,0,0} //B
+    {0,0,0,0,0,0,0,0,0,0,0,0}, //C
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //D
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //E
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //F
+    {4,0,0,0,0,0,0,0,0,0,0,0}, //G
+    {5,0,0,0,0,0,0,0,0,0,0,0}, //A
+    {6,0,0,0,0,0,0,0,0,0,0,0} //B
 };
 static int scale35chromatic[][] = {
-    {0,0,0,0,0,0,0,0,0,0}, //C
-    {0,1,0,0,0,0,0,0,0,0}, //C♯
-    {1,0,0,0,0,0,0,0,0,0}, //D
-    {2,-1,-1,0,0,0,0,0,0,0}, //Eb-
-    {2,0,-1,0,0,0,0,0,0,0}, //E
-    {3,0,0,0,0,0,0,0,0,0}, //F
-    {4,-1,-1,0,0,0,0,0,0,0}, //Gb
-    {4,0,0,0,0,0,0,0,0,0}, //G
-    {5,-1,-1,0,0,0,0,0,0,0}, //Ab
-    {5,0,-1,0,0,0,0,0,0,0}, //A-
-    {6,-1,-1,0,0,0,0,0,0,0}, //Bb-
-    {6,0,-1,0,0,0,0,0,0,0}, //B
+    //basenote,2,3,5,7,11,13,17,19,23,29,31
+    {0,0,0,0,0,0,0,0,0,0,0,0}, //C
+    {0,0,1,0,0,0,0,0,0,0,0,0}, //C♯
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //D
+    {2,0,-1,-1,0,0,0,0,0,0,0,0}, //Eb-
+    {2,0,0,-1,0,0,0,0,0,0,0,0}, //E
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //F
+    {4,0,-1,-1,0,0,0,0,0,0,0,0}, //Gb
+    {4,0,0,0,0,0,0,0,0,0,0,0}, //G
+    {5,0,-1,-1,0,0,0,0,0,0,0,0}, //Ab
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, //A-
+    {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
+    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B
 };
     
 //scale data 
@@ -122,7 +123,7 @@ static const double noteratio1[] = ;
 static double refratio1 =  ;
 static int numberofnotes1 = (sizeof(just_note1) / sizeof(just_note1[0]));
  
- */
+ 
 //shruti scale
 static const char* just_note1[] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
 static const double noteratio1[] = {1/1.0, 256/243.0, 16/15.0, 10/9.0, 9/8.0, 32/27.0, 6/5.0, 5/4.0, 81/64.0, 4/3.0, 27/20.0, 45/32.0, 729/512.0, 3/2.0, 128/81.0, 8/5.0, 5/3.0, 27/16.0, 16/9.0, 9/5.0, 15/8.0, 243/128.0, 2/1.0};
@@ -148,7 +149,7 @@ static const char* just_note5[] = {"C","D7♭","D","E7♭","EL","F","F♯LL","G"
 static const double noteratio5[] = {1/1.0, 49/48.0, 9/8.0, 7/6.0, 9/7.0, 4/3.0, 72/49.0, 3/2.0, 14/9.0, 12/7.0, 7/4.0, 27/14.0, 2/1.0};
 static double refratio5 = 5/3.0;
 static int numberofnotes5 = (sizeof(just_note5) / sizeof(just_note5[0]));    
-
+*/
 static const double dashline[] = {
     3.0                
 };
@@ -642,35 +643,94 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // ♯ ♭
     GxTuner *tuner = GX_TUNER(widget);
+    //setting the scale
     if (tuner->mode < 2){
-        tuner->just_note = just_note1;
-        tuner->noteratio = noteratio1; 
-        tuner->refratio = refratio1;
-        tuner->numberofnotes = numberofnotes1;
-    } else if (tuner->mode == 2 ){
-        tuner->just_note = just_note2;
-        tuner->noteratio = noteratio2; 
-        tuner->refratio = refratio2;
-        tuner->numberofnotes = numberofnotes2;
+        tuner->tempscale = scale3diatonic;     
+    } else if (tuner->mode > 1 ){
+        tuner->tempscale = scale35chromatic;
     }
-    else if (tuner->mode == 3){
-        tuner->just_note = just_note3;
-        tuner->noteratio = noteratio3; 
-        tuner->refratio = refratio3;
-        tuner->numberofnotes = numberofnotes3;
+    //calculating the number notes in scale
+    numberofnotes = (sizeof(tempscale) / sizeof(tempscale[0]))
+    // calculating the reference note + comma's and chroma's to powers of primes
+    tuner->tempreference_notepowprimes[NRPRIMES]={{0}};
+    for (i=1; i<NRPRIMES; i++){
+            tuner->tempreference_notepowprimes[i] = scale3base[reference_note][i]
+                                        + (reference_03comma-3)*a03comma[i] 
+                                        + (reference_05comma-3)*a05comma[i]
+                                        + (reference_07comma-3)*a07comma[i]
+                                        + (reference_11comma-3)*a11comma[i]
+                                        + (reference_13comma-3)*a13comma[i]
+                                        + (reference_17comma-3)*a17comma[i]
+                                        + (reference_19comma-3)*a19comma[i]
+                                        + (reference_23comma-3)*a23comma[i]
+                                        + (reference_29comma-3)*a29comma[i]
+                                        + (reference_31comma-3)*a31comma[i]);
+            fprintf(stderr, "tempreference_note[i]: %i ", tempreference_notepowprimes[i]);
     }
-    else if (tuner->mode == 4){
-        tuner->just_note = just_note4;
-        tuner->noteratio = noteratio4; 
-        tuner->refratio = refratio4;
-        tuner->numberofnotes = numberofnotes4;
+    fprintf(stderr,"\n");
+    
+        // calculating the powers of primes of tempscale
+    double tempscaleratios[numberofnotes];
+    for (n=0; n<numberofnotes; n++){
+        for (i=1; i<NRPRIMES; i++){
+            int tempscalepowprimes[numberofnotes][NRPRIMES];
+            tempscalepowprimes[n][i] =   (tuner->tempreferencepowprimes_note[i]
+                                              + scale3base[n][i]  
+                                              + tempscale[n][2]*a03comma[i] 
+                                              + tempscale[n][3]*a05comma[i]
+                                              + tempscale[n][4]*a07comma[i]
+                                              + tempscale[n][5]*a11comma[i]
+                                              + tempscale[n][6]*a13comma[i]
+                                              + tempscale[n][7]*a17comma[i]
+                                              + tempscale[n][8]*a19comma[i]
+                                              + tempscale[n][9]*a23comma[i]
+                                              + tempscale[n][10]*a29comma[i]
+                                              + tempscale[n][11]*a31comma[i]);
+            
+            }
+            tempscaleratios[n] =      (pow(2.0,tempscalepowprimes[n][1]
+                                    * pow(3.0,tempscalepowprimes[n][2]
+                                    * pow(5.0,tempscalepowprimes[n][3]
+                                    * pow(7.0,tempscalepowprimes[n][4]
+                                    * pow(11.0,tempscalepowprimes[n][5]
+                                    * pow(13.0,tempscalepowprimes[n][6]
+                                    * pow(17.0,tempscalepowprimes[n][7]
+                                    * pow(19.0,tempscalepowprimes[n][8]
+                                    * pow(23.0,tempscalepowprimes[n][9]
+                                    * pow(29.0,tempscalepowprimes[n][10]
+                                    * pow(31.0,tempscalepowprimes[n][11]);
     }
-    else if (tuner->mode == 5){
-        tuner->just_note = just_note5;
-        tuner->noteratio = noteratio5; 
-        tuner->refratio = refratio5;
-        tuner->numberofnotes = numberofnotes5;
+    //creating the note names
+    std::string tempscalenames[numberofnotes];
+    for (n=0; n<numberofnotes; n++){
+        int tempnotename = tempscale[n][0] + reference_note
+        if (tempnotename > 7) {
+            tempnotename = tempnotename -7;
+        }
+        tempscalenames[n] = scale3basenames[tempnotename]
+        //here all commas and chroma's are added ♯ ♭
+        if (reference_03comma == 0){
+           tempscalenames[n] += "♭♭♭";             
+        } else if (reference_03comma == 1){
+           tempscalenames[n] += "♭♭";             
+        } else if (reference_03comma == 2){
+           tempscalenames[n] += "♭";             
+        } else if (reference_03comma == 3){
+           tempscalenames[n] += "";             
+        } else if (reference_03comma == 4){
+           tempscalenames[n] += "♯";             
+        } else if (reference_03comma == 5){
+           tempscalenames[n] += "♯♯";             
+        } else if (reference_03comma == 6){
+           tempscalenames[n] += "♯♯♯";             
+        }
+        
     }
+    
+        
+    }
+    
+    //
     // calculating the number of notes of the preset
     // Frequency Octave divider 
     float multiply = 1.0;
@@ -682,8 +742,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     static const char* octave[] = {"0","1","2","3","4","5","6","7"," "};
     // Octave indicator
     static int indicate_oc = 0;
-    
-    fprintf(stderr, "reference_note: %d 03comma %d \n", tuner->reference_note, tuner->reference_03comma);
+    //fprintf(stderr, "reference_note: %d 03comma %d \n", tuner->reference_note, tuner->reference_03comma);
     // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
     gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
