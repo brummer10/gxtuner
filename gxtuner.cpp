@@ -36,7 +36,7 @@ enum {
     PROP_FREQ = 1,
     PROP_REFERENCE_PITCH = 2,
     PROP_MODE = 3,
-    PROP_REFERENCE_NOTE =4, //#1
+    PROP_REFERENCE_NOTE =4, 
     PROP_REFERENCE_03COMMA =5,
     PROP_REFERENCE_05COMMA =6,
     PROP_REFERENCE_07COMMA =7,
@@ -115,41 +115,7 @@ static int scale35chromatic[][] = {
     {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
     {6,0,0,-1,0,0,0,0,0,0,0,0}, //B
 };
-    
-//scale data 
-/*
-static const char* just_note1[] = ;
-static const double noteratio1[] = ;
-static double refratio1 =  ;
-static int numberofnotes1 = (sizeof(just_note1) / sizeof(just_note1[0]));
- 
- 
-//shruti scale
-static const char* just_note1[] = {"S ","r1","r2","R1","R2","g1","g2","G1","G2","M1","M2","m1","m2","P ","d1","d2","D1","D2","n1","n2","N1","N2"};
-static const double noteratio1[] = {1/1.0, 256/243.0, 16/15.0, 10/9.0, 9/8.0, 32/27.0, 6/5.0, 5/4.0, 81/64.0, 4/3.0, 27/20.0, 45/32.0, 729/512.0, 3/2.0, 128/81.0, 8/5.0, 5/3.0, 27/16.0, 16/9.0, 9/5.0, 15/8.0, 243/128.0, 2/1.0};
-static double refratio1 = 5/3.0;
-static int numberofnotes1 = (sizeof(just_note1) / sizeof(just_note1[0]));
-//Diatonic
-static const char* just_note2[] = {"Do","Re","Mi","Fa","Sol","La ","Ti"};
-static const double noteratio2[] = {1/1.0, 9/8.0, 5/4.0, 4/3.0, 3/2.0, 5/3.0, 15/8.0, 2/1.0} ;
-static double refratio2 = 5/3.0 ;
-static int numberofnotes2 = (sizeof(just_note2) / sizeof(just_note2[0]));
-//johnston5limit_note
-static const char* just_note3[] = {"C","C+","D♭♭-","B♯♯+","C♯","C♯+","D♭-","D♭","E♭♭♭-","C♯♯+","D-","D","E♭♭-","E♭♭","F♭♭♭-","D♯","E♭-","E♭","E♭+","F♭♭","D♯♯+","E","E+","F♭","D♯♯♯+","E♯","E♯+","F","F+","G♭♭-","E♯♯+","F♯","F♯+","G♭-","G♭","A♭♭♭-","F♯♯+","G-","G","G+","A♭♭","G♯","A♭-","A♭","F♯♯♯♯++","G♯♯","G♯♯+","F♯♯♯++","A","A+","B♭♭-","G♯♯♯+","A♯","A♯+","B♭-","B♭","C♭♭-","C♭♭","A♯♯++","B","C♭-","C♭","D♭♭♭-","B♯","C-"};
-static const double noteratio3[] = {1/1.0, 81/80.0, 128/125.0, 16875/16364.0, 25/24.0, 135/128.0, 16/15.0, 27/25.0, 2048/1875.0, 1125/1024.0, 10/9.0, 9/8.0, 256/225.0, 144/125.0, 32768/28125.0, 75/64.0, 32/27.0, 6/5.0, 243/200.0, 768/625.0, 10125/8192.0, 5/4.0, 81/64.0, 32/25.0, 84375/65536.0, 125/96.0, 675/512.0, 4/3.0, 27/20.0, 512/375.0, 5625/4096.0, 25/18.0, 45/32.0, 64/45.0, 36/25.0, 8192/5625.0, 375/256.0, 40/27.0, 3/2.0, 243/160.0, 192/125.0, 25/16.0, 128/81.0, 8/5.0, 421875/262144.0, 625/384.0, 3375/2048.0, 54375/32768.0, 5/3.0, 27/16.0, 128/75.0, 28125/16385.0, 125/72.0, 225/128.0, 16/9.0, 9/5.0, 2048/1125.0, 1152/625.0, 30375/16384.0, 15/8.0, 258/135.0, 48/25.0, 32768/16875.0, 125/64.0, 160/81.0, 2/1.0};
-static double refratio3 = 5/3.0 ;
-static int numberofnotes3 = (sizeof(just_note3) / sizeof(just_note3[0]));
-//johnston7limit_note
-static const char* just_note4[] = {"C","D7♭-","D♭-","D-","DL-","E7♭","E♭", "E","EL","F7+","F+","F♯+","F♯L+","G","A7♭","A♭","A","AL","B7♭","B♭","B","BL"};
-static const double noteratio4[] = {1/1.0, 28/27.0, 16/15.0, 10/9.0, 8/7.0, 7/6.0, 6/5.0, 5/4.0, 9/7.0, 21/16.0, 27/20.0, 45/32.0, 81/56.0, 3/2.0, 14/9.0, 8/5.0, 5/3.0, 12/7.0, 7/4.0, 9/5.0, 15/8.0, 27/14.0, 2/1.0};
-static double refratio4 = 5/3.0 ;
-static int numberofnotes4 = (sizeof(just_note4) / sizeof(just_note4[0]));
-//johnston7limitno5
-static const char* just_note5[] = {"C","D7♭","D","E7♭","EL","F","F♯LL","G","A7♭","AL","B7♭","BL"};
-static const double noteratio5[] = {1/1.0, 49/48.0, 9/8.0, 7/6.0, 9/7.0, 4/3.0, 72/49.0, 3/2.0, 14/9.0, 12/7.0, 7/4.0, 27/14.0, 2/1.0};
-static double refratio5 = 5/3.0;
-static int numberofnotes5 = (sizeof(just_note5) / sizeof(just_note5[0]));    
-*/
+
 static const double dashline[] = {
     3.0                
 };
@@ -641,7 +607,13 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 }
 
 static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
-    // ♯ ♭
+    /* steps to take:
+     1. tempreference_note: array with basenote + comma's and chroma's
+     2. tempscaletranslated = tempreference_note + scaletemp (array with basenote + comma's and chroma's
+     3. Create notenames with tempscaletranslated
+     4. calculate tempscaletranslatedpowprimes
+     5. calculate tempscaletranslateratios
+     */
     GxTuner *tuner = GX_TUNER(widget);
     //setting the scale
     if (tuner->mode < 2){
@@ -650,88 +622,93 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         tuner->tempscale = scale35chromatic;
     }
     //calculating the number notes in scale
-    numberofnotes = (sizeof(tempscale) / sizeof(tempscale[0]))
-    // calculating the reference note + comma's and chroma's to powers of primes
-    tuner->tempreference_notepowprimes[NRPRIMES]={{0}};
-    for (i=1; i<NRPRIMES; i++){
-            tuner->tempreference_notepowprimes[i] = scale3base[reference_note][i]
-                                        + (reference_03comma-3)*a03comma[i] 
-                                        + (reference_05comma-3)*a05comma[i]
-                                        + (reference_07comma-3)*a07comma[i]
-                                        + (reference_11comma-3)*a11comma[i]
-                                        + (reference_13comma-3)*a13comma[i]
-                                        + (reference_17comma-3)*a17comma[i]
-                                        + (reference_19comma-3)*a19comma[i]
-                                        + (reference_23comma-3)*a23comma[i]
-                                        + (reference_29comma-3)*a29comma[i]
-                                        + (reference_31comma-3)*a31comma[i]);
-            fprintf(stderr, "tempreference_note[i]: %i ", tempreference_notepowprimes[i]);
+    int numberofnotes = (sizeof(tempscale) / sizeof(tempscale[0]))
+    //1. creating tempreference_note
+    int tempreference_note[]= ( tuner->reference_note,0,tuner->reference_03comma-3,tuner->reference_05comma-3,tuner->reference_07comma-3,
+                                tuner->reference_11comma-3,tuner->reference_13comma-3,tuner->reference_17comma-3,tuner->reference_19comma-3,
+                                tuner->reference_23comma-3,tuner->reference_29comma-3,tuner->reference_31comma-3);
+    //2. tempscaletranslated
+    int tempscaletranslated[numberofnotes][NRPRIMES];
+    for (n=0; n<tuner->numberofnotes; n++){
+        int temp = tuner->tempscale[n][0]+tuner->tempreference_note[0];
+        if (temp > 7){
+            temp = temp -7;
+        }
+        tuner->tempscaletranslated[n][0]=temp;
+        for (i=1; i<NRPRIMES; i++){
+            tuner->tempscaletranslated[n][i]=tuner->tempreference_note[i]+tuner->tempscale[n][i];
+        }
     }
-    fprintf(stderr,"\n");
+    //3. creatnotenames with tempscaletranslated
+    std::string tempscaletranslatednames[tuner->numberofnotes];
+    std::string namecomma(int a, const char* b , const char* c){
+            std::string temp="";
+            if (a == 0){
+            temp ="";             
+            } else if (a < 0){
+                for (j=0;abs(j)<a; j++){
+                    temp += b;
+                }
+            } else if (a > 0){
+                for (j=0;j<a; j++){
+                    temp += c;
+                    
+                }              
+            }
+            return temp
+    }
+        
+    for (n=0; n<tuner->numberofnotes; n++){
+        tuner->tempscaletranslatednames[n] = (scale3base[tempscaletranslated[n][0]] 
+                                            + tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
+                                            + tuner->namecomma(tempscaletranslated[n][3],"-","+")
+                                            + tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
+                                            + tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
+                                            + tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
+                                            + tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
+                                            + tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
+                                            + tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
+                                            + tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
+                                            + tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
+    }
     
-        // calculating the powers of primes of tempscale
+    // 4. calculating the translated scale: + comma's and chroma's to powers of primes
+    int tempscaletranslatedpowprimes[tuner->numberofnotes][NRPRIMES];
+    for (n=0; n<tuner->numberofnotes; n++){
+        for (i=1; i<NRPRIMES; i++){
+                tuner->tempscaletranslatedpowprimes[n][i] = scale3base[tuner->tempscaletranslated[n][i]]
+                                                        + (tuner->tempscaletranslated[n][2])*a03comma[i] 
+                                                        + (tuner->tempscaletranslated[n][3])*a05comma[i]
+                                                        + (tuner->tempscaletranslated[n][4])*a07comma[i]
+                                                        + (tuner->tempscaletranslated[n][5])*a11comma[i]
+                                                        + (tuner->tempscaletranslated[n][6])*a13comma[i]
+                                                        + (tuner->tempscaletranslated[n][7])*a17comma[i]
+                                                        + (tuner->tempscaletranslated[n][8])*a19comma[i]
+                                                        + (tuner->tempscaletranslated[n][9])*a23comma[i]
+                                                        + (tuner->tempscaletranslated[n][10])*a29comma[i]
+                                                        + (tuner->tempscaletranslated[n][11])*a31comma[i]);                
+        }
+    }
+    // 5. calculate tempscaletranslateratios
     double tempscaleratios[numberofnotes];
     for (n=0; n<numberofnotes; n++){
         for (i=1; i<NRPRIMES; i++){
-            int tempscalepowprimes[numberofnotes][NRPRIMES];
-            tempscalepowprimes[n][i] =   (tuner->tempreferencepowprimes_note[i]
-                                              + scale3base[n][i]  
-                                              + tempscale[n][2]*a03comma[i] 
-                                              + tempscale[n][3]*a05comma[i]
-                                              + tempscale[n][4]*a07comma[i]
-                                              + tempscale[n][5]*a11comma[i]
-                                              + tempscale[n][6]*a13comma[i]
-                                              + tempscale[n][7]*a17comma[i]
-                                              + tempscale[n][8]*a19comma[i]
-                                              + tempscale[n][9]*a23comma[i]
-                                              + tempscale[n][10]*a29comma[i]
-                                              + tempscale[n][11]*a31comma[i]);
-            
-            }
-            tempscaleratios[n] =      (pow(2.0,tempscalepowprimes[n][1]
-                                    * pow(3.0,tempscalepowprimes[n][2]
-                                    * pow(5.0,tempscalepowprimes[n][3]
-                                    * pow(7.0,tempscalepowprimes[n][4]
-                                    * pow(11.0,tempscalepowprimes[n][5]
-                                    * pow(13.0,tempscalepowprimes[n][6]
-                                    * pow(17.0,tempscalepowprimes[n][7]
-                                    * pow(19.0,tempscalepowprimes[n][8]
-                                    * pow(23.0,tempscalepowprimes[n][9]
-                                    * pow(29.0,tempscalepowprimes[n][10]
-                                    * pow(31.0,tempscalepowprimes[n][11]);
-    }
-    //creating the note names
-    std::string tempscalenames[numberofnotes];
-    for (n=0; n<numberofnotes; n++){
-        int tempnotename = tempscale[n][0] + reference_note
-        if (tempnotename > 7) {
-            tempnotename = tempnotename -7;
+            tuner->tempscaleratios[n] =     (pow(2.0,tuner->tempscaletranslatedpowprimes[n][1]
+                                            * pow(3.0,tuner->tempscaletranslatedpowprimes[n][2]
+                                            * pow(5.0,tuner->tempscaletranslatedpowprimes[n][3]
+                                            * pow(7.0,tuner->tempscaletranslatedpowprimes[n][4]
+                                            * pow(11.0,tuner->tempscaletranslatedpowprimes[n][5]
+                                            * pow(13.0,tuner->tempscaletranslatedpowprimes[n][6]
+                                            * pow(17.0,tuner->tempscaletranslatedpowprimes[n][7]
+                                            * pow(19.0,tuner->tempscaletranslatedpowprimes[n][8]
+                                            * pow(23.0,tuner->tempscaletranslatedpowprimes[n][9]
+                                            * pow(29.0,tuner->tempscaletranslatedpowprimes[n][10]
+                                            * pow(31.0,tuner->tempscaletranslatedpowprimes[n][11]);
         }
-        tempscalenames[n] = scale3basenames[tempnotename]
-        //here all commas and chroma's are added ♯ ♭
-        if (reference_03comma == 0){
-           tempscalenames[n] += "♭♭♭";             
-        } else if (reference_03comma == 1){
-           tempscalenames[n] += "♭♭";             
-        } else if (reference_03comma == 2){
-           tempscalenames[n] += "♭";             
-        } else if (reference_03comma == 3){
-           tempscalenames[n] += "";             
-        } else if (reference_03comma == 4){
-           tempscalenames[n] += "♯";             
-        } else if (reference_03comma == 5){
-           tempscalenames[n] += "♯♯";             
-        } else if (reference_03comma == 6){
-           tempscalenames[n] += "♯♯♯";             
-        }
-        
+    //check if ratio is between 1/1 (unison) and 2/0 (octave) and set it between those two ratios)
+    int ratiocheck = log(tempscaletranslateratios[n])/log(2);
+    tuner->tempscaleratios[n]= tempscaleratios[2]/2^ratiocheck;
     }
-    
-        
-    }
-    
-    //
-    // calculating the number of notes of the preset
     // Frequency Octave divider 
     float multiply = 1.0;
     // ratio 
@@ -776,8 +753,8 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     if (tuner->freq) {
         // this is the frequency we get from the pitch tracker
         float freq_is = tuner->freq;
-        // Set reference frequency of the first note of the preset
-        float ref_c = tuner->reference_pitch / tuner->refratio;
+        // Set reference frequency to the first note of the translated scale (16/27 is the reciproce of a Pythagorean sixt, i.c. C-->A)
+        float ref_c = tuner->reference_pitch * 16.0 / 27.0 * tuner->tempscaletranslateratios[0];
         // now check in which octave we are with the tracked frequency
         // and set the frequency octave divider
         // ref_c is now the frequency of the first note in octave, 
@@ -785,7 +762,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
     for (int n=0 ; n <= 8 ; ++n )
-         { float ratiodiffhighnoteandoctave = exp((log(tuner->noteratio[tuner->numberofnotes-1])+log(tuner->noteratio[tuner->numberofnotes]))/2) ;  
+         { float ratiodiffhighnoteandoctave = exp((log(tuner->tempscaletranslateratios[tuner->numberofnotes-1])+log(2.0))/2) ;  
             if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
                  indicate_oc = n; 
                  multiply = pow(2, 4-n);
@@ -795,14 +772,24 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     percent = (freq_is/(ref_c/multiply)) ;
     // now we chould check which ratio we have
     // we split the range using log-average
-     for (int n=0 ; n <= tuner->numberofnotes ; ++n )
-         { float ratiodiff = exp((log(tuner->noteratio[n])+log(tuner->noteratio[n+1]))/2) ;  
+    for (int n=0 ; n <= tuner->numberofnotes ; ++n ){ 
+         if (i<tuner->numberofnotes){
+         float ratiodiff = exp((log(tuner->noteratio[n])+log(tuner->noteratio[n+1]))/2) ;  
                  if (percent < ratiodiff) {
                      display_note = n;
                      scale = ((percent-tuner->noteratio[n]))/2.0;
                      break;
                  }
          }
+         else if (i == numberofnotes){
+         float ratiodiff = exp((log(tuner->noteratio[n])+log(2.0))/2) ;  
+                 if (percent < ratiodiff) {
+                     display_note = n;
+                     scale = ((percent-tuner->noteratio[n]))/2.0;
+                     break;
+                 }
+         }
+    }
     //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->numberofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);

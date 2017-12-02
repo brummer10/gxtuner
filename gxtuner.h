@@ -52,7 +52,8 @@ typedef struct _GxTunerClass GxTunerClass;
 struct _GxTuner
 {
     GtkDrawingArea parent;
-    std::string tempscalenames
+    std::string tempscalenames;
+    std::string namecomma();
     double freq;
     double reference_pitch;
     double scale_w;
@@ -60,7 +61,9 @@ struct _GxTuner
     double tempscaleratios;
     int tempscale;
     int numberofnotes;
-    int tempreference_notepowprimes;
+    int tempreference_note;
+    int tempscaletranslated;
+    int tempscaletranslatedpowprimes;
     int mode;
     int reference_note; //#1
     int reference_03comma;
