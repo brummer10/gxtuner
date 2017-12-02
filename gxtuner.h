@@ -34,6 +34,8 @@ extern "C" {
 #include <gtk/gtk.h>
 #include <string> 
 
+
+
 G_BEGIN_DECLS
 
 #define GX_TYPE_TUNER          (gx_tuner_get_type())
@@ -52,14 +54,14 @@ typedef struct _GxTunerClass GxTunerClass;
 struct _GxTuner
 {
     GtkDrawingArea parent;
-    std::string tempscalenames;
-    std::string namecomma();
+    //std::string tempscalenames;
+    const char** namecomma();
     double freq;
     double reference_pitch;
     double scale_w;
     double scale_h;
-    double tempscaleratios;
-    int tempscale;
+    const double* tempscaleratios;
+    //int *tempscale;
     int numberofnotes;
     int tempreference_note;
     int tempscaletranslated;
