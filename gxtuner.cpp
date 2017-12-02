@@ -24,7 +24,7 @@
 #include "./gxtuner.h"
 
 
-#include <string> 
+#include <string.h> 
 #include <math.h>
 #include <stdlib.h>
 #define P_(s) (s)   // FIXME -> gettext
@@ -115,10 +115,9 @@ static const int scale35chromatic[12][NRPRIMES] = {
     {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
     {6,0,0,-1,0,0,0,0,0,0,0,0}, //B
 };
-int * tempscale;
+int tempscale;
 int *tempscaletranslated;
 int * tempreference_note;
-std::string * tempscaletranslatednames;
 
 static const double dashline[] = {
     3.0                
@@ -144,8 +143,19 @@ static const double no_dash[] = {
     1000,                      /* ink  */
     0                          /* skip */
 };
-
-
+/*
+static void namecomma(char *b , char *c){
+           if (a < 0){
+                for (int j=0; abs(j)<a; j++){
+                    strcat(b,tuner->tempscaletranslatednames[n]);
+                }
+            } else if (a > 0){
+                for (int j=0; j<a; j++){
+                    strcat(c,tuner->tempscaletranslatednames[n])
+                }              
+            }
+    }
+*/
 static void gx_tuner_get_preferred_size (GtkWidget *widget,
 	GtkOrientation orientation, gint *minimal_size, gint *natural_size)
 {
@@ -622,7 +632,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     //setting the scale
     if (tuner->mode < 2){
         tuner->numberofnotes = (sizeof(scale3diatonic) / sizeof(scale3diatonic[0]));
-        int tempscale[tuner->numberofnotes][NRPRIMES]={{0}};
+        int tempscale[tuner->numberofnotes][NRPRIMES];
         for (int n=0 ; n<tuner->numberofnotes; n++){
             for (int i=0; i<NRPRIMES; i++){
                 tempscale[n][i] = scale3diatonic[n][i];
@@ -630,7 +640,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         }
     } else if (tuner->mode > 1 ){
         tuner->numberofnotes = (sizeof(scale35chromatic) / sizeof(scale35chromatic[0]));
-        int tempscale[tuner->numberofnotes][NRPRIMES]={{0}};
+        int tempscale[tuner->numberofnotes][NRPRIMES];
         for (int n=0 ; n<tuner->numberofnotes; n++){
             for (int i=0; i<NRPRIMES; i++){
                 tempscale[n][i] = scale35chromatic[n][i];
@@ -644,46 +654,42 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     //2. tempscaletranslated
     int tempscaletranslated[tuner->numberofnotes][NRPRIMES];
     for (int n=0; n<tuner->numberofnotes; n++){
-        int temp = tempscale[n][0]+tempreference_note[0];
+        int temp = tempscale[n][0]+tuner->tempreference_note[0];
         if (temp > 7){
             temp = temp -7;
         }
-        tempscaletranslated[n][0]=temp;
+        tuner->tempscaletranslated[n][0]=temp;
         for (int i=1; i<NRPRIMES; i++){
-            tempscaletranslated[n][i]=tempreference_note[i]+tempscale[n][i];
+            tuner->tempscaletranslated[n][i]=tuner->tempreference_note[i]+tempscale[n][i];
         }
     }
     //3. creatnotenames with tempscaletranslated
-    string tempscaletranslatednames[tuner->numberofnotes];
-    const char* namecomma(int a, const char* b , const char* c){
-            std::string temp="";
-            if (a == 0){
-            temp ="";             
-            } else if (a < 0){
-                for (j=0;abs(j)<a; j++){
-                    temp += b;
+    const char* tempscaletranslatednames[tuner->numberofnotes];
+    for (int n=0; n<tuner->numberofnotes; n++){
+        strcat(scale3base[tempscaletranslated[n][0]],tuner->tempscaletranslatednames[n]); 
+        if (tempscaletranslated[n][2] < 0){
+                for (int j=0; j<abs(tuner->tempscaletranslated[n][2]); j++){
+                    strcat("♭",tuner->tempscaletranslatednames[n]);
                 }
-            } else if (a > 0){
-                for (j=0;j<a; j++){
-                    temp += c;
-                    
+            } else if (tempscaletranslated[n][2] > 0){
+                for (int j=0; j<tuner->tempscaletranslated[n][2]; j++){
+                    strcat("♯",tuner->tempscaletranslatednames[n])
                 }              
             }
-            return temp
-    }
         
-    for (int n=0; n<tuner->numberofnotes; n++){
-        tuner->tempscaletranslatednames[n] = (scale3base[tempscaletranslated[n][0]] 
-                                            + tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
-                                            + tuner->namecomma(tempscaletranslated[n][3],"-","+")
-                                            + tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
-                                            + tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
-                                            + tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
-                                            + tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
-                                            + tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
-                                            + tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
-                                            + tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
-                                            + tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
+        /*
+        tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
+        tuner->namecomma(tempscaletranslated[n][3],"-","+")
+        tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
+        tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
+        tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
+        tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
+        tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
+        tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
+        tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
+        tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
+        tuner->tempscaletranslatednames[n] = strcat(tempscalename);
+        */
     }
     
     // 4. calculating the translated scale: + comma's and chroma's to powers of primes

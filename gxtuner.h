@@ -32,7 +32,7 @@ extern "C" {
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <string> 
+#include <string.h> 
 
 
 
@@ -55,7 +55,7 @@ struct _GxTuner
 {
     GtkDrawingArea parent;
     //std::string tempscalenames;
-    const char** namecomma();
+    const char** tempscaletranslatednames;
     double freq;
     double reference_pitch;
     double scale_w;
@@ -108,6 +108,9 @@ void gx_tuner_set_reference_23comma(GxTuner *tuner, int reference_23comma);
 void gx_tuner_set_reference_29comma(GxTuner *tuner, int reference_29comma);
 void gx_tuner_set_reference_31comma(GxTuner *tuner, int reference_31comma);
 GtkWidget *gx_tuner_new(void);
+char* namecomma(int a, const char* b , const char* c);
+
+
 
 G_END_DECLS
 
