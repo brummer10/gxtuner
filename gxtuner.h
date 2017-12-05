@@ -44,6 +44,7 @@ G_BEGIN_DECLS
 #define GX_TUNER_CLASS(klass)  (G_TYPE_CHECK_CLASS_CAST ((klass),  GX_TYPE_TUNER, GxTunerClass))
 #define GX_IS_TUNER_CLASS(obj) (G_TYPE_CHECK_CLASS_TYPE ((klass),  GX_TYPE_TUNER))
 # define NRPRIMES 12
+# define MAXSCALENOTES 53
 
 typedef struct _GxTuner GxTuner;
 typedef struct _GxTunerClass GxTunerClass;
@@ -54,18 +55,18 @@ typedef struct _GxTunerClass GxTunerClass;
 struct _GxTuner
 {
     GtkDrawingArea parent;
-    //std::string tempscalenames;
-    const char** tempscaletranslatednames;
+    char** tempscaletranslatednames;
     double freq;
     double reference_pitch;
     double scale_w;
     double scale_h;
-    const double* tempscaleratios;
-    //int *tempscale;
-    int numberofnotes;
-    int tempreference_note;
-    int tempscaletranslated;
-    int tempscaletranslatedpowprimes;
+    double *tempscaleratios;
+    int temp;
+    int tempscale[MAXSCALENOTES][NRPRIMES];
+    int tempnumofnotes;
+    int tempreference_note[NRPRIMES];
+    int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
+    int tempscaletranslatedpowprimes[MAXSCALENOTES][NRPRIMES];
     int mode;
     int reference_note; //#1
     int reference_03comma;
