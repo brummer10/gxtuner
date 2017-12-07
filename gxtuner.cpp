@@ -634,7 +634,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     GxTuner *tuner = GX_TUNER(widget);
     //setting the scale
     //int tempscale[MAXSCALENOTES][NRPRIMES];
-    int tempnumofnotes;
+    //int tempnumofnotes;
     if (tuner->mode < 2){
         //int tempscale[MAXSCALENOTES][NRPRIMES];
         tuner->tempnumofnotes = numnotesscale3diatonic;
@@ -653,22 +653,23 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         }
     }
     //1. creating tempreference_note
-    int tempreference_note[NRPRIMES];
-    tempreference_note[0] = tuner->reference_note;
-    tempreference_note[1] = 0;
-    tempreference_note[2] = tuner->reference_03comma-3;
-    tempreference_note[3] = tuner->reference_05comma-3;
-    tempreference_note[4] = tuner->reference_07comma-3;
-    tempreference_note[5] = tuner->reference_11comma-3;
-    tempreference_note[6] = tuner->reference_13comma-3;
-    tempreference_note[7] = tuner->reference_17comma-3;
-    tempreference_note[8] = tuner->reference_19comma-3;
-    tempreference_note[9] = tuner->reference_23comma-3;
-    tempreference_note[10] = tuner->reference_29comma-3;
-    tempreference_note[11] = tuner->reference_31comma-3;
+    //int tempreference_note[NRPRIMES]={0};
+    tuner->tempreference_note[0] = tuner->reference_note;
+    tuner->tempreference_note[1] = 0;
+    tuner->tempreference_note[2] = tuner->reference_03comma-3;
+    tuner->tempreference_note[3] = tuner->reference_05comma-3;
+    tuner->tempreference_note[4] = tuner->reference_07comma-3;
+    tuner->tempreference_note[5] = tuner->reference_11comma-3;
+    tuner->tempreference_note[6] = tuner->reference_13comma-3;
+    tuner->tempreference_note[7] = tuner->reference_17comma-3;
+    tuner->tempreference_note[8] = tuner->reference_19comma-3;
+    tuner->tempreference_note[9] = tuner->reference_23comma-3;
+    tuner->tempreference_note[10] = tuner->reference_29comma-3;
+    tuner->tempreference_note[11] = tuner->reference_31comma-3;
     
     //2. tempscaletranslated
     int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
+    memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
     //int temp;
     for (int n=0; n<tuner->tempnumofnotes; n++){
         tuner->temp = tuner->tempscale[n][0] +  tuner->tempreference_note[0];
@@ -682,32 +683,41 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     }
     //3. creatnotenames with tempscaletranslated
     const char* tempscaletranslatednames[MAXSCALENOTES][25];
+    memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
     for (int n=0; n<tuner->tempnumofnotes; n++){
-        strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]); 
-        if (tempscaletranslated[n][2] < 0){
-                for (int j=0; j<abs(tuner->tempscaletranslated[n][2]); j++){
-                    strcat(tuner->tempscaletranslatednames[n],"♭");
+        int i = 0;
+        while (i < 25){ 
+            strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
+            i++;
+            if (tempscaletranslated[n][2] < 0){
+                    for (int j=0; j<abs(tuner->tempscaletranslated[n][2]); j++){
+                        strcat(tuner->tempscaletranslatednames[n],"♭");
+                        i++;
+                    }
+                } else if (tempscaletranslated[n][2] > 0){
+                    for (int j=0; j<tuner->tempscaletranslated[n][2]; j++){
+                        strcat(tuner->tempscaletranslatednames[n],"♯");
+                        i++;
+                    }              
                 }
-            } else if (tempscaletranslated[n][2] > 0){
-                for (int j=0; j<tuner->tempscaletranslated[n][2]; j++){
-                    strcat(tuner->tempscaletranslatednames[n],"♯");
-                }              
-            }
         
-        /*
-        tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
-        tuner->namecomma(tempscaletranslated[n][3],"-","+")
-        tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
-        tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
-        tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
-        tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
-        tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
-        tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
-        tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
-        tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
-        tuner->tempscaletranslatednames[n] = strcat(tempscalename);
-        */
-        strcat(tuner->tempscaletranslatednames[n],"\n");
+    
+            /*
+            tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
+            tuner->namecomma(tempscaletranslated[n][3],"-","+")
+            tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
+            tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
+            tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
+            tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
+            tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
+            tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
+            tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
+            tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
+            tuner->tempscaletranslatednames[n] = strcat(tempscalename);
+            */
+            strcat(tuner->tempscaletranslatednames[n],"\n");
+            i++;
+        }
     }
     
     // 4. calculating the translated scale: + comma's and chroma's to powers of primes
@@ -904,7 +914,14 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
     cairo_stroke(cr);   
 
-    g_free (allocation); 
+    //memset(tuner->tempscaletranslatednames[0], 0, sizeof(tempscaletranslatednames));
+    //memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
+    free(tuner->tempscaletranslatednames);
+    free(tuner->tempscale);
+    free(tuner->tempscaletranslated);
+    free(tuner->tempscaleratios);
+    free(tuner->tempreference_note);
+    g_free (allocation);
     return FALSE;
 }
 
