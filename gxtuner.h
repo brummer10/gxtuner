@@ -52,15 +52,17 @@ typedef struct _GxTunerClass GxTunerClass;
 // the internal struct of the tuner widget,
 // add variables for new propertys in the struct
 
+
 struct _GxTuner
 {
     GtkDrawingArea parent;
-    char** tempscaletranslatednames;
+    //char** tempscaletranslatednames;
     double freq;
     double reference_pitch;
     double scale_w;
     double scale_h;
     double *tempscaleratios;
+    char** tempscaletranslatednames;
     int temp;
     int tempscale[MAXSCALENOTES][NRPRIMES];
     int tempnumofnotes;
@@ -109,7 +111,7 @@ void gx_tuner_set_reference_23comma(GxTuner *tuner, int reference_23comma);
 void gx_tuner_set_reference_29comma(GxTuner *tuner, int reference_29comma);
 void gx_tuner_set_reference_31comma(GxTuner *tuner, int reference_31comma);
 GtkWidget *gx_tuner_new(void);
-char* namecomma(int a, const char* b , const char* c);
+//char* namecomma(int a, const char* b , const char* c);
 
 
 

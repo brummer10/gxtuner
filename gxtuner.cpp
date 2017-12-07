@@ -79,7 +79,7 @@ static int scale3base[7][NRPRIMES] = {
 };
 const char* scale3basenames[7] = {"C","D","E","F","G","A","B"};
 
-static int a03comma[NRPRIMES] = {0,-9,7,0,0,0,0,0,0,0,0,0};
+/*static int a03comma[NRPRIMES] = {0,-9,7,0,0,0,0,0,0,0,0,0};
 static int a05comma[NRPRIMES] = {0,-4,4,-1,0,0,0,0,0,0,0,0};
 static int a07comma[NRPRIMES] = {0,6,-2,0,-1,0,0,0,0,0,0,0}; 
 static int a11comma[NRPRIMES] = {0,-5,1,0,0,1,0,0,0,0,0,0};
@@ -88,7 +88,7 @@ static int a17comma[NRPRIMES] = {0,7,-7,0,0,0,0,1,0,0,0,0};
 static int a19comma[NRPRIMES] = {0,-9,3,0,0,0,0,0,1,0,0,0}; 
 static int a23comma[NRPRIMES] = {0,5,-6,0,0,0,0,0,0,1,0,0};
 static int a29comma[NRPRIMES] = {0,-8,2,0,0,0,0,0,0,0,1,0};
-static int a31comma[NRPRIMES] = {0,3,-5,0,0,0,0,0,0,0,0,1};
+static int a31comma[NRPRIMES] = {0,3,-5,0,0,0,0,0,0,0,0,1};*/
 
 //here we define the scales. Every row of the array has 11 digits. The first 
 static int scale3diatonic[7][NRPRIMES] = {
@@ -624,13 +624,7 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
 }
 
 static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
-    /* steps to take:
-     1. tempreference_note: array with basenote + comma's and chroma's
-     2. tempscaletranslated = tempreference_note + scaletemp (array with basenote + comma's and chroma's
-     3. Create notenames with tempscaletranslated
-     4. calculate tempscaletranslatedpowprimes
-     5. calculate tempscaletranslateratios
-     */
+    fprintf(stderr,"Fase I, start");
     GxTuner *tuner = GX_TUNER(widget);
     //setting the scale
     //int tempscale[MAXSCALENOTES][NRPRIMES];
@@ -652,6 +646,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             }
         }
     }
+    fprintf(stderr,"Fase II creating reference note \n");
     //1. creating tempreference_note
     //int tempreference_note[NRPRIMES]={0};
     tuner->tempreference_note[0] = tuner->reference_note;
@@ -668,6 +663,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     tuner->tempreference_note[11] = tuner->reference_31comma-3;
     
     //2. tempscaletranslated
+    fprintf(stderr,"Fase III creating tempscaletranslated \n");
     int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
     memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
     //int temp;
@@ -681,16 +677,28 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             tuner->tempscaletranslated[n][i]=tuner->tempreference_note[i]+tuner->tempscale[n][i];
         }
     }
+    char* tempscaletranslatednames[MAXSCALENOTES][25];
+    
+    int sizeoftempscaletranslatednames = sizeof(tempscaletranslatednames)/sizeof(tempscaletranslatednames[0]);
     //3. creatnotenames with tempscaletranslated
-    const char* tempscaletranslatednames[MAXSCALENOTES][25];
-    memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
+    fprintf(stderr,"sizeof: %i \n", sizeoftempscaletranslatednames);
+    fprintf(stderr,"Fase IV creating names \n");
+    fprintf(stderr,"Fase IVa \n");
+    //memset(tuner->tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
+    fprintf(stderr,"Fase IVb: \n");
     for (int n=0; n<tuner->tempnumofnotes; n++){
+        fprintf(stderr,"Fase IVc \n");
         int i = 0;
-        while (i < 25){ 
+        fprintf(stderr,"Fase IVd i=%i \n",i);
+        while (i < 24){ 
+            fprintf(stderr,"Fase IVe \n");
             strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
+            fprintf(stderr,"Fase IVf \n");
             i++;
+            fprintf(stderr,"Fase IVg i=%i tempnumofnotes=%i \n",i, tuner->tempnumofnotes);
             if (tempscaletranslated[n][2] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][2]); j++){
+                        fprintf(stderr,"Fase IVh \n");
                         strcat(tuner->tempscaletranslatednames[n],"♭");
                         i++;
                     }
@@ -700,7 +708,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-        
+            
     
             /*
             tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
@@ -715,11 +723,12 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
             tuner->tempscaletranslatednames[n] = strcat(tempscalename);
             */
-            strcat(tuner->tempscaletranslatednames[n],"\n");
-            i++;
-        }
+            break;
+        } 
+        strcat(tuner->tempscaletranslatednames[n],"\0");
     }
-    
+    fprintf(stderr,"tempscaletranslatednames[0][0]: %c \n", tuner->tempscaletranslatednames[0][0]);
+    fprintf(stderr,"Fase V creating names \n");
     // 4. calculating the translated scale: + comma's and chroma's to powers of primes
     //int tempscaletranslatedpowprimes[MAXSCALENOTES][NRPRIMES];
     for (int n=0; n<tuner->tempnumofnotes; n++){
@@ -914,7 +923,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
     cairo_stroke(cr);   
 
-    //memset(tuner->tempscaletranslatednames[0], 0, sizeof(tempscaletranslatednames));
+    //memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
     //memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
     free(tuner->tempscaletranslatednames);
     free(tuner->tempscale);
