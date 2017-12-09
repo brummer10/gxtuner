@@ -61,8 +61,9 @@ struct _GxTuner
     double reference_pitch;
     double scale_w;
     double scale_h;
-    double *tempscaleratios;
-    char** tempscaletranslatednames;
+    //double *tempscaleratios;
+    double tempscaleratios[MAXSCALENOTES];
+    char* tempscaletranslatednames[MAXSCALENOTES];
     int temp;
     int tempscale[MAXSCALENOTES][NRPRIMES];
     int tempnumofnotes;
