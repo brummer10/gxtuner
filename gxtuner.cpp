@@ -654,7 +654,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             }
         }
     }
-    fprintf(stderr,"Fase II creating reference note \n");
     //1. creating tempreference_note
     //int tempreference_note[NRPRIMES]={0};
     tuner->tempreference_note[0] = tuner->reference_note;
@@ -671,7 +670,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     tuner->tempreference_note[11] = tuner->reference_31comma;
     
     //2. tempscaletranslated
-    fprintf(stderr,"Fase III creating tempscaletranslated \n");
     int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
     memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
     //int temp;
@@ -685,25 +683,13 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             tuner->tempscaletranslated[n][i]=tuner->tempreference_note[i]+tuner->tempscale[n][i];
         }
     }
-    //char* tempscaletranslatednames[MAXSCALENOTES][25];
-    
-    int sizeoftempscaletranslatednames = sizeof(tuner->tempscaletranslatednames)/sizeof(tuner->tempscaletranslatednames[0]);
     //3. creatnotenames with tempscaletranslated
-    fprintf(stderr,"sizeof: %i \n", sizeoftempscaletranslatednames);
-    fprintf(stderr,"Fase IV creating names \n");
-    fprintf(stderr,"Fase IVa \n");
-    //memset(tuner->tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
-    fprintf(stderr,"Fase IVb: \n");
+    memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
     for (int n=0; n<tuner->tempnumofnotes; n++){
-        fprintf(stderr,"Fase IVc \n");
         int i = 0;
-        fprintf(stderr,"Fase IVd i=%i \n",i);
+        strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
         while (i < 24){ 
-            fprintf(stderr,"Fase IVe \n");
-            strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
-            fprintf(stderr,"Fase IVf \n");
             i++;
-            fprintf(stderr,"Fase IVg i=%i tempnumofnotes=%i \n",i, tuner->tempnumofnotes);
             if (tempscaletranslated[n][2] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][2]); j++){
                         fprintf(stderr,"Fase IVh \n");
@@ -716,7 +702,8 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
+            strcat(tuner->tempscaletranslatednames[n],"\0");
+            break;
     
             /*
             tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
@@ -731,17 +718,15 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
             tuner->tempscaletranslatednames[n] = strcat(tempscalename);
             */
-            break;
+            
         } 
-        strcat(tuner->tempscaletranslatednames[n],"\0");
+        
     }
-    fprintf(stderr,"tempscaletranslatednames[1][0]: %c \n", tuner->tempscaletranslatednames[1][0]);
     fprintf(stderr,"Fase V creating names \n");
     // 4. calculating the translated scale: + comma's and chroma's to powers of primes
     //int tempscaletranslatedpowprimes[MAXSCALENOTES][NRPRIMES];
     for (int n=0; n<tuner->tempnumofnotes; n++){
         for (int i=1; i<NRPRIMES; i++){
-                fprintf(stderr,"Fase Va creating names \n");
                 tuner->tempscaletranslatedpowprimes[n][i] = scale3base[tuner->tempscaletranslated[n][0]][i] /*
                                                         + tuner->tempscaletranslated[n][2]  * a03comma[i] 
                                                         + tuner->tempscaletranslated[n][3]  * a05comma[i]
@@ -756,10 +741,8 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         }
     }
     // 5. calculate tempscaletranslateratios
-    fprintf(stderr,"Fase VI creating noteratios \n");
     for (int n=0; n<tuner->tempnumofnotes; n++){
         for (int i=1; i<NRPRIMES; i++){
-            fprintf(stderr,"Fase VIa creating noteratios, i=%i \n",i);
             tuner->tempscaleratios[n] =     (pow(2.0,tuner->tempscaletranslatedpowprimes[n][1])
                                             * pow(3.0,tuner->tempscaletranslatedpowprimes[n][2])
                                             * pow(5.0,tuner->tempscaletranslatedpowprimes[n][3])
@@ -776,7 +759,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             int ratiocheck = log(tuner->tempscaleratios[n])/log(2);
             tuner->tempscaleratios[n]= tuner->tempscaleratios[n]/pow(2,ratiocheck);
     }
-    fprintf(stderr,"Fase VII \n");
     // Frequency Octave divider 
     float multiply = 1.0;
     // ratio 
@@ -848,7 +830,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // now we chould check which ratio we have
     // we split the range using log-average
     fprintf(stderr,"Fase X \n");
-    for (int n=0 ; n <= tuner->tempnumofnotes ; ++n ){ 
+    for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
         if (n<tuner->tempnumofnotes){
          float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;  
                  if (percent < ratiodiff) {
@@ -944,11 +926,11 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
 
     //memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
     //memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
-    free(tuner->tempscaletranslatednames);
+    /*free(tuner->tempscaletranslatednames);
     free(tuner->tempscale);
     free(tuner->tempscaletranslated);
     free(tuner->tempscaleratios);
-    free(tuner->tempreference_note);
+    free(tuner->tempreference_note);*/
     g_free (allocation);
     return FALSE;
 }
