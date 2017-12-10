@@ -213,23 +213,20 @@ void TunerWidget::create_window() {
     // scale
     selectord = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "chromatic");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "shruti");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "diatonic");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston5limit");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston7limit");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "johnston7limitno5");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 0);
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale3diatonic");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale35chromatic");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.1);
     // Reference note
     selectore = gtk_combo_box_text_new();
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "C");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "D");
-    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "E");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "F");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "C");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "G");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "D");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "A");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "E");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "B");
-    gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectore), 0.1);
     // Flat or Sharps
     selectorf = gtk_combo_box_text_new();
@@ -506,31 +503,25 @@ void TunerWidget::parse_cmd() {
     // add your mode here as well.
     if (!cptr->cv(9).empty()) {
         std::string m = cptr->cv(9).c_str();
-        if(m == "shruti") {
+        if(m == "scale3diatonic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
-        } else if(m == "diatonic") {
+        } else if(m == "scale35chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 2);
-        } else if(m == "johnston5limit") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 3);
-        } else if(m == "johnston7limit") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 4);
-        } else if(m == "johnston7limitno5") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
-         }
+        } 
     }
     if (!cptr->cv(10).empty()) { //#3
         std::string R = cptr->cv(10).c_str();
-        if(R == "C") {
+        if(R == "F") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
-        } else if(R == "D") {
+        } else if(R == "C") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
-        } else if(R == "E") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
-        } else if(R == "F") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
         } else if(R == "G") {
-           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 2);
+        } else if(R == "D") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 3);
         } else if(R == "A") {
+           gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 4);
+        } else if(R == "E") {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 5);
         } else if(R == "B") {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);

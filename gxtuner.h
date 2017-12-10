@@ -64,6 +64,7 @@ struct _GxTuner
     //double *tempscaleratios;
     double tempscaleratios[MAXSCALENOTES];
     char* tempscaletranslatednames[MAXSCALENOTES];
+    //int tempscale3base[7][NRPRIMES];
     int temp;
     int tempscale[MAXSCALENOTES][NRPRIMES];
     int tempnumofnotes;
