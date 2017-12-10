@@ -658,16 +658,16 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     //int tempreference_note[NRPRIMES]={0};
     tuner->tempreference_note[0] = tuner->reference_note;
     tuner->tempreference_note[1] = 0;
-    tuner->tempreference_note[2] = tuner->reference_03comma;
-    tuner->tempreference_note[3] = tuner->reference_05comma;
-    tuner->tempreference_note[4] = tuner->reference_07comma;
-    tuner->tempreference_note[5] = tuner->reference_11comma;
-    tuner->tempreference_note[6] = tuner->reference_13comma;
-    tuner->tempreference_note[7] = tuner->reference_17comma;
-    tuner->tempreference_note[8] = tuner->reference_19comma;
-    tuner->tempreference_note[9] = tuner->reference_23comma;
-    tuner->tempreference_note[10] = tuner->reference_29comma;
-    tuner->tempreference_note[11] = tuner->reference_31comma;
+    tuner->tempreference_note[2] = tuner->reference_03comma-3;
+    tuner->tempreference_note[3] = tuner->reference_05comma-3;
+    tuner->tempreference_note[4] = tuner->reference_07comma-3;
+    tuner->tempreference_note[5] = tuner->reference_11comma-3;
+    tuner->tempreference_note[6] = tuner->reference_13comma-3;
+    tuner->tempreference_note[7] = tuner->reference_17comma-3;
+    tuner->tempreference_note[8] = tuner->reference_19comma-3;
+    tuner->tempreference_note[9] = tuner->reference_23comma-3;
+    tuner->tempreference_note[10] = tuner->reference_29comma-3;
+    tuner->tempreference_note[11] = tuner->reference_31comma-3;
     
     //2. tempscaletranslated
     int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
@@ -684,7 +684,10 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         }
     }
     //3. creatnotenames with tempscaletranslated
-    memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
+    for(int i=0;i<MAXSCALENOTES;i++) {
+         memset(tuner->tempscaletranslatednames[i], 0, sizeof(char));
+    }
+ 
     for (int n=0; n<tuner->tempnumofnotes; n++){
         int i = 0;
         strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
