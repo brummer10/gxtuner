@@ -260,7 +260,7 @@ void CmdParse::setup_groups() {
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
-            "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic )", "MODE" },
+            "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic / scaleovertones )", "MODE" },
         { "reference_note", 'R', 0, G_OPTION_ARG_STRING, &reference_note,
             "set reference note (-R C / D / E / F / G / A / B )", "REFERENCE_NOTE" },
         { "reference_03comma", 'A', 0, G_OPTION_ARG_STRING, &reference_03comma,
