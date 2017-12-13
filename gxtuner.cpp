@@ -118,9 +118,54 @@ static int scale35chromatic[12][NRPRIMES] = {
     {4,0,-1,-1,0,0,0,0,0,0,0,0}, //Ab
     {4,0,0,-1,0,0,0,0,0,0,0,0}, //A-
     {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
-    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B
+    {6,0,0,-1,0,0,0,0,0,0,0,0} //B
 };
 static int numnotesscale35chromatic = 12;
+
+static int scale357chromatic[22][NRPRIMES] = {
+    //basenote,2,3,5,7,11,13,17,19,23,29,31
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //C
+    {3,0,-1,-1,1,0,0,0,0,0,0,0}, //Db-7
+    {3,0,-1,-1,0,0,0,0,0,0,0,0}, //Db-
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //D
+    {3,0,0,-1,-1,0,0,0,0,0,0,0}, //DL-
+    {5,0,-1,-1,1,0,0,0,0,0,0,0}, //Eb-7
+    {5,0,-1,-1,0,0,0,0,0,0,0,0}, //Eb-
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E-
+    {5,0,0,-1,-1,0,0,0,0,0,0,0}, //E-L
+    {0,0,0,1,1,0,0,0,0,0,0,0}, //F+7
+    {0,0,0,1,0,0,0,0,0,0,0,0}, //F+
+    {0,0,1,1,0,0,0,0,0,0,0,0}, //F#+
+    {0,0,1,1,-1,0,0,0,0,0,0,0}, //F#+L
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //G
+    {4,0,-1,-1,1,0,0,0,0,0,0,0}, //Ab-7
+    {4,0,-1,-1,0,0,0,0,0,0,0,0}, //Ab-
+    {4,0,0,-1,0,0,0,0,0,0,0,0}, //A-
+    {4,0,0,-1,-1,0,0,0,0,0,0,0}, //A-L
+    {6,0,-1,-1,1,0,0,0,0,0,0,0}, //Bb-7
+    {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
+    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B-
+    {6,0,0,-1,-1,0,0,0,0,0,0,0} //B-L
+};
+static int numnotesscale357chromatic = 22;
+
+static int scale37chromatic[12][NRPRIMES] = {
+    //basenote,2,3,5,7,11,13,17,19,23,29,31
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //C
+    {3,0,-1,0,1,0,0,0,0,0,0,0}, //Db7
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //D
+    {5,0,-1,-1,1,0,0,0,0,0,0,0}, //Eb-7
+    {5,0,0,-1,-1,0,0,0,0,0,0,0}, //E-L
+    {0,0,0,0,0,0,0,0,0,0,0,0}, //F
+    {0,0,1,0,-2,0,0,0,0,0,0,0}, //F#LL
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //G
+    {4,0,-1,-1,1,0,0,0,0,0,0,0}, //Ab-7
+    {4,0,0,-1,-1,0,0,0,0,0,0,0}, //A-L
+    {6,0,-1,-1,1,0,0,0,0,0,0,0}, //Bb-7
+    {6,0,0,-1,-1,0,0,0,0,0,0,0} //B-L
+};
+static int numnotesscale37chromatic = 12;
+
 
 static int scaleovertones[8][NRPRIMES] = {
     //basenote,2,3,5,7,11,13,17,19,23,29,31
@@ -134,7 +179,6 @@ static int scaleovertones[8][NRPRIMES] = {
     {6,0,0,-1,0,0,0,0,0,0,0,0}, //B-
 };
 static int numnotesscaleovertones = 8;
-
 
 static const double dashline[] = {
     3.0                
@@ -670,7 +714,21 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 tuner->tempscale[n][i] = scale35chromatic[n][i];
             }
         }
-    }else if (tuner->mode == 3 ){
+    } else if (tuner->mode == 3 ){
+        tuner->tempnumofnotes = numnotesscale357chromatic;
+        for (int n=0 ; n<tuner->tempnumofnotes; n++){
+            for (int i=0; i<NRPRIMES; i++){
+                tuner->tempscale[n][i] = scale357chromatic[n][i];
+            }
+        }
+    } else if (tuner->mode == 4 ){
+    tuner->tempnumofnotes = numnotesscale37chromatic;
+    for (int n=0 ; n<tuner->tempnumofnotes; n++){
+        for (int i=0; i<NRPRIMES; i++){
+            tuner->tempscale[n][i] = scale37chromatic[n][i];
+        }
+    }
+    }else if (tuner->mode == 5 ){
         tuner->tempnumofnotes = numnotesscaleovertones;
         for (int n=0 ; n<tuner->tempnumofnotes; n++){
             for (int i=0; i<NRPRIMES; i++){

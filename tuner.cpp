@@ -230,6 +230,8 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale3diatonic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale35chromatic");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale357chromatic");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale37chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scaleovertones");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.1);
@@ -529,8 +531,12 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
         } else if(m == "scale35chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 2);
-        }else if(m == "scaleovertones") {
+        } else if(m == "scale357chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 3);
+        } else if(m == "scale37chromatic") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 4);        
+                }else if(m == "scaleovertones") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
         } 
     }
     if (!cptr->cv(10).empty()) { //#3
