@@ -182,6 +182,12 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(gbox),false);
     hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(hbox),false);
+    habox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(habox),false);
+    hbbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(hbbox),false);
+    hcbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(hcbox),false);
     hhbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(hhbox),false);
     ibox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -198,6 +204,15 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(nbox),false);
     obox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(obox),false);
+    pbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(pbox),false);
+    //pabox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    //gtk_box_set_homogeneous(GTK_BOX(pabox),false);
+    //pbbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    //gtk_box_set_homogeneous(GTK_BOX(pbbox),false);
+    //pcbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    //gtk_box_set_homogeneous(GTK_BOX(pcbox),false);
+    
         
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
     spinner = gtk_knob_new_with_value_label(GTK_ADJUSTMENT(adj), 0);
@@ -367,11 +382,11 @@ void TunerWidget::create_window() {
     gtk_container_add (GTK_CONTAINER(window), box2);
     // the paintbox to create the frame
     gtk_box_pack_start(GTK_BOX(box2), box,true,true,0);
+    gtk_box_pack_end(GTK_BOX(box2), pbox, false,false,0);
+    gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     // put the tuner inside the frame
     gtk_box_pack_start(GTK_BOX(box), box1,true,true,0);
     gtk_box_pack_start(GTK_BOX(box1), tuner,true,true,0);
-    // add a box for the controls to the bottom
-    gtk_box_pack_end(GTK_BOX(box2), hbox, false,false,0);
     // put all the selectors and spinners in a box
     gtk_container_add (GTK_CONTAINER (abox), spinner);
     gtk_container_add (GTK_CONTAINER (bbox), spinnert);
@@ -388,23 +403,29 @@ void TunerWidget::create_window() {
     gtk_container_add (GTK_CONTAINER (nbox), selectorn);
     gtk_container_add (GTK_CONTAINER (obox), selectoro);
         
-    //put all the filled boxes in hbox
-    gtk_box_pack_start(GTK_BOX(hbox),abox,false,false,0);
-    gtk_box_pack_start(GTK_BOX(hbox),bbox,false,false,0);
-    gtk_box_pack_start(GTK_BOX(hbox),cbox,true,false,0);
-    gtk_box_pack_start(GTK_BOX(hbox),dbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),ebox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),fbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),gbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),hhbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),ibox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),jbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),kbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),lbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),mbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),nbox,false,false,5);
-    gtk_box_pack_start(GTK_BOX(hbox),obox,false,false,5);
-        
+    //put all the filled boxes in hbox and pbox
+    gtk_box_pack_start(GTK_BOX(hbox),habox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(habox),abox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(hbox),hbbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),cbox,true,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),dbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),ebox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),fbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),gbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),hhbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),ibox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(hbox),hcbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(hcbox),bbox,false,false,5);
+    
+    //gtk_box_pack_start(GTK_BOX(pbox),pabox,false,false,5);
+    //gtk_box_pack_start(GTK_BOX(pbox),pbbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(pbox),jbox,false,false,15);
+        gtk_box_pack_start(GTK_BOX(pbox),kbox,false,false,15);
+        gtk_box_pack_start(GTK_BOX(pbox),lbox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbox),obox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbox),nbox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbox),mbox,false,false,15);
+    //gtk_box_pack_start(GTK_BOX(pbox),pcbox,false,false,5);
     // connect the signal handlers 
     // connect the controls with a function to do what they should do
     // when they changed there value.
@@ -464,7 +485,7 @@ void TunerWidget::parse_cmd() {
    
     // *** commandline parsing ***
     // set default window position optional by command line options
-    int x = 120;
+    int x = 90;
     int y = 90;
     if (!cptr->cv(3).empty()) {
         x = atoi(cptr->cv(3).c_str());
@@ -478,8 +499,8 @@ void TunerWidget::parse_cmd() {
     }
     gtk_window_move(GTK_WINDOW(window),x,y);
     // set default window size optional by command line options
-    x = 1000;
-    y = 500;
+    x = 500;
+    y = 300;
     if (!cptr->cv(1).empty()) {
         x = atoi(cptr->cv(1).c_str());
     }

@@ -58,6 +58,7 @@ static void gx_tuner_set_property(
     GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec);
 static void gx_tuner_get_property(
     GObject *object, guint prop_id, GValue *value, GParamSpec *pspec);
+static void gx_tuner_destroy(GObject  *object);
 
 static const int tuner_width = 100;
 static const int tuner_height = 60;
@@ -66,6 +67,7 @@ static const double rect_height = 60;
 
 static int cents = 0;
 static float mini_cents = 0.0;
+
 // base scale: 3limit diatonic (Pythagorean)
 static int scale3base[7][NRPRIMES] = {
     //{notename,2,3,5,7,11,13,17,19,23,29,31}
@@ -216,11 +218,11 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
 	widget_class->get_preferred_width = gx_tuner_get_preferred_width;
 	widget_class->get_preferred_height = gx_tuner_get_preferred_height;
 	
-	// here we setup get and set methodes for the propertys
+	// here we setup get and set methodes for the properties
     gobject_class->set_property = gx_tuner_set_property;
     gobject_class->get_property = gx_tuner_get_property;
     // here we install the propertys for the widget, add new 
-    // preopertys here
+    // properties here
     g_object_class_install_property(
         gobject_class, PROP_FREQ, g_param_spec_double (
             "freq", P_("Frequency"),
@@ -291,11 +293,21 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
             "reference-31comma", P_("Reference 31 comma"),
             P_("The 31 comma for which tuning is displayed"),
             0, 1, 0, G_PARAM_READWRITE));
- 
+    gobject_class->finalize = gx_tuner_destroy;
+    
     klass->surface_tuner = cairo_image_surface_create(
         CAIRO_FORMAT_ARGB32, tuner_width*3., tuner_height*3.);
     g_assert(klass->surface_tuner != NULL);
     draw_background(klass->surface_tuner);
+}
+
+static void gx_tuner_destroy(GObject *object) {
+    g_return_if_fail (object != NULL);
+    g_return_if_fail (GX_IS_TUNER (object));
+    GxTuner *tuner = GX_TUNER(object);
+    for(int i=0;i<MAXSCALENOTES;i++) {
+           free(tuner->tempscaletranslatednames[i]);
+    }
 }
 
 static void gx_tuner_base_class_finalize(GxTunerClass *klass) {
@@ -438,7 +450,7 @@ GtkWidget *gx_tuner_new(void) {
     return (GtkWidget*)g_object_new(GX_TYPE_TUNER, NULL);
 }
 
-// here we set propertys, add new ones here
+// here we set properties, add new ones here
 
 static void gx_tuner_set_property(GObject *object, guint prop_id,
                                       const GValue *value, GParamSpec *pspec) {
@@ -681,9 +693,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     tuner->tempreference_note[10] = tuner->reference_29comma-3;
     tuner->tempreference_note[11] = tuner->reference_31comma-3;
     
-    fprintf(stderr, "tempreference_note: %i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i \n ", tuner->tempreference_note[0],tuner->tempreference_note[1],tuner->tempreference_note[2],
-            tuner->tempreference_note[3],tuner->tempreference_note[4],tuner->tempreference_note[5],tuner->tempreference_note[6],tuner->tempreference_note[7],
-            tuner->tempreference_note[8],tuner->tempreference_note[9],tuner->tempreference_note[10],tuner->tempreference_note[11]);
     //2. tempscaletranslated
     //memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
     for(int i=0;i<MAXSCALENOTES;i++) {
@@ -708,20 +717,9 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
             tuner->tempscaletranslated[n][2]=tuner->tempscaletranslated[n][2]+1;
             tuner->tempscaletranslated[n][0]= tuner->temp;
         }
-        else {tuner->tempscaletranslated[n][0]= tuner->temp;}
-        fprintf(stderr, "tuner->temp%i:%i \n",n,tuner->temp);       
+        else {tuner->tempscaletranslated[n][0]= tuner->temp;}           
     }
-    
-    
-    fprintf(stderr, "tempscaletranslated: %i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i \n ", tuner->tempscaletranslated[3][0],tuner->tempscaletranslated[3][1],
-            tuner->tempscaletranslated[3][2], tuner->tempscaletranslated[3][3],tuner->tempscaletranslated[3][4],tuner->tempscaletranslated[3][5],
-            tuner->tempscaletranslated[3][6],tuner->tempscaletranslated[3][7],tuner->tempscaletranslated[3][8],tuner->tempscaletranslated[3][9],
-            tuner->tempscaletranslated[3][10],tuner->tempscaletranslated[3][11]);
-    
-    
-    
-    
-    
+        
     //3. creatnotenames with tempscaletranslated
     
     int i = 0;
@@ -754,11 +752,10 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 7limit comma
             if (tuner->tempscaletranslated[n][4] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][4]); j++){
-                        strcat(tuner->tempscaletranslatednames[n],"ㄥ");
+                        strcat(tuner->tempscaletranslatednames[n],"L");
                         i++;
                     }
                 } else if (tuner->tempscaletranslated[n][4] > 0){
@@ -779,7 +776,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 13limit comma
             if (tuner->tempscaletranslated[n][6] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][6]); j++){
@@ -792,11 +788,10 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 17limit comma
             if (tuner->tempscaletranslated[n][7] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][7]); j++){
-                        strcat(tuner->tempscaletranslatednames[n],"ㄥƖ");
+                        strcat(tuner->tempscaletranslatednames[n],"LƖ");
                         i++;
                     }
                 } else if (tuner->tempscaletranslated[n][7] > 0){
@@ -805,7 +800,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 19limit comma
             if (tuner->tempscaletranslated[n][8] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][8]); j++){
@@ -818,11 +812,10 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 23limit comma
             if (tuner->tempscaletranslated[n][9] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][9]); j++){
-                        strcat(tuner->tempscaletranslatednames[n],"Ɛᄅ");
+                        strcat(tuner->tempscaletranslatednames[n],"ƐS");
                         i++;
                     }
                 } else if (tuner->tempscaletranslated[n][9] > 0){
@@ -831,11 +824,10 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
             // 29limit comma
             if (tuner->tempscaletranslated[n][10] < 0){
                     for (int j=0; j<abs(tuner->tempscaletranslated[n][10]); j++){
-                        strcat(tuner->tempscaletranslatednames[n],"6ᄅ");
+                        strcat(tuner->tempscaletranslatednames[n],"6S");
                         i++;
                     }
                 } else if (tuner->tempscaletranslated[n][10] > 0){
@@ -856,25 +848,8 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                         i++;
                     }              
                 }
-            
-            
             strcat(tuner->tempscaletranslatednames[n],"\0");
             break;
-    
-            /*
-            tuner->namecomma(tempscaletranslated[n][2],"♭","♯")
-            tuner->namecomma(tempscaletranslated[n][3],"-","+")
-            tuner->namecomma(tempscaletranslated[n][4],"ㄥ","7")
-            tuner->namecomma(tempscaletranslated[n][5],"↓","↑")
-            tuner->namecomma(tempscaletranslated[n][6],"ƐƖ","13")
-            tuner->namecomma(tempscaletranslated[n][7],"ㄥƖ","17")
-            tuner->namecomma(tempscaletranslated[n][8],"6Ɩ","19")
-            tuner->namecomma(tempscaletranslated[n][9],"Ɛᄅ","23")
-            tuner->namecomma(tempscaletranslated[n][10],"6ᄅ","29")
-            tuner->namecomma(tempscaletranslated[n][11],"ƖƐ","31"));
-            tuner->tempscaletranslatednames[n] = strcat(tempscalename);
-            */
-            
         } 
         
     }
@@ -915,7 +890,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 tuner->tempscaleratios[n] = 1/tempratio/pow(2.0,ratiocheck);
             } else { tuner->tempscaleratios[n] = tempratio/pow(2.0,ratiocheck);
             }
-            fprintf(stderr,"Ratio n=%i:%f ratiocheck:%i \n", n, tuner->tempscaleratios[n], ratiocheck);
     }
     tuner->tempscaleratios[tuner->tempnumofnotes]=2.0;
     
@@ -985,12 +959,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     cairo_translate(cr, -x0*tuner->scale_w*3., -y0*tuner->scale_h*3.);
     cairo_scale(cr, tuner->scale_w*3., tuner->scale_h*3.);
     
-    //Just checking
-    for (int i=0; i<tuner->tempnumofnotes;i++){
-        fprintf(stderr,"Fase VIII %s %lf \n", tuner->tempscaletranslatednames[i], tuner->tempscaleratios[i]);
-    }
-    
-    
     // fetch Octave we are in 
     float scale = -0.4;
     if (tuner->freq) {
@@ -1004,7 +972,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         // but we want to check if the frequency is below the last note in octave
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
-    fprintf(stderr,"Fase IX \n");
     for (int n=0 ; n <= 8 ; ++n )
          { float ratiodiffhighnoteandoctave = exp((log(tuner->tempscaleratios[tuner->tempnumofnotes-1])+log(2.0))/2) ;  
             if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
@@ -1016,7 +983,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     percent = (freq_is/(ref_c/multiply)) ;
     // now we chould check which ratio we have
     // we split the range using log-average
-    fprintf(stderr,"Fase X \n");
     for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
          float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;  
                  if (percent < ratiodiff) {
@@ -1026,14 +992,14 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                  }
          }         
     
-    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes );   
+    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes );   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
-        cairo_set_font_size(cr, 18.0);
-        cairo_move_to(cr,x0+50 -9 , y0+30 +9 );
+        cairo_set_font_size(cr, 10.0);
+        cairo_move_to(cr,x0+40 -9 , y0+30 +9 ); //original was 50 and 54
         cairo_show_text(cr, tuner->tempscaletranslatednames[display_note]);
         cairo_set_font_size(cr, 8.0);
-        cairo_move_to(cr,x0+54  , y0+30 +16 );
+        cairo_move_to(cr,x0+40  , y0+30 +16 );
         cairo_show_text(cr, octave[indicate_oc]);
     }
 
@@ -1102,13 +1068,6 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
     cairo_stroke(cr);   
 
-    //memset(tuner->tempscaletranslatednames[0], 0, sizeof(tuner->tempscaletranslatednames));
-    //memset(tuner->tempscaletranslated[0], 0, sizeof(tempscaletranslated));
-    /*free(tuner->tempscaletranslatednames);
-    free(tuner->tempscale);
-    free(tuner->tempscaletranslated);
-    free(tuner->tempscaleratios);
-    free(tuner->tempreference_note);*/
     g_free (allocation);
     return FALSE;
 }
@@ -1352,12 +1311,6 @@ static void draw_background(cairo_surface_t *surface) {
 
     
     // indicator shaft (circle)
-    /*cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 0);
-    cairo_move_to(cr, x0+50, y0+rect_height-5);
-    cairo_arc(cr, x0+50, y0+rect_height-5, 2.0, 0, 2*M_PI);
-    cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
-    cairo_set_line_width(cr, 2.0);
-    cairo_stroke(cr);*/
     cairo_pattern_destroy(pat);
     cairo_destroy(cr);
 }
