@@ -32,6 +32,8 @@ extern "C" {
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <string.h> 
+
 
 
 G_BEGIN_DECLS
@@ -41,6 +43,8 @@ G_BEGIN_DECLS
 #define GX_IS_TUNER(obj)       (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GX_TYPE_TUNER))
 #define GX_TUNER_CLASS(klass)  (G_TYPE_CHECK_CLASS_CAST ((klass),  GX_TYPE_TUNER, GxTunerClass))
 #define GX_IS_TUNER_CLASS(obj) (G_TYPE_CHECK_CLASS_TYPE ((klass),  GX_TYPE_TUNER))
+# define NRPRIMES 12
+# define MAXSCALENOTES 53
 
 typedef struct _GxTuner GxTuner;
 typedef struct _GxTunerClass GxTunerClass;
@@ -48,14 +52,38 @@ typedef struct _GxTunerClass GxTunerClass;
 // the internal struct of the tuner widget,
 // add variables for new propertys in the struct
 
+
 struct _GxTuner
 {
     GtkDrawingArea parent;
+    //char** tempscaletranslatednames;
     double freq;
     double reference_pitch;
     double scale_w;
     double scale_h;
+    //double *tempscaleratios;
+    double tempscaleratios[MAXSCALENOTES];
+    double tempreference_noteratio;
+    char* tempscaletranslatednames[MAXSCALENOTES];
+    int temp;
+    int tempscale[MAXSCALENOTES][NRPRIMES];
+    int tempnumofnotes;
+    int tempreference_note[NRPRIMES];
+    int tempreference_notepowprimes[NRPRIMES];
+    int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
+    int tempscaletranslatedpowprimes[MAXSCALENOTES][NRPRIMES];
     int mode;
+    int reference_note; //#1
+    int reference_03comma;
+    int reference_05comma;
+    int reference_07comma;
+    int reference_11comma;
+    int reference_13comma;
+    int reference_17comma;
+    int reference_19comma;
+    int reference_23comma;
+    int reference_29comma;
+    int reference_31comma;  
 };
 
 struct _GxTunerClass
@@ -74,7 +102,21 @@ void gx_tuner_set_freq(GxTuner *tuner, double freq);
 void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch);
 double gx_tuner_get_reference_pitch(GxTuner *tuner);
 void gx_tuner_set_mode(GxTuner *tuner, int mode);
+void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note); //#2
+void gx_tuner_set_reference_03comma(GxTuner *tuner, int reference_03comma);
+void gx_tuner_set_reference_05comma(GxTuner *tuner, int reference_05comma);
+void gx_tuner_set_reference_07comma(GxTuner *tuner, int reference_07comma);
+void gx_tuner_set_reference_11comma(GxTuner *tuner, int reference_11comma);
+void gx_tuner_set_reference_13comma(GxTuner *tuner, int reference_13comma);
+void gx_tuner_set_reference_17comma(GxTuner *tuner, int reference_17comma);
+void gx_tuner_set_reference_19comma(GxTuner *tuner, int reference_19comma);
+void gx_tuner_set_reference_23comma(GxTuner *tuner, int reference_23comma);
+void gx_tuner_set_reference_29comma(GxTuner *tuner, int reference_29comma);
+void gx_tuner_set_reference_31comma(GxTuner *tuner, int reference_31comma);
 GtkWidget *gx_tuner_new(void);
+//char* namecomma(int a, const char* b , const char* c);
+
+
 
 G_END_DECLS
 
@@ -83,4 +125,3 @@ G_END_DECLS
 #endif
 
 #endif // _GX_TUNER_H_
-

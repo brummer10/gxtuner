@@ -7,18 +7,17 @@
 
 gxtuner 2.4
 
-A simple (linux) guitar and bass tuner for jack
-with full jack session managment support
+A (linux) tuner for jack, with full jack session managment support
 
-gxtuner use a equal-tempered scale based on
+Besides a regular tuning option, it's possible to use GXtuner for extended Just Intonation.
 
 A4 = 440 Hz 
 
 A4 reference pitch can adjusted at command line and/or runtime
 in a half tone range: 415Hz <-> 467Hz
 
-gxtuner use a default threshold level at 0.001
-threshold can adjusted at command line and/or runtime
+gxtuner uses a default threshold level at 0.001.
+The threshold can be adjusted at command line and/or runtime
 in a range of 0.001 <-> 0.2
 
 ############# COMMANDLINE OPTIONS ################
@@ -33,8 +32,8 @@ Help Options:
 GTK configuration options
   -x, --posx=POSITION_X         window position x-axis ( -x 1 . . .)
   -y, --posy=POSITION_Y         window position y-axis ( -y 1 . . .)
-  -w, --wigth=WIDTH             'default' width ( -w 120 . . .)
-  -l, --height=HEIGHT           'default' height ( -l 100 . . .)
+  -w, --wigth=WIDTH             'default' width ( -w 500 . . .)
+  -l, --height=HEIGHT           'default' height ( -l 300 . . .)
   -d, --desktop=NUM             set to virtual desktop num ( -d 0 . . .)
 
 JACK configuration options
@@ -42,11 +41,10 @@ JACK configuration options
                                     (-i system:capture_1)
 
 ENGINE configuration options
-  -p, --pitch=PITCH             set reference pitch (-p 415,0 <-> 467,0)
-  -t, --threshold=THRESHOLD     set threshold level (-t 0,001 <-> 0,5)
+  -p, --pitch=PITCH             set reference pitch (-p 415.0 <-> 467.0)
+  -t, --threshold=THRESHOLD     set threshold level (-t 0,001 <-> 0.2)
 
-All settigs are optional,
-they will be all restored by the jack session manager
+All settings are optional, they will be all restored by the jack session manager
 
 ############## BUILD DEPENDENCY’S #################
 
@@ -101,4 +99,3 @@ $ make tar
 
 gxtuner home is :
 https://github.com/brummer10/gxtuner
-

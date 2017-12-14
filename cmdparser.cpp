@@ -45,6 +45,17 @@ void CmdParse::init() {
     pitch           = NULL;
     threshold       = NULL;
     mode            = NULL;
+    reference_note  = NULL; //#1
+    reference_03comma = NULL;
+    reference_05comma = NULL;
+    reference_07comma = NULL;
+    reference_11comma = NULL;
+    reference_13comma = NULL;
+    reference_17comma = NULL;
+    reference_19comma = NULL;
+    reference_23comma = NULL;
+    reference_29comma = NULL;
+    reference_31comma = NULL;
 }
 
 void CmdParse::write_optvar() {
@@ -55,7 +66,6 @@ void CmdParse::write_optvar() {
     } else if (!optvar[JACK_UUID].empty()) {
         optvar[JACK_UUID] = ""; 
     }
-
     // *** process ENGINE options
     if (pitch != NULL) {
         optvar[PITCH] = pitch;
@@ -77,7 +87,73 @@ void CmdParse::write_optvar() {
     } else if (!optvar[MODE].empty()) {
         optvar[MODE] = ""; 
     }
-
+    if (reference_note != NULL) { //#2
+        optvar[REFERENCE_NOTE] = reference_note;
+        g_free(reference_note);
+    } else if (!optvar[REFERENCE_NOTE].empty()) {
+        optvar[REFERENCE_NOTE] = ""; 
+    }
+if (reference_03comma != NULL) { 
+        optvar[REFERENCE_03COMMA] = reference_03comma;
+        g_free(reference_03comma);
+    } else if (!optvar[REFERENCE_03COMMA].empty()) {
+        optvar[REFERENCE_03COMMA] = ""; 
+    }
+if (reference_05comma != NULL) { 
+        optvar[REFERENCE_05COMMA] = reference_05comma;
+        g_free(reference_05comma);
+    } else if (!optvar[REFERENCE_05COMMA].empty()) {
+        optvar[REFERENCE_05COMMA] = ""; 
+    }
+if (reference_07comma != NULL) { 
+        optvar[REFERENCE_07COMMA] = reference_07comma;
+        g_free(reference_07comma);
+    } else if (!optvar[REFERENCE_07COMMA].empty()) {
+        optvar[REFERENCE_07COMMA] = ""; 
+    }
+if (reference_11comma != NULL) { 
+        optvar[REFERENCE_11COMMA] = reference_11comma;
+        g_free(reference_11comma);
+    } else if (!optvar[REFERENCE_11COMMA].empty()) {
+        optvar[REFERENCE_11COMMA] = ""; 
+    }
+if (reference_13comma != NULL) { 
+        optvar[REFERENCE_13COMMA] = reference_13comma;
+        g_free(reference_13comma);
+    } else if (!optvar[REFERENCE_13COMMA].empty()) {
+        optvar[REFERENCE_13COMMA] = ""; 
+    }
+if (reference_17comma != NULL) { 
+        optvar[REFERENCE_17COMMA] = reference_17comma;
+        g_free(reference_17comma);
+    } else if (!optvar[REFERENCE_17COMMA].empty()) {
+        optvar[REFERENCE_17COMMA] = ""; 
+    }
+if (reference_19comma != NULL) { 
+        optvar[REFERENCE_19COMMA] = reference_19comma;
+        g_free(reference_19comma);
+    } else if (!optvar[REFERENCE_19COMMA].empty()) {
+        optvar[REFERENCE_19COMMA] = ""; 
+    }
+if (reference_23comma != NULL) { 
+        optvar[REFERENCE_23COMMA] = reference_23comma;
+        g_free(reference_23comma);
+    } else if (!optvar[REFERENCE_23COMMA].empty()) {
+        optvar[REFERENCE_23COMMA] = ""; 
+    }
+if (reference_29comma != NULL) { 
+        optvar[REFERENCE_29COMMA] = reference_29comma;
+        g_free(reference_29comma);
+    } else if (!optvar[REFERENCE_29COMMA].empty()) {
+        optvar[REFERENCE_29COMMA] = ""; 
+    }
+if (reference_31comma != NULL) { 
+        optvar[REFERENCE_31COMMA] = reference_31comma;
+        g_free(reference_31comma);
+    } else if (!optvar[REFERENCE_31COMMA].empty()) {
+        optvar[REFERENCE_31COMMA] = ""; 
+    }
+    
     // *** process GTK options
     if (size_y != NULL) {
         optvar[SIZE_Y] = size_y;
@@ -184,11 +260,32 @@ void CmdParse::setup_groups() {
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
-            "set tuner mode (-m chromatic / shruti / diatonic)", "MODE" },
+            "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic / scale357chromatic / scale37chromatic / scaleovertones )", "MODE" },
+        { "reference_note", 'R', 0, G_OPTION_ARG_STRING, &reference_note,
+            "set reference note (-R C / D / E / F / G / A / B )", "REFERENCE_NOTE" },
+        { "reference_03comma", 'A', 0, G_OPTION_ARG_STRING, &reference_03comma,
+            "set reference 3 limit comma (-A min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_03COMMA" },
+        { "reference_05comma", 'B', 0, G_OPTION_ARG_STRING, &reference_05comma,
+            "set reference 5 limit comma (-B min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_05COMMA" },
+        { "reference_07comma", 'C', 0, G_OPTION_ARG_STRING, &reference_07comma,
+            "set reference 7 limit comma (-C min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_07COMMA" },
+        { "reference_11comma", 'D', 0, G_OPTION_ARG_STRING, &reference_11comma,
+            "set reference 11 limit comma (-D min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_11COMMA" },
+        { "reference_13comma", 'E', 0, G_OPTION_ARG_STRING, &reference_13comma,
+            "set reference 13 limit comma (-E min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_13COMMA" },
+        { "reference_17comma", 'F', 0, G_OPTION_ARG_STRING, &reference_17comma,
+            "set reference 17 limit comma (-F min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_17COMMA" },
+        { "reference_19comma", 'G', 0, G_OPTION_ARG_STRING, &reference_19comma,
+            "set reference 19 limit comma (-G min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_19COMMA" },
+        { "reference_23comma", 'H', 0, G_OPTION_ARG_STRING, &reference_23comma,
+            "set reference 23 limit comma (-H min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_23COMMA" },
+        { "reference_29comma", 'I', 0, G_OPTION_ARG_STRING, &reference_29comma,
+            "set reference 29 limit comma (-I min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_29COMMA" },
+        { "reference_31comma", 'J', 0, G_OPTION_ARG_STRING, &reference_31comma,
+            "set reference 31 limit comma (-J min3 / min2 / min1 / 0 / 1 / 2 / 3 )", "REFERENCE_31COMMA" },        
         { NULL }
     };
     g_option_group_add_entries(optgroup_engine, opt_entries_engine);
-    
     g_option_context_add_group(opt_context, optgroup_gtk);
     g_option_context_add_group(opt_context, optgroup_jack);
     g_option_context_add_group(opt_context, optgroup_engine);
@@ -205,5 +302,3 @@ void CmdParse::process_cmdline_options(int& argc, char**& argv)
 }
 
 CmdParse cmd;
-
-

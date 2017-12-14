@@ -31,16 +31,27 @@
 #include <cstdlib>
 
 
-#define JACK_INP        (0)
-#define SIZE_X          (1)
-#define SIZE_Y          (2)
-#define POS_X           (3)
-#define POS_Y           (4)
-#define PITCH           (5)
-#define THRESHOLD       (6)
-#define JACK_UUID       (7)
-#define DESK            (8)
-#define MODE            (9)
+#define JACK_INP            (0)
+#define SIZE_X              (1)
+#define SIZE_Y              (2)
+#define POS_X               (3)
+#define POS_Y               (4)
+#define PITCH               (5)
+#define THRESHOLD           (6)
+#define JACK_UUID           (7)
+#define DESK                (8)
+#define MODE                (9)
+#define REFERENCE_NOTE      (10) //#1
+#define REFERENCE_03COMMA   (11)
+#define REFERENCE_05COMMA   (12)
+#define REFERENCE_07COMMA   (13)
+#define REFERENCE_11COMMA   (14)
+#define REFERENCE_13COMMA   (15)
+#define REFERENCE_17COMMA   (16)
+#define REFERENCE_19COMMA   (17)
+#define REFERENCE_23COMMA   (18)
+#define REFERENCE_29COMMA   (19)
+#define REFERENCE_31COMMA   (20)
 
 class CmdParse {
  private:
@@ -59,13 +70,24 @@ class CmdParse {
     gchar*              pitch;
     gchar*              threshold;
     gchar*              mode;
+    gchar*              reference_note; //#2
+    gchar*              reference_03comma;
+    gchar*              reference_05comma;
+    gchar*              reference_07comma;
+    gchar*              reference_11comma;
+    gchar*              reference_13comma;
+    gchar*              reference_17comma;
+    gchar*              reference_19comma;
+    gchar*              reference_23comma;
+    gchar*              reference_29comma;
+    gchar*              reference_31comma;
     std::string         infostring;
     void                init();
     void                setup_groups();
     void                parse(int& argc, char**& argv);
     void                write_optvar();
  protected:
-    std::string         optvar[10];
+    std::string         optvar[21]; //#3
 
  public:
     explicit CmdParse();
@@ -76,5 +98,3 @@ class CmdParse {
 extern CmdParse         cmd;
 
 #endif // CMD_PARSER_H_
-
-

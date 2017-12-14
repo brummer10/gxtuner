@@ -62,21 +62,60 @@ class TunerWidget {
     GtkWidget*          box;
     GtkWidget*          box1;
     GtkWidget*          box2;
-    GtkWidget*          hbox;
-    GtkWidget*          abox;
-    GtkWidget*          bbox;
+    GtkWidget*          abox;  
+    GtkWidget*          bbox; 
+    GtkWidget*          cbox; 
+    GtkWidget*          dbox; 
+    GtkWidget*          ebox;
     GtkWidget*          fbox;
-    GtkWidget*          cbox;
-    GtkWidget*          dbox;
+    GtkWidget*          gbox;
+    GtkWidget*          hbox;
+    GtkWidget*          habox;
+    GtkWidget*          hbbox;
+    GtkWidget*          hcbox;
+    GtkWidget*          hhbox;
+    GtkWidget*          ibox;
+    GtkWidget*          jbox;
+    GtkWidget*          kbox;
+    GtkWidget*          lbox;
+    GtkWidget*          mbox;
+    GtkWidget*          nbox;
+    GtkWidget*          obox;
+    GtkWidget*          pbox;
+    //GtkWidget*          pabox;
+    //GtkWidget*          pbbox;
+    //GtkWidget*          pcbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
-    GtkWidget*          selector;
-
+    GtkWidget*          selectord; //changes mode
+    GtkWidget*          selectore; // changes reference note
+    GtkWidget*          selectorf; // 03comma
+    GtkWidget*          selectorg; // 05comma
+    GtkWidget*          selectorh; // 07comma 
+    GtkWidget*          selectori; // 11comma
+    GtkWidget*          selectorj; // 13comma
+    GtkWidget*          selectork; // 17comma
+    GtkWidget*          selectorl; // 19comma
+    GtkWidget*          selectorm; // 23comma
+    GtkWidget*          selectorn; // 29comma
+    GtkWidget*          selectoro; // 31comma
+    
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
     static gboolean     ref_freq_changed(gpointer arg);
     static gboolean     threshold_changed(gpointer arg);
     static gboolean     mode_changed(gpointer arg);
+    static gboolean     reference_note_changed(gpointer arg); //#1
+    static gboolean     reference_03comma_changed(gpointer arg);
+    static gboolean     reference_05comma_changed(gpointer arg);
+    static gboolean     reference_07comma_changed(gpointer arg);
+    static gboolean     reference_11comma_changed(gpointer arg);
+    static gboolean     reference_13comma_changed(gpointer arg);
+    static gboolean     reference_17comma_changed(gpointer arg);
+    static gboolean     reference_19comma_changed(gpointer arg);
+    static gboolean     reference_23comma_changed(gpointer arg);
+    static gboolean     reference_29comma_changed(gpointer arg);
+    static gboolean     reference_31comma_changed(gpointer arg);
     static void         destroy( GtkWidget *widget, gpointer data);
  public:
     explicit TunerWidget();
@@ -108,4 +147,3 @@ class CmdPtr {
 extern CmdPtr *cptr;
 
 #endif // _TUNER_H_
-
