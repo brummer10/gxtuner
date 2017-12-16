@@ -110,73 +110,73 @@ static int scale35chromatic[12][NRPRIMES] = {
     {1,0,0,0,0,0,0,0,0,0,0,0}, //C
     {1,0,1,0,0,0,0,0,0,0,0,0}, //C♯
     {3,0,0,0,0,0,0,0,0,0,0,0}, //D
-    {5,0,-1,-1,0,0,0,0,0,0,0,0}, //Eb-
-    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E
+    {5,0,-1,1,0,0,0,0,0,0,0,0}, //Eb+
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E-
     {0,0,0,0,0,0,0,0,0,0,0,0}, //F
-    {2,0,-1,-1,0,0,0,0,0,0,0,0}, //Gb
+    {2,0,-1,-1,0,0,0,0,0,0,0,0}, //Gb 36/25
     {2,0,0,0,0,0,0,0,0,0,0,0}, //G
-    {4,0,-1,-1,0,0,0,0,0,0,0,0}, //Ab
-    {4,0,0,-1,0,0,0,0,0,0,0,0}, //A-
-    {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
-    {6,0,0,-1,0,0,0,0,0,0,0,0} //B
+    {4,0,-1,1,0,0,0,0,0,0,0,0}, //Ab+ 8/5
+    {4,0,0,-1,0,0,0,0,0,0,0,0}, //A- 5/3
+    {6,0,-1,1,0,0,0,0,0,0,0,0}, //Bb+ 9/5
+    {6,0,0,-1,0,0,0,0,0,0,0,0} //B- 15/8
 };
 static int numnotesscale35chromatic = 12;
 
 static int scale357chromatic[22][NRPRIMES] = {
     //basenote,2,3,5,7,11,13,17,19,23,29,31
     {1,0,0,0,0,0,0,0,0,0,0,0}, //C
-    {3,0,-1,-1,1,0,0,0,0,0,0,0}, //Db-7
-    {3,0,-1,-1,0,0,0,0,0,0,0,0}, //Db-
-    {3,0,0,0,0,0,0,0,0,0,0,0}, //D
-    {3,0,0,-1,-1,0,0,0,0,0,0,0}, //DL-
-    {5,0,-1,-1,1,0,0,0,0,0,0,0}, //Eb-7
-    {5,0,-1,-1,0,0,0,0,0,0,0,0}, //Eb-
-    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E-
-    {5,0,0,-1,-1,0,0,0,0,0,0,0}, //E-L
-    {0,0,0,1,1,0,0,0,0,0,0,0}, //F+7
-    {0,0,0,1,0,0,0,0,0,0,0,0}, //F+
-    {0,0,1,1,0,0,0,0,0,0,0,0}, //F#+
-    {0,0,1,1,-1,0,0,0,0,0,0,0}, //F#+L
-    {2,0,0,0,0,0,0,0,0,0,0,0}, //G
-    {4,0,-1,-1,1,0,0,0,0,0,0,0}, //Ab-7
-    {4,0,-1,-1,0,0,0,0,0,0,0,0}, //Ab-
-    {4,0,0,-1,0,0,0,0,0,0,0,0}, //A-
-    {4,0,0,-1,-1,0,0,0,0,0,0,0}, //A-L
-    {6,0,-1,-1,1,0,0,0,0,0,0,0}, //Bb-7
-    {6,0,-1,-1,0,0,0,0,0,0,0,0}, //Bb-
-    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B-
-    {6,0,0,-1,-1,0,0,0,0,0,0,0} //B-L
+    {3,0,-1,0,1,0,0,0,0,0,0,0}, //Db7 28/27
+    {3,0,-1,1,0,0,0,0,0,0,0,0}, //Db+ 16/15
+    {3,0,0,-1,0,0,0,0,0,0,0,0}, //D- 10/9
+    {3,0,0,0,-1,0,0,0,0,0,0,0}, //DL 8/7
+    {5,0,-1,0,1,0,0,0,0,0,0,0}, //Eb7 7/6
+    {5,0,-1,1,0,0,0,0,0,0,0,0}, //Eb+ 6/5
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E- 5/4
+    {5,0,0,0,-1,0,0,0,0,0,0,0}, //EL 9/7 
+    {0,0,0,0,1,0,0,0,0,0,0,0}, //F7 21/16
+    {0,0,0,1,0,0,0,0,0,0,0,0}, //F+ 27/20
+    {0,0,1,-1,0,0,0,0,0,0,0,0}, //F#- 45/32
+    {0,0,1,0,-1,0,0,0,0,0,0,0}, //F#L 81/56
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //G 3/2
+    {4,0,-1,0,1,0,0,0,0,0,0,0}, //Ab7 14/9
+    {4,0,-1,1,0,0,0,0,0,0,0,0}, //Ab+ 8/5
+    {4,0,0,-1,0,0,0,0,0,0,0,0}, //A- 5/3
+    {4,0,0,0,-1,0,0,0,0,0,0,0}, //AL 12/7
+    {6,0,-1,0,1,0,0,0,0,0,0,0}, //Bb7 7/4
+    {6,0,-1,1,0,0,0,0,0,0,0,0}, //Bb+ 9/5
+    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B- 15/8
+    {6,0,0,0,-1,0,0,0,0,0,0,0} //BL 27/14
 };
 static int numnotesscale357chromatic = 22;
 
 static int scale37chromatic[12][NRPRIMES] = {
     //basenote,2,3,5,7,11,13,17,19,23,29,31
-    {1,0,0,0,0,0,0,0,0,0,0,0}, //C
-    {3,0,-1,0,1,0,0,0,0,0,0,0}, //Db7
-    {3,0,0,0,0,0,0,0,0,0,0,0}, //D
-    {5,0,-1,-1,1,0,0,0,0,0,0,0}, //Eb-7
-    {5,0,0,-1,-1,0,0,0,0,0,0,0}, //E-L
-    {0,0,0,0,0,0,0,0,0,0,0,0}, //F
-    {0,0,1,0,-2,0,0,0,0,0,0,0}, //F#LL
-    {2,0,0,0,0,0,0,0,0,0,0,0}, //G
-    {4,0,-1,-1,1,0,0,0,0,0,0,0}, //Ab-7
-    {4,0,0,-1,-1,0,0,0,0,0,0,0}, //A-L
-    {6,0,-1,-1,1,0,0,0,0,0,0,0}, //Bb-7
-    {6,0,0,-1,-1,0,0,0,0,0,0,0} //B-L
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //C 1/1
+    {3,0,-1,0,1,0,0,0,0,0,0,0}, //Db7 49/48
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //D 9/8
+    {5,0,-1,0,1,0,0,0,0,0,0,0}, //Eb7 7/6
+    {5,0,0,0,-1,0,0,0,0,0,0,0}, //EL 9/7
+    {0,0,0,0,0,0,0,0,0,0,0,0}, //F 4/3
+    {0,0,1,0,-2,0,0,0,0,0,0,0}, //F#LL 72/49
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //G 3/2
+    {4,0,-1,0,1,0,0,0,0,0,0,0}, //Ab7 14/9
+    {4,0,0,0,-1,0,0,0,0,0,0,0}, //AL 12/7
+    {6,0,-1,0,1,0,0,0,0,0,0,0}, //Bb7 7/4
+    {6,0,0,0,-1,0,0,0,0,0,0,0} //BL 27/14
 };
 static int numnotesscale37chromatic = 12;
 
 
 static int scaleovertones[8][NRPRIMES] = {
     //basenote,2,3,5,7,11,13,17,19,23,29,31
-    {1,0,0,0,0,0,0,0,0,0,0,0}, //C
-    {3,0,0,0,0,0,0,0,0,0,0,0}, //D
-    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E
-    {0,0,0,0,0,1,0,0,0,0,0,0}, //F11
-    {2,0,0,0,0,0,0,0,0,0,0,0}, //G
-    {4,0,-1,0,0,0,1,0,0,0,0,0}, //Ab13
-    {6,0,-1,0,1,0,0,0,0,0,0,0}, //Bb7
-    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B-
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //C 1/1
+    {3,0,0,0,0,0,0,0,0,0,0,0}, //D 9/8
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, //E- 5/4
+    {0,0,0,0,0,1,0,0,0,0,0,0}, //F11 11/8
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //G 3/2
+    {4,0,-1,0,0,0,1,0,0,0,0,0}, //Ab13 13/8
+    {6,0,-1,0,1,0,0,0,0,0,0,0}, //Bb7 7/4
+    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B- 15/8
 };
 static int numnotesscaleovertones = 8;
 
@@ -1031,26 +1031,29 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
         // so, for example if freq_is is below ref_c we are in octave 3
         // if freq_is is below ref_c/2 we are in octave 2, etc.
     for (int n=0 ; n <= 8 ; ++n )
-         { float ratiodiffhighnoteandoctave = exp((log(tuner->tempscaleratios[tuner->tempnumofnotes-1])+log(2.0))/2) ;  
-            if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
+         { float ratiodiffhighnoteandoctave = exp((log(tuner->tempscaleratios[tuner->tempnumofnotes])+log(2.0))/2) ;  
+            //fprintf(stderr, "ratio highestnote %f ratiodiffhighnoteandoctave %f \n", tuner->tempscaleratios[tuner->tempnumofnotes-1] , ratiodiffhighnoteandoctave);
+             if (freq_is < (ref_c*pow(2,n-3))-(2-ratiodiffhighnoteandoctave)*(ref_c*pow(2,n-3)) && freq_is >0.0) {
                  indicate_oc = n; 
                  multiply = pow(2, 4-n);
                  break;
                 }
          }
-    percent = (freq_is/(ref_c/multiply)) ;
+    percent = (freq_is/(ref_c/multiply));
     // now we chould check which ratio we have
     // we split the range using log-average
     for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
          float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;  
-                 if (percent < ratiodiff) {
+                 fprintf(stderr, "ratio note: %f ratiodiff: %f \n", tuner->tempscaleratios[n] , ratiodiff);
+            if (percent < ratiodiff) {
                      display_note = n;
-                     scale = ((percent-tuner->tempscaleratios[n]))/2.0;
+                     scale = (percent-tuner->tempscaleratios[n])/2.0;
                      break;
                  }
          }         
     
-    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i \n value of numberofnotes is %i ", percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes );   
+    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i value of numberofnotes is %i \n", 
+                                percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes);   
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 10.0);
