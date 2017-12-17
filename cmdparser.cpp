@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ void CmdParse::init() {
     error           = NULL;
     infostring      = "\n        version ";
     infostring      += VERSION;
-    infostring      += "\n    A simple (linux) guitar and bass tuner for jack\n"; 
+    infostring      += "\n    A tuner for jack, with an option for Just Intonation\n"; 
     infostring      += "    with full jack session management support";
     opt_context     = g_option_context_new(infostring.c_str());
     jack_uuid       = NULL;

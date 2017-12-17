@@ -3,9 +3,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
 
- * Copyright (C) 2011-2016 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2011-2017 Hermann Meyer, Andreas Degert, Hans Bezemer
 
-gxtuner 2.4
+gxtuner 3.0
 
 A (linux) tuner for jack, with full jack session managment support
 

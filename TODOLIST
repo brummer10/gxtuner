@@ -1,4 +1,6 @@
 To do:
-- 
+- Rework calculation of needle position for tuner
+- Rework Boxes. When maximized, the boxes move to one side now
+- Add Partch scale.
 
 

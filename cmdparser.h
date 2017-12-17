@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@
 #define JACK_UUID           (7)
 #define DESK                (8)
 #define MODE                (9)
-#define REFERENCE_NOTE      (10) //#1
+#define REFERENCE_NOTE      (10) 
 #define REFERENCE_03COMMA   (11)
 #define REFERENCE_05COMMA   (12)
 #define REFERENCE_07COMMA   (13)
@@ -70,7 +70,7 @@ class CmdParse {
     gchar*              pitch;
     gchar*              threshold;
     gchar*              mode;
-    gchar*              reference_note; //#2
+    gchar*              reference_note; 
     gchar*              reference_03comma;
     gchar*              reference_05comma;
     gchar*              reference_07comma;
