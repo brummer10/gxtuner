@@ -83,11 +83,11 @@ const char* scale3basenames[7] = {"F","C","G","D","A","E","B"};
 
 static int a03comma[NRPRIMES] = {0,-11,7,0,0,0,0,0,0,0,0,0};
 static int a05comma[NRPRIMES] = {0,-4,4,-1,0,0,0,0,0,0,0,0};
-static int a07comma[NRPRIMES] = {0,-6,2,0,1,0,0,0,0,0,0,0}; 
+static int a07comma[NRPRIMES] = {0,-6,2,0,1,0,0,0,0,0,0,0};
 static int a11comma[NRPRIMES] = {0,-5,1,0,0,1,0,0,0,0,0,0};
-static int a13comma[NRPRIMES] = {0,-10,4,0,0,0,1,0,0,0,0,0}; 
+static int a13comma[NRPRIMES] = {0,-10,4,0,0,0,1,0,0,0,0,0};
 static int a17comma[NRPRIMES] = {0,7,-7,0,0,0,0,1,0,0,0,0};
-static int a19comma[NRPRIMES] = {0,-9,3,0,0,0,0,0,1,0,0,0}; 
+static int a19comma[NRPRIMES] = {0,-9,3,0,0,0,0,0,1,0,0,0};
 static int a23comma[NRPRIMES] = {0,5,-6,0,0,0,0,0,0,1,0,0};
 static int a29comma[NRPRIMES] = {0,-8,2,0,0,0,0,0,0,0,1,0};
 static int a31comma[NRPRIMES] = {0,3,-5,0,0,0,0,0,0,0,0,1};
@@ -692,7 +692,7 @@ static void gx_tuner_strobe(cairo_t *cr, double x0, double y0, double cents) {
     cairo_set_line_width(cr, 2.0);
     cairo_move_to(cr,x0+hold_l, y0+1);
     cairo_line_to(cr, x0+rect_width-hold_l , y0+1);
-    cairo_stroke(cr);   
+    cairo_stroke(cr);
     cairo_pattern_destroy(pat);
 
 }
@@ -924,7 +924,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                                                         + tuner->tempscale[n][8]  * a19comma[i]
                                                         + tuner->tempscale[n][9]  * a23comma[i]
                                                         + tuner->tempscale[n][10] * a29comma[i]
-                                                        + tuner->tempscale[n][11] * a31comma[i];                
+                                                        + tuner->tempscale[n][11] * a31comma[i];
         }
     }
     // 5. calculate tempscaletranslateratios
@@ -963,7 +963,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                                                         + tuner->tempreference_note[8]  * a19comma[i]
                                                         + tuner->tempreference_note[9]  * a23comma[i]
                                                         + tuner->tempreference_note[10] * a29comma[i]
-                                                        + tuner->tempreference_note[11] * a31comma[i];                
+                                                        + tuner->tempreference_note[11] * a31comma[i];
     }
     tuner->tempreference_noteratio  =     (pow(2.0,tuner->tempreference_notepowprimes[1])
                                          * pow(3.0,tuner->tempreference_notepowprimes[2])
@@ -991,7 +991,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     static int indicate_oc = 0;
     // fetch widget size and location
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
-    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation);
 
     double x0      = (allocation->width - 100) * 0.5;
     double y0      = (allocation->height - 60) * 0.5;
@@ -1043,7 +1043,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // now we chould check which ratio we have
     // we split the range using log-average
     for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
-         float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;  
+         float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;
                  fprintf(stderr, "ratio note: %f ratiodiff: %f \n", tuner->tempscaleratios[n] , ratiodiff);
             if (percent < ratiodiff) {
                      display_note = n;
@@ -1052,8 +1052,8 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                  }
          }         
     
-    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i value of numberofnotes is %i \n", 
-                                percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes);   
+    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i value of numberofnotes is %i \n",
+                                percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes);
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 10.0);
@@ -1127,7 +1127,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 1);
     cairo_line_to(cr, (log_scale(cents, scale)*2*rect_width)+x0+50, y0+(scale*scale*30)+2);
     cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
-    cairo_stroke(cr);   
+    cairo_stroke(cr);
 
     g_free (allocation);
     return FALSE;
@@ -1145,7 +1145,7 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     static int indicate_oc = 0;
     
     GtkAllocation *allocation = g_new0 (GtkAllocation, 1);
-    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation); 
+    gtk_widget_get_allocation(GTK_WIDGET(widget), allocation);
 
     double x0      = (allocation->width - 100) * 0.5;
     double y0      = (allocation->height - 60) * 0.5;
@@ -1277,9 +1277,9 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     cairo_set_dash (cr, dash_ind, sizeof(dash_ind)/sizeof(dash_ind[0]), 1);
     cairo_line_to(cr, (log_scale(cents, scale)*2*rect_width)+x0+50, y0+(scale*scale*30)+2);
     cairo_set_source_rgb(cr,  0.5, 0.1, 0.1);
-    cairo_stroke(cr);   
+    cairo_stroke(cr);
 
-    g_free (allocation); 
+    g_free (allocation);
     return FALSE;
 }
 
