@@ -42,7 +42,7 @@ JACK configuration options
 
 ENGINE configuration options
   -p, --pitch=PITCH             set reference pitch (-p 415.0 <-> 467.0)
-  -t, --threshold=THRESHOLD     set threshold level (-t 0,001 <-> 0.2)
+  -t, --threshold=THRESHOLD     set threshold level (-t 0.001 <-> 0.2)
 
 All settings are optional, they will be all restored by the jack session manager
 
@@ -58,9 +58,7 @@ libglib2.0-0-dev
 libgtk3.0-0-dev
 libstdc++6-dev
 libzita-resampler0-dev
-libjack-jackd2-0-dev 
-or
-libjack-0.116-dev
+libjack-jackd2-0-dev or libjack-0.116-dev
 
 note that those packages could have different, but similar names 
 on different distributions. There is no configure script, 

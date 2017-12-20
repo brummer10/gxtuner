@@ -16,9 +16,7 @@ the following packages are needed to build gxtuner :
 - libgtk3.0-0-dev
 - libstdc++6-dev
 - libzita-resampler0-dev
-- libjack-jackd2-0-dev 
-- or
-- libjack-0.116-dev
+- libjack-jackd2-0-dev or libjack-0.116-dev
 
 note that those packages could have different, but similar names 
 on different distributions. There is no configure script, 

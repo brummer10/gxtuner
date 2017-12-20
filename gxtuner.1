@@ -2,7 +2,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH GXTUNER 1 "January 28, 2011"
+.TH GXTUNER 1 "December 20, 2017"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -28,7 +28,7 @@ because the original program does not have a manual page.
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
 .\" \fI<whatever>\fP escape sequences to invode bold face and italics, 
 .\" respectively.
-\fBgxtuner\fP is a simple, small and lightweight guitar/bass tuner connected through Jack Audio Connection Kit.
+\fBgxtuner\fP is a simple, small and lightweight tuner, for 12 TET and extended Just Intonation, connected through Jack Audio Connection Kit.
 .PP
 \fBgxtuner\fP comes with a analogue like interface (scale), show the tune (char) and the accumulated frequency (Hz).
 .SH OPTIONS
@@ -57,10 +57,10 @@ GTK configuration options
         window position y\-axis ( \-y 1 \-> . . )
 .PP
 .B \   -w \-\-width=WIDTH
-        'default' width ( \-w 120 \-> . .)
+        'default' width ( \-w 500 \-> . .)
 .PP
 .B \   -l \-\-height=HEIGHT
-        'default' height ( \-l 100 \-> . .)
+        'default' height ( \-l 300 \-> . .)
 .PP
 .B \   -d \-\-desktop=NUM
         set to virtual desktop num
@@ -70,7 +70,7 @@ JACK configuration options
 .B \  -i   \-\-jack\-input=PORT  
        gxtuner JACK input
        e.g.
-       gxtuner \-i system:capture_3
+       gxtuner \-i system:capture_1
        gxtuner \-i gx_head_amp:out_0
 .PP
 .B \  -U    \-\-jack\-jack\-input=UUID            
@@ -79,15 +79,50 @@ JACK configuration options
 ENGINE configuration options
 .PP
 .B \  -p    \-\-pitch=PITCH
-       set reference pitch ( \-p 415,0 <\-> 467,0)
+       set reference pitch ( \-p 415.0 <\-> 467.0)
 .PP
 .B \  -t    \-\-threshold=THRESHOLD
-       set threshold level (\-t 0,001 <\-> 0,5)
-
+       set threshold level (\-t 0.001 <\-> 0.2)
+.PP
+.B \  -m    \-\-mode=MODE
+       set tuner mode ( \-m chromatic , scale3diatonic , scale35chromatic , scale357chromatic , scale37chromatic , scaleovertones )
+.PP
+.B \ -R \-\-reference_note=REFERENCE_NOTE
+        set reference note ( \-R C , D , E , F , G , A , B )
+.PP
+.B \ -A \-\-reference_03comma=REFERENCE_03COMMA        
+        set reference 3 limit comma ( \-A min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -B \-\-reference_05comma=REFERENCE_05COMMA        
+        set reference 5 limit comma ( \-B min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -C \-\-reference_07comma=REFERENCE_07COMMA        
+        set reference 7 limit comma ( \-C min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -D \-\-reference_11comma=REFERENCE_11COMMA        
+        set reference 11 limit comma ( \-D min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -E \-\-reference_13comma=REFERENCE_13COMMA        
+        set reference 13 limit comma ( \-E min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -F \-\-reference_17comma=REFERENCE_17COMMA        
+        set reference 17 limit comma ( \-F min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -G \-\-reference_19comma=REFERENCE_19COMMA        
+        set reference 19 limit comma ( \-G min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -H \-\-reference_23comma=REFERENCE_23COMMA        
+        set reference 23 limit comma ( \-H min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -I \-\-reference_29comma=REFERENCE_29COMMA        
+        set reference 29 limit comma ( \-I min3 , min2 , min1 , 0 , 1 , 2 , 3 )
+.PP
+.B \ -J \-\-reference_31comma=REFERENCE_31COMMA        
+        set reference 31 limit comma ( \-J min3 , min2 , min1 , 0 , 1 , 2 , 3 )
 .PP
 .SH SEE ALSO
 .BR jackd(1).
 .br
 .SH AUTHOR
-This manual page was written by Jaromír Mikeš <mira.mikes@seznam.cz>,
+This manual page was written by Jaromír Mikeš <mira.mikes@seznam.cz> and Hans Bezemer <allfifthstuning@kliksafe.nl>,
 for the Debian project (but may be used by others).
