@@ -82,9 +82,9 @@ class TunerWidget {
     GtkWidget*          nbox;
     GtkWidget*          obox;
     GtkWidget*          pbox;
-    //GtkWidget*          pabox;
-    //GtkWidget*          pbbox;
-    //GtkWidget*          pcbox;
+    GtkWidget*          pabox;
+    GtkWidget*          pbbox;
+    GtkWidget*          pcbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
     GtkWidget*          selectord; //changes mode

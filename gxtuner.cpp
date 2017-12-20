@@ -1044,7 +1044,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     // we split the range using log-average
     for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
          float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;
-                 fprintf(stderr, "ratio note: %f ratiodiff: %f \n", tuner->tempscaleratios[n] , ratiodiff);
+                 //fprintf(stderr, "ratio note: %f ratiodiff: %f \n", tuner->tempscaleratios[n] , ratiodiff);
             if (percent < ratiodiff) {
                      display_note = n;
                      scale = (percent-tuner->tempscaleratios[n])/2.0;
@@ -1052,8 +1052,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                  }
          }         
     
-    fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i value of numberofnotes is %i \n",
-                                percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes);
+    //fprintf(stderr, " percent == %f freq = %f ref_c = %f indicate_oc = %i value of numberofnotes is %i \n", percent, freq_is, ref_c, indicate_oc, tuner->tempnumofnotes);
         // display note
         cairo_set_source_rgba(cr, fabsf(scale)*3.0, 1-fabsf(scale)*3.0, 0.2,1-fabsf(scale)*2);
         cairo_set_font_size(cr, 10.0);

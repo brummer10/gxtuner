@@ -206,12 +206,12 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(obox),false);
     pbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(pbox),false);
-    //pabox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    //gtk_box_set_homogeneous(GTK_BOX(pabox),false);
-    //pbbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    //gtk_box_set_homogeneous(GTK_BOX(pbbox),false);
-    //pcbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    //gtk_box_set_homogeneous(GTK_BOX(pcbox),false);
+    pabox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(pabox),false);
+    pbbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(pbbox),false);
+    pcbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(pcbox),false);
     
         
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
@@ -419,15 +419,15 @@ void TunerWidget::create_window() {
     gtk_box_pack_start(GTK_BOX(hbox),hcbox,false,false,5);
         gtk_box_pack_start(GTK_BOX(hcbox),bbox,false,false,5);
     
-    //gtk_box_pack_start(GTK_BOX(pbox),pabox,false,false,5);
-    //gtk_box_pack_start(GTK_BOX(pbox),pbbox,false,false,5);
-        gtk_box_pack_start(GTK_BOX(pbox),jbox,false,false,15);
-        gtk_box_pack_start(GTK_BOX(pbox),kbox,false,false,15);
-        gtk_box_pack_start(GTK_BOX(pbox),lbox,false,false,15);
-        gtk_box_pack_end(GTK_BOX(pbox),obox,false,false,15);
-        gtk_box_pack_end(GTK_BOX(pbox),nbox,false,false,15);
-        gtk_box_pack_end(GTK_BOX(pbox),mbox,false,false,15);
-    //gtk_box_pack_start(GTK_BOX(pbox),pcbox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(pbox),pabox,false,false,5);
+    gtk_box_pack_start(GTK_BOX(pbox),pbbox,false,false,5);
+        gtk_box_pack_start(GTK_BOX(pbbox),jbox,false,false,15);
+        gtk_box_pack_start(GTK_BOX(pbbox),kbox,false,false,15);
+        gtk_box_pack_start(GTK_BOX(pbbox),lbox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbbox),obox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbbox),nbox,false,false,15);
+        gtk_box_pack_end(GTK_BOX(pbbox),mbox,false,false,15);
+    gtk_box_pack_start(GTK_BOX(pbox),pcbox,false,false,5);
     // connect the signal handlers 
     // connect the controls with a function to do what they should do
     // when they changed there value.
