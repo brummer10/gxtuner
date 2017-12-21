@@ -124,7 +124,7 @@ static void knob_expose(GtkWidget *widget, cairo_t *cr, int knob_x, int knob_y, 
 	double lengh_y = (knoby+radius+pointer_off/2) + radius * cos(angle);
 	double radius1 = min(knob_x, knob_y) / 2 ;
 
-	/** get widget forground color convert to cairo **/
+	/** get widget foreground color convert to cairo **/
 	//GtkStyle *style = gtk_widget_get_style (widget);
 	//double r = min(0.6,style->fg[gtk_widget_get_state_flags(widget)].red/65535.0),
 	//	   g = min(0.6,style->fg[gtk_widget_get_state_flags(widget)].green/65535.0),
