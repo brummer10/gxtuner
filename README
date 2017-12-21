@@ -14,7 +14,7 @@ Besides a regular tuning option, it's possible to use GXtuner for extended Just 
 A4 = 440 Hz 
 
 A4 reference pitch can adjusted at command line and/or runtime
-in a half tone range: 415Hz <-> 467Hz
+in a half tone range: 200 <-> 600Hz
 
 gxtuner uses a default threshold level at 0.001.
 The threshold can be adjusted at command line and/or runtime
