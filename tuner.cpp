@@ -233,6 +233,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale357chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale37chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scaleovertones");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale16limit");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.1);
     // Reference note
@@ -522,7 +523,7 @@ void TunerWidget::parse_cmd() {
     } else {
         t = 0.001;
     }
-    gtk_window_set_title(GTK_WINDOW(window),"gxtuner-chromatic");
+    gtk_window_set_title(GTK_WINDOW(window),"gxtuner");
     // here we check if a special mode is given on commandline, 
     // add your mode here as well.
     if (!cptr->cv(9).empty()) {
@@ -535,9 +536,11 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 3);
         } else if(m == "scale37chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 4);        
-                }else if(m == "scaleovertones") {
+        }else if(m == "scaleovertones") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
-        } 
+        }else if(m == "scale16limit") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 6);
+        }
     }
     if (!cptr->cv(10).empty()) { //#3
         std::string R = cptr->cv(10).c_str();

@@ -81,6 +81,7 @@ static int scale3base[7][NRPRIMES] = {
 };
 const char* scale3basenames[7] = {"F","C","G","D","A","E","B"};
 
+static int a02comma[NRPRIMES] = {0,1,0,0,0,0,0,0,0,0,0,0};
 static int a03comma[NRPRIMES] = {0,-11,7,0,0,0,0,0,0,0,0,0};
 static int a05comma[NRPRIMES] = {0,-4,4,-1,0,0,0,0,0,0,0,0};
 static int a07comma[NRPRIMES] = {0,-6,2,0,1,0,0,0,0,0,0,0};
@@ -176,9 +177,71 @@ static int scaleovertones[8][NRPRIMES] = {
     {2,0,0,0,0,0,0,0,0,0,0,0}, //G 3/2
     {4,0,-1,0,0,0,1,0,0,0,0,0}, //Ab13 13/8
     {6,0,-1,0,1,0,0,0,0,0,0,0}, //Bb7 7/4
-    {6,0,0,-1,0,0,0,0,0,0,0,0}, //B- 15/8
+    {6,0,0,-1,0,0,0,0,0,0,0,0} //B- 15/8
 };
 static int numnotesscaleovertones = 8;
+
+static int scale16limit[54][NRPRIMES] = {
+    //basenote,2,3,5,7,11,13,17,19,23,29,31
+    {1,0,0,0,0,0,0,0,0,0,0,0}, //C 1/1
+    {3,0,-1,1,0,0,0,0,0,0,0,0}, // 16/15
+    {1,0,1,-1,-1,0,0,0,0,0,0,0}, // 15/14
+    {3,0,0,0,1,0,-1,0,0,0,0,0}, // 14/13
+    {3,0,-1,0,0,0,1,0,0,0,0,0}, // 13/12
+    {3,0,0,0,0,-1,0,0,0,0,0,0}, // 12/11
+    {3,0,-1,1,0,1,0,0,0,0,0,0}, // 11/10
+    {3,0,0,-1,0,0,0,0,0,0,0,0}, // 10/9
+    {3,0,0,0,0,0,0,0,0,0,0,0}, // 9/8
+    {3,0,0,0,-1,0,0,0,0,0,0,0}, // 8/7
+    {3,0,1,-1,0,0,-1,0,0,0,0,0}, // 15/13
+    {5,0,-1,0,1,0,0,0,0,0,0,0}, // 7/6
+    {5,0,-1,0,0,-1,1,0,0,0,0,0}, // 13/11
+    {5,0,-1,1,0,0,0,0,0,0,0,0}, // 6/5
+    {5,0,-1,0,0,1,0,0,0,0,0,0}, // 11/9
+    {5,0,0,0,0,0,-1,0,0,0,0,0}, // 16/13
+    {5,0,0,-1,0,0,0,0,0,0,0,0}, // 5/4
+    {0,0,0,0,1,-1,0,0,0,0,0,0}, // 14/11
+    {5,0,0,0,-1,0,0,0,0,0,0,0}, // 9/7
+    {0,0,-1,1,0,0,1,0,0,0,0,0}, // 13/10
+    {0,0,0,0,0,0,0,0,0,0,0,0}, // 4/3
+    {0,0,1,-1,0,-1,0,0,0,0,0,0}, // 15/11
+    {0,0,0,0,0,1,0,0,0,0,0,0}, // 11/8
+    {0,0,1,0,0,0,-1,0,0,0,0,0}, // 18/13
+    {2,0,-1,1,1,0,0,0,0,0,0,0}, // 7/5
+    {0,0,1,-1,-1,0,0,0,0,0,0,0}, // 10/7
+    {2,0,-1,0,0,0,1,0,0,0,0,0}, // 13/9
+    {2,0,0,0,0,-1,0,0,0,0,0,0}, // 16/11
+    {2,0,-1,1,0,1,0,0,0,0,0,0}, // 22/15
+    {2,0,0,0,0,0,0,0,0,0,0,0}, //3/2
+    {2,0,1,-1,0,0,-1,0,0,0,0,0}, // 20/13
+    {4,0,-1,0,1,0,0,0,0,0,0,0}, // 14/9
+    {2,0,0,0,-1,1,0,0,0,0,0,0}, // 11/7
+    {4,0,-1,1,0,0,0,0,0,0,0,0}, //8/5
+    {4,0,0,0,1,0,-1,0,0,0,0,0}, // 21/13
+    {4,0,-1,0,0,0,1,0,0,0,0,0}, // 13/8
+    {4,0,0,0,0,-1,0,0,0,0,0,0}, // 18/11
+    {4,0,0,-1,0,0,0,0,0,0,0,0}, // 5/3
+    {4,0,0,0,0,1,-1,0,0,0,0,0}, // 22/13
+    {4,0,0,0,-1,0,0,0,0,0,0,0}, // 14/7
+    {6,0,-2,1,0,0,1,0,0,0,0,0}, // 26/15 Hier gebleven
+    {6,0,-1,0,1,0,0,0,0,0,0,0}, // 7/4
+    {6,0,-1,0,0,0,0,0,0,0,0,0}, // 16/9
+    {4,0,1,-2,-1,0,0,0,0,0,0,0}, // 25/14
+    {6,0,-1,1,0,0,0,0,0,0,0,0}, // 9/5
+    {6,0,0,-1,0,-1,0,0,0,0,0,0}, // 20/11
+    {6,0,-1,0,0,1,0,0,0,0,0,0}, // 11/6
+    {6,0,0,0,0,0,-1,0,0,0,0,0}, // 24/13
+    {6,0,-1,0,-1,0,1,0,0,0,0,0}, // 13/7
+    {1,1,-1,1,1,0,0,0,0,0,0,0}, // 28/15
+    {6,0,0,-1,0,0,0,0,0,0,0,0}, // 15/8
+    {1,1,0,0,1,-1,0,0,0,0,0,0}, // 21/11
+    {6,0,1,-2,0,0,-1,0,0,0,0,0}, // 25/13
+    {6,0,0,0,-1,0,0,0,0,0,0,0}, // 27/14
+};
+
+static int numnotesscale16limit = 54;
+
+
 
 static const double dashline[] = {
     3.0                
@@ -735,7 +798,15 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 tuner->tempscale[n][i] = scaleovertones[n][i];
             }
         }
+    }else if (tuner->mode == 6 ){
+        tuner->tempnumofnotes = numnotesscale16limit;
+        for (int n=0 ; n<tuner->tempnumofnotes; n++){
+            for (int i=0; i<NRPRIMES; i++){
+                tuner->tempscale[n][i] = scale16limit[n][i];
+            }
+        }
     }
+    
     
     //1. creating tempreference_note
     tuner->tempreference_note[0] = tuner->reference_note;
@@ -915,6 +986,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     for (int n=0; n<tuner->tempnumofnotes; n++){
         for (int i=1; i<NRPRIMES; i++){
                 tuner->tempscaletranslatedpowprimes[n][i] = scale3base[tuner->tempscale[n][0]][i]
+                                                        + tuner->tempscale[n][1]  * a02comma[i] 
                                                         + tuner->tempscale[n][2]  * a03comma[i] 
                                                         + tuner->tempscale[n][3]  * a05comma[i]
                                                         + tuner->tempscale[n][4]  * a07comma[i] 
@@ -940,7 +1012,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                                          * pow(19.0,tuner->tempscaletranslatedpowprimes[n][8])
                                          * pow(23.0,tuner->tempscaletranslatedpowprimes[n][9])
                                          * pow(29.0,tuner->tempscaletranslatedpowprimes[n][10])
-                                         * pow(31.0,tuner->tempscaletranslatedpowprimes[n][11])) ;
+                                         * pow(31.0,tuner->tempscaletranslatedpowprimes[n][11]));
         
             //check if ratio is between 1/1 (unison) and 2/0 (octave) and set it between those two ratios)
             int ratiocheck = log(tempratio)/log(2.0);
@@ -948,12 +1020,14 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 tuner->tempscaleratios[n] = 1/tempratio/pow(2.0,ratiocheck);
             } else { tuner->tempscaleratios[n] = tempratio/pow(2.0,ratiocheck);
             }
+            fprintf(stderr,"Notenumber: %i Noteratio: %lf \n", n, tuner->tempscaleratios[n]); 
     }
     tuner->tempscaleratios[tuner->tempnumofnotes]=2.0;
     
     // Calculate ratio of reference note
     for (int i=1; i<NRPRIMES; i++){
         tuner->tempreference_notepowprimes[i] =           scale3base[tuner->tempreference_note[0]][i]
+                                                        + tuner->tempreference_note[1]  * a02comma[i]
                                                         + tuner->tempreference_note[2]  * a03comma[i] 
                                                         + tuner->tempreference_note[3]  * a05comma[i]
                                                         + tuner->tempreference_note[4]  * a07comma[i] 
