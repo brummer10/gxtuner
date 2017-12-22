@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,8 +84,12 @@ gboolean TunerWidget::mode_changed(gpointer arg) {
     gx_tuner_set_mode(GX_TUNER(tw.get_tuner()),m);
     return true;
 }
-
-gboolean TunerWidget::reference_note_changed(gpointer arg) { //#1
+gboolean TunerWidget::doremi_changed(gpointer arg) { //#1
+    int N = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
+    gx_tuner_set_doremi(GX_TUNER(tw.get_tuner()),N);
+    return true;
+}
+gboolean TunerWidget::reference_note_changed(gpointer arg) {
     int R = gtk_combo_box_get_active(GTK_COMBO_BOX(arg));
     gx_tuner_set_reference_note(GX_TUNER(tw.get_tuner()),R);
     return true;
@@ -212,6 +216,8 @@ void TunerWidget::create_window() {
     gtk_box_set_homogeneous(GTK_BOX(pbbox),false);
     pcbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_homogeneous(GTK_BOX(pcbox),false);
+    qbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_set_homogeneous(GTK_BOX(qbox),false);
     
         
     adj = gtk_adjustment_new(440, 200, 600, 0.1, 1.0, 0);
@@ -236,6 +242,12 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale16limit");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.4);
+    // doremi
+    selectorq = gtk_combo_box_text_new();
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorq), NULL, "CDE");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorq), NULL, "DoReMi");
+    gtk_combo_box_set_active(GTK_COMBO_BOX(selectorq), 0);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorq), 0.4);
     // Reference note
     selectore = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "F");
@@ -368,6 +380,7 @@ void TunerWidget::create_window() {
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinner),"reference pitch");
     gtk_widget_set_tooltip_text(GTK_WIDGET(spinnert),"threshold");
     gtk_widget_set_tooltip_text(GTK_WIDGET(selectord),"scale");
+    gtk_widget_set_tooltip_text(GTK_WIDGET(selectorq),"CDE or DoReMi");
     gtk_widget_set_tooltip_text(GTK_WIDGET(selectore),"Reference note");
     gtk_widget_set_tooltip_text(GTK_WIDGET(selectorf),"Flats or Sharps");
     gtk_widget_set_tooltip_text(GTK_WIDGET(selectorg),"Syncomma");
@@ -405,12 +418,14 @@ void TunerWidget::create_window() {
     gtk_container_add (GTK_CONTAINER (mbox), selectorm);
     gtk_container_add (GTK_CONTAINER (nbox), selectorn);
     gtk_container_add (GTK_CONTAINER (obox), selectoro);
+    gtk_container_add (GTK_CONTAINER (qbox), selectorq);
         
     //put all the filled boxes in hbox and pbox
     gtk_box_pack_start(GTK_BOX(hbox),habox,false,false,5);
         gtk_box_pack_start(GTK_BOX(habox),abox,false,false,5);
     gtk_box_pack_start(GTK_BOX(hbox),hbbox,false,false,5);
         gtk_box_pack_start(GTK_BOX(hbbox),cbox,true,false,5);
+        gtk_box_pack_start(GTK_BOX(hbbox),qbox,false,false,5);
         gtk_box_pack_start(GTK_BOX(hbbox),dbox,false,false,5);
         gtk_box_pack_start(GTK_BOX(hbbox),ebox,false,false,5);
         gtk_box_pack_start(GTK_BOX(hbbox),fbox,false,false,5);
@@ -438,7 +453,9 @@ void TunerWidget::create_window() {
         G_CALLBACK(threshold_changed),(gpointer)adjt);
     g_signal_connect(GTK_COMBO_BOX(selectord), "changed",
         G_CALLBACK(mode_changed),(gpointer)selectord);
-    g_signal_connect(GTK_COMBO_BOX(selectore), "changed", //#2
+    g_signal_connect(GTK_COMBO_BOX(selectorq), "changed", //#2
+        G_CALLBACK(doremi_changed),(gpointer)selectorq);
+    g_signal_connect(GTK_COMBO_BOX(selectore), "changed",
         G_CALLBACK(reference_note_changed),(gpointer)selectore);
     g_signal_connect(GTK_COMBO_BOX(selectorf), "changed",
         G_CALLBACK(reference_03comma_changed),(gpointer)selectorf);
@@ -543,7 +560,15 @@ void TunerWidget::parse_cmd() {
         }
     }
     if (!cptr->cv(10).empty()) { //#3
-        std::string R = cptr->cv(10).c_str();
+        std::string N = cptr->cv(10).c_str();
+        if(N == "cde") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+        } else if(N == "doremi") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+        }    
+    }
+    if (!cptr->cv(11).empty()) {
+        std::string R = cptr->cv(11).c_str();
         if(R == "F") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
         } else if(R == "C") {
@@ -560,8 +585,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 6);
          }   
     }
-    if (!cptr->cv(11).empty()) {
-        std::string A = cptr->cv(11).c_str();
+    if (!cptr->cv(12).empty()) {
+        std::string A = cptr->cv(12).c_str();
         if(A == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 0);
         } else if(A == "min2") {
@@ -578,8 +603,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 6);
          }   
     }
-    if (!cptr->cv(12).empty()) {
-        std::string B = cptr->cv(12).c_str();
+    if (!cptr->cv(13).empty()) {
+        std::string B = cptr->cv(13).c_str();
         if(B == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 0);
         } else if(B == "min2") {
@@ -596,8 +621,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 6);
          }   
     }
-    if (!cptr->cv(13).empty()) {
-        std::string C = cptr->cv(13).c_str();
+    if (!cptr->cv(14).empty()) {
+        std::string C = cptr->cv(14).c_str();
         if(C == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 0);
         } else if(C == "min2") {
@@ -614,8 +639,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 6);
          }   
     }
-    if (!cptr->cv(14).empty()) {
-        std::string D = cptr->cv(14).c_str();
+    if (!cptr->cv(15).empty()) {
+        std::string D = cptr->cv(15).c_str();
         if(D == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 0);
         } else if(D == "min2") {
@@ -632,8 +657,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 6);
          }   
     }
-    if (!cptr->cv(15).empty()) {
-        std::string E = cptr->cv(15).c_str();
+    if (!cptr->cv(16).empty()) {
+        std::string E = cptr->cv(16).c_str();
         if(E == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 0);
         } else if(E == "min2") {
@@ -650,8 +675,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 6);
          }   
     }
-    if (!cptr->cv(16).empty()) {
-        std::string F = cptr->cv(16).c_str();
+    if (!cptr->cv(17).empty()) {
+        std::string F = cptr->cv(17).c_str();
         if(F == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 0);
         } else if(F == "min2") {
@@ -668,8 +693,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 6);
          }   
     }
-    if (!cptr->cv(17).empty()) {
-        std::string G = cptr->cv(17).c_str();
+    if (!cptr->cv(18).empty()) {
+        std::string G = cptr->cv(18).c_str();
         if(G == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 0);
         } else if(G == "min2") {
@@ -686,8 +711,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 6);
          }   
     }
-    if (!cptr->cv(18).empty()) {
-        std::string H = cptr->cv(18).c_str();
+    if (!cptr->cv(19).empty()) {
+        std::string H = cptr->cv(19).c_str();
         if(H == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 0);
         } else if(H == "min2") {
@@ -704,8 +729,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 6);
          }   
     }
-    if (!cptr->cv(19).empty()) {
-        std::string I = cptr->cv(19).c_str();
+    if (!cptr->cv(20).empty()) {
+        std::string I = cptr->cv(20).c_str();
         if(I == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 0);
         } else if(I == "min2") {
@@ -722,8 +747,8 @@ void TunerWidget::parse_cmd() {
            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 6);
          }   
     }
-    if (!cptr->cv(20).empty()) {
-        std::string J = cptr->cv(20).c_str();
+    if (!cptr->cv(21).empty()) {
+        std::string J = cptr->cv(21).c_str();
         if(J == "min3") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 0);
         } else if(J == "min2") {

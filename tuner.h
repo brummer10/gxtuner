@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +85,7 @@ class TunerWidget {
     GtkWidget*          pabox;
     GtkWidget*          pbbox;
     GtkWidget*          pcbox;
+    GtkWidget*          qbox;
     GtkWidget*          spinner;
     GtkWidget*          spinnert;
     GtkWidget*          selectord; //changes mode
@@ -99,13 +100,15 @@ class TunerWidget {
     GtkWidget*          selectorm; // 23comma
     GtkWidget*          selectorn; // 29comma
     GtkWidget*          selectoro; // 31comma
+    GtkWidget*          selectorq; // doremi box, skipped p because this was already taken
     
     static gboolean     delete_event(GtkWidget *widget, GdkEvent *event,
                              gpointer data);
     static gboolean     ref_freq_changed(gpointer arg);
     static gboolean     threshold_changed(gpointer arg);
     static gboolean     mode_changed(gpointer arg);
-    static gboolean     reference_note_changed(gpointer arg); //#1
+    static gboolean     doremi_changed(gpointer arg); //#1
+    static gboolean     reference_note_changed(gpointer arg);
     static gboolean     reference_03comma_changed(gpointer arg);
     static gboolean     reference_05comma_changed(gpointer arg);
     static gboolean     reference_07comma_changed(gpointer arg);

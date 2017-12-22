@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,8 @@ struct _GxTuner
     int tempscaletranslated[MAXSCALENOTES][NRPRIMES];
     int tempscaletranslatedpowprimes[MAXSCALENOTES][NRPRIMES];
     int mode;
-    int reference_note; //#1
+    int doremi; //#1
+    int reference_note;
     int reference_03comma;
     int reference_05comma;
     int reference_07comma;
@@ -102,7 +103,8 @@ void gx_tuner_set_freq(GxTuner *tuner, double freq);
 void gx_tuner_set_reference_pitch(GxTuner *tuner, double reference_pitch);
 double gx_tuner_get_reference_pitch(GxTuner *tuner);
 void gx_tuner_set_mode(GxTuner *tuner, int mode);
-void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note); //#2
+void gx_tuner_set_doremi(GxTuner *tuner, int doremi); //#2
+void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note);
 void gx_tuner_set_reference_03comma(GxTuner *tuner, int reference_03comma);
 void gx_tuner_set_reference_05comma(GxTuner *tuner, int reference_05comma);
 void gx_tuner_set_reference_07comma(GxTuner *tuner, int reference_07comma);

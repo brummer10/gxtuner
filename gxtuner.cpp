@@ -36,17 +36,18 @@ enum {
     PROP_FREQ = 1,
     PROP_REFERENCE_PITCH = 2,
     PROP_MODE = 3,
-    PROP_REFERENCE_NOTE =4, 
-    PROP_REFERENCE_03COMMA =5,
-    PROP_REFERENCE_05COMMA =6,
-    PROP_REFERENCE_07COMMA =7,
-    PROP_REFERENCE_11COMMA =8,
-    PROP_REFERENCE_13COMMA =9,
-    PROP_REFERENCE_17COMMA =10,
-    PROP_REFERENCE_19COMMA =11,
-    PROP_REFERENCE_23COMMA =12,
-    PROP_REFERENCE_29COMMA =13,
-    PROP_REFERENCE_31COMMA =14,
+    PROP_DOREMI = 4,
+    PROP_REFERENCE_NOTE =5, 
+    PROP_REFERENCE_03COMMA =6,
+    PROP_REFERENCE_05COMMA =7,
+    PROP_REFERENCE_07COMMA =8,
+    PROP_REFERENCE_11COMMA =9,
+    PROP_REFERENCE_13COMMA =10,
+    PROP_REFERENCE_17COMMA =11,
+    PROP_REFERENCE_19COMMA =12,
+    PROP_REFERENCE_23COMMA =13,
+    PROP_REFERENCE_29COMMA =14,
+    PROP_REFERENCE_31COMMA =15,
 };
 
 static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr);
@@ -80,6 +81,7 @@ static int scale3base[7][NRPRIMES] = {
     {0,-7,5,0,0,0,0,0,0,0,0,0} //B 6
 };
 const char* scale3basenames[7] = {"F","C","G","D","A","E","B"};
+const char* scale3basenamesdoremi[7] = {"Fa","Do","Sol","Ré","La","Mi","Si"};
 
 static int a02comma[NRPRIMES] = {0,1,0,0,0,0,0,0,0,0,0,0};
 static int a03comma[NRPRIMES] = {0,-11,7,0,0,0,0,0,0,0,0,0};
@@ -346,7 +348,12 @@ static void gx_tuner_class_init(GxTunerClass *klass) {
             P_("The Mode for which tuning is displayed"),
             0, 1, 0, G_PARAM_READWRITE));
     g_object_class_install_property(
-        gobject_class, PROP_REFERENCE_NOTE, g_param_spec_int ( //#2
+        gobject_class, PROP_DOREMI, g_param_spec_int ( //#2
+            "doremi", P_("CDE or DoReMi"),
+            P_("CDE or DoReMi"),
+            0, 1, 0, G_PARAM_READWRITE));
+    g_object_class_install_property(
+        gobject_class, PROP_REFERENCE_NOTE, g_param_spec_int (
             "reference-note", P_("Reference note"),
             P_("The note for which tuning is displayed"),
             0, 1, 0, G_PARAM_READWRITE));
@@ -429,7 +436,8 @@ static void gx_tuner_init (GxTuner *tuner) {
     tuner->freq = 0;
     tuner->reference_pitch = 440.0;
     tuner->mode = 1;
-    tuner->reference_note = 1; //#3
+    tuner->doremi = 0; //#3
+    tuner->reference_note = 1;
     tuner->reference_03comma = 3;
     tuner->reference_05comma = 3;
     tuner->reference_07comma = 3;
@@ -480,13 +488,18 @@ void gx_tuner_set_mode(GxTuner *tuner, int mode) {
     g_object_notify(G_OBJECT(tuner), "mode");
 }
 
-void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note) { //#4
+void gx_tuner_set_doremi(GxTuner *tuner, int doremi) { //#4
+    g_assert(GX_IS_TUNER(tuner));
+    tuner->doremi = doremi;
+    gtk_widget_queue_draw(GTK_WIDGET(tuner));
+    g_object_notify(G_OBJECT(tuner), "doremi");
+}
+void gx_tuner_set_reference_note(GxTuner *tuner, int reference_note) {
     g_assert(GX_IS_TUNER(tuner));
     tuner->reference_note = reference_note;
     gtk_widget_queue_draw(GTK_WIDGET(tuner));
     g_object_notify(G_OBJECT(tuner), "reference-note");
 }
-
 void gx_tuner_set_reference_03comma(GxTuner *tuner, int reference_03comma) { 
     g_assert(GX_IS_TUNER(tuner));
     tuner->reference_03comma = reference_03comma;
@@ -573,7 +586,10 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     case PROP_MODE:
         gx_tuner_set_mode(tuner, g_value_get_int(value));
         break;
-    case PROP_REFERENCE_NOTE: //#5
+    case PROP_DOREMI: //#5
+        gx_tuner_set_doremi(tuner, g_value_get_int(value));
+        break;
+    case PROP_REFERENCE_NOTE:
         gx_tuner_set_reference_note(tuner, g_value_get_int(value));
         break;
     case PROP_REFERENCE_03COMMA:
@@ -625,7 +641,10 @@ static void gx_tuner_get_property(GObject *object, guint prop_id,
     case PROP_MODE:
         g_value_set_int(value, tuner->mode);
         break;
-    case PROP_REFERENCE_NOTE: //#6
+    case PROP_DOREMI: //#6
+        g_value_set_int(value, tuner->doremi);
+        break;
+    case PROP_REFERENCE_NOTE:
         g_value_set_int(value, tuner->reference_note);
         break;
     case PROP_REFERENCE_03COMMA: 
@@ -853,7 +872,11 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     
     int i = 0;
     for (int n=0; n<tuner->tempnumofnotes; n++){
-        strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
+        if(tuner->doremi == 0){
+            strcat(tuner->tempscaletranslatednames[n],scale3basenames[tuner->tempscaletranslated[n][0]]);
+        } else if (tuner->doremi == 1) {strcat(tuner->tempscaletranslatednames[n],scale3basenamesdoremi[tuner->tempscaletranslated[n][0]]);
+            }
+        //fprintf(stderr,"Stand doremi: %i \n",tuner->doremi);
         while (i < 24){ 
             i = 0;
             i++;

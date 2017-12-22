@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Hermann Meyer, Andreas Degert
+ * Copyright (C) 2017 Hermann Meyer, Andreas Degert, Hans Bezemer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,4 +121,3 @@ void JackTuner::gx_jack_session_callback(jack_session_event_t *event, void *arg)
 
 FuncPtr *fptr = 0;
 JackTuner jt;
-

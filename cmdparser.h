@@ -41,17 +41,18 @@
 #define JACK_UUID           (7)
 #define DESK                (8)
 #define MODE                (9)
-#define REFERENCE_NOTE      (10) 
-#define REFERENCE_03COMMA   (11)
-#define REFERENCE_05COMMA   (12)
-#define REFERENCE_07COMMA   (13)
-#define REFERENCE_11COMMA   (14)
-#define REFERENCE_13COMMA   (15)
-#define REFERENCE_17COMMA   (16)
-#define REFERENCE_19COMMA   (17)
-#define REFERENCE_23COMMA   (18)
-#define REFERENCE_29COMMA   (19)
-#define REFERENCE_31COMMA   (20)
+#define DOREMI              (10)
+#define REFERENCE_NOTE      (11) 
+#define REFERENCE_03COMMA   (12)
+#define REFERENCE_05COMMA   (13)
+#define REFERENCE_07COMMA   (14)
+#define REFERENCE_11COMMA   (15)
+#define REFERENCE_13COMMA   (16)
+#define REFERENCE_17COMMA   (17)
+#define REFERENCE_19COMMA   (18)
+#define REFERENCE_23COMMA   (19)
+#define REFERENCE_29COMMA   (20)
+#define REFERENCE_31COMMA   (21)
 
 class CmdParse {
  private:
@@ -69,7 +70,8 @@ class CmdParse {
     gchar*              desktop;
     gchar*              pitch;
     gchar*              threshold;
-    gchar*              mode;
+    gchar*              mode; //#2
+    gchar*              doremi; 
     gchar*              reference_note; 
     gchar*              reference_03comma;
     gchar*              reference_05comma;
@@ -87,7 +89,7 @@ class CmdParse {
     void                parse(int& argc, char**& argv);
     void                write_optvar();
  protected:
-    std::string         optvar[21]; //#3
+    std::string         optvar[22]; //#3
 
  public:
     explicit CmdParse();

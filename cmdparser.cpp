@@ -45,7 +45,8 @@ void CmdParse::init() {
     pitch           = NULL;
     threshold       = NULL;
     mode            = NULL;
-    reference_note  = NULL; //#1
+    doremi          = NULL; //#1
+    reference_note  = NULL; 
     reference_03comma = NULL;
     reference_05comma = NULL;
     reference_07comma = NULL;
@@ -87,7 +88,13 @@ void CmdParse::write_optvar() {
     } else if (!optvar[MODE].empty()) {
         optvar[MODE] = ""; 
     }
-    if (reference_note != NULL) { //#2
+    if (doremi != NULL) { //#2
+        optvar[DOREMI] = doremi;
+        g_free(doremi);
+    } else if (!optvar[DOREMI].empty()) {
+        optvar[DOREMI] = ""; 
+    }
+    if (reference_note != NULL) { 
         optvar[REFERENCE_NOTE] = reference_note;
         g_free(reference_note);
     } else if (!optvar[REFERENCE_NOTE].empty()) {
@@ -261,6 +268,8 @@ void CmdParse::setup_groups() {
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
             "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic / scale357chromatic / scale37chromatic / scaleovertones / scale16limit )", "MODE" },
+        { "doremi", 'N', 0, G_OPTION_ARG_STRING, &reference_note,
+            "set base note type (-N cde / doremi )", "DOREMI" },
         { "reference_note", 'R', 0, G_OPTION_ARG_STRING, &reference_note,
             "set reference note (-R C / D / E / F / G / A / B )", "REFERENCE_NOTE" },
         { "reference_03comma", 'A', 0, G_OPTION_ARG_STRING, &reference_03comma,
