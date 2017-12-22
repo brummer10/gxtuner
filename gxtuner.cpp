@@ -29,8 +29,8 @@
 #include <stdlib.h>
 #define P_(s) (s)   // FIXME -> gettext
 
-// Use propertys to set variables for the widget from outside,
-// add new propertys here in the enum 
+// Use properties to set variables for the widget from outside,
+// add new properties here in the enum 
 
 enum {
     PROP_FREQ = 1,
