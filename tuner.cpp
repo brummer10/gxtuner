@@ -235,7 +235,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scaleovertones");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale16limit");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
-    gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.4);
     // Reference note
     selectore = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "F");
@@ -246,7 +246,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "E");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectore), NULL, "B");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
-    gtk_widget_set_opacity(GTK_WIDGET(selectore), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectore), 0.4);
     // Flat or Sharps
     selectorf = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♭♭♭");
@@ -257,7 +257,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♯♯");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorf), NULL, "♯♯♯");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorf), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorf), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorf), 0.4);
     // 5 comma
     selectorg = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "---");
@@ -268,7 +268,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "++");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorg), NULL, "+++");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorg), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorg), 0.4);
     // 7 comma
     selectorh = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "ㄥㄥㄥ");
@@ -279,7 +279,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "77");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorh), NULL, "777");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorh), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorh), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorh), 0.4);
     // 11 comma
     selectori = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↓↓↓");
@@ -290,7 +290,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↑↑");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectori), NULL, "↑↑↑");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectori), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectori), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectori), 0.4);
     // 13 comma
     selectorj = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "ƐƖƐƖƐƖ");
@@ -301,7 +301,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "1313");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorj), NULL, "131313");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorj), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorj), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorj), 0.4);
     // 17 comma
     selectork = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "ㄥƖㄥƖㄥƖ");
@@ -312,7 +312,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "1717");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectork), NULL, "171717");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectork), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectork), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectork), 0.4);
     // 19 comma
     selectorl = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "6Ɩ6Ɩ6Ɩ");
@@ -323,7 +323,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "1919");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorl), NULL, "191919");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorl), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorl), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorl), 0.4);
     // 23 comma
     selectorm = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "ƐᄅƐᄅƐᄅ");
@@ -334,7 +334,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "2323");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorm), NULL, "232323");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorm), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorm), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorm), 0.4);
     // 29 comma
     selectorn = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "6ᄅ6ᄅ6ᄅ");
@@ -345,7 +345,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "2929");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectorn), NULL, "292929");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectorn), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectorn), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectorn), 0.4);
     // 31 comma
     selectoro = gtk_combo_box_text_new();
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "ƖƐƖƐƖƐ");
@@ -356,7 +356,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "3131");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectoro), NULL, "313131");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectoro), 3);
-    gtk_widget_set_opacity(GTK_WIDGET(selectoro), 0.1);
+    gtk_widget_set_opacity(GTK_WIDGET(selectoro), 0.4);
     
     // set some options to widgets
     gtk_widget_set_app_paintable(window, TRUE);
