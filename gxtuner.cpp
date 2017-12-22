@@ -1020,7 +1020,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 tuner->tempscaleratios[n] = 1/tempratio/pow(2.0,ratiocheck);
             } else { tuner->tempscaleratios[n] = tempratio/pow(2.0,ratiocheck);
             }
-            fprintf(stderr,"Notenumber: %i Noteratio: %lf \n", n, tuner->tempscaleratios[n]); 
+            //fprintf(stderr,"Notenumber: %i Noteratio: %lf \n", n, tuner->tempscaleratios[n]); 
     }
     tuner->tempscaleratios[tuner->tempnumofnotes]=2.0;
     
