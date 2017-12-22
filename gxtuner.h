@@ -50,7 +50,7 @@ typedef struct _GxTuner GxTuner;
 typedef struct _GxTunerClass GxTunerClass;
 
 // the internal struct of the tuner widget,
-// add variables for new propertys in the struct
+// add variables for new properties in the struct
 
 
 struct _GxTuner
