@@ -243,8 +243,6 @@ static int scale16limit[54][NRPRIMES] = {
 
 static int numnotesscale16limit = 54;
 
-
-
 static const double dashline[] = {
     3.0                
 };

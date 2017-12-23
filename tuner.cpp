@@ -562,9 +562,9 @@ void TunerWidget::parse_cmd() {
     if (!cptr->cv(10).empty()) { //#3
         std::string N = cptr->cv(10).c_str();
         if(N == "cde") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 0);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorq), 0);
         } else if(N == "doremi") {
-            gtk_combo_box_set_active(GTK_COMBO_BOX(selectore), 1);
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectorq), 1);
         }    
     }
     if (!cptr->cv(11).empty()) {
