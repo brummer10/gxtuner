@@ -35,6 +35,7 @@ GTK configuration options
   -w, --wigth=WIDTH             'default' width ( -w 500 . . .)
   -l, --height=HEIGHT           'default' height ( -l 300 . . .)
   -d, --desktop=NUM             set to virtual desktop num ( -d 0 . . .)
+  -N doremi                     start with Latin notation
 
 JACK configuration options
   -i, --jack-input=PORT         connect to JACK port name 
