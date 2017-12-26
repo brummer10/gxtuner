@@ -545,7 +545,9 @@ void TunerWidget::parse_cmd() {
     // add your mode here as well.
     if (!cptr->cv(9).empty()) {
         std::string m = cptr->cv(9).c_str();
-        if(m == "scale3diatonic") {
+        if(m == "chromatic") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 0);
+        } else if(m == "scale3diatonic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
         } else if(m == "scale35chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 2);
@@ -553,9 +555,9 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 3);
         } else if(m == "scale37chromatic") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 4);        
-        }else if(m == "scaleovertones") {
+        } else if(m == "scaleovertones") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
-        }else if(m == "scale16limit") {
+        } else if(m == "scale16limit") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 6);
         }
     }

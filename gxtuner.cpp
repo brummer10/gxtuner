@@ -1234,7 +1234,20 @@ static gboolean gtk_tuner_expose (GtkWidget *widget, cairo_t *cr) {
     if (tuner->mode > 0) {
         if (!gtk_tuner_expose_just (widget, cr)) return FALSE;
     }
-    static const char* note[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
+    static const char* notecde[12] = {"A ","A#","B ","C ","C#","D ","D#","E ","F ","F#","G ","G#"};
+    static const char* notedoremi[12] = {"La ","Li","Ti","Do","Di","Re","Ri","Mi","Fa","Fi","Sol","Si"};
+    static const char* note[12];
+    if(tuner->doremi==0){
+        for(int n=0; n<12; n++){
+            note[n]=notecde[n];
+        }
+    } else {
+        for(int n=0; n<12; n++){
+            note[n]=notedoremi[n];
+        }
+    }
+    
+    
     static const char* octave[9] = {"0","1","2","3","4","5","6","7"," "};
     static int indicate_oc = 0;
     
