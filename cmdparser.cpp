@@ -267,7 +267,7 @@ void CmdParse::setup_groups() {
         { "threshold", 't', 0, G_OPTION_ARG_STRING, &threshold,
             "set threshold level (-t 0,001 <-> 0,5)", "THRESHOLD" },
         { "mode", 'm', 0, G_OPTION_ARG_STRING, &mode,
-            "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic / scale357chromatic / scale37chromatic / scaleovertones / scale16limit )", "MODE" },
+            "set tuner mode (-m chromatic / scale3diatonic / scale35chromatic / scale357chromatic / scale37chromatic / scaleovertones / scale16limit / scalegreekdorian )", "MODE" },
         { "doremi", 'N', 0, G_OPTION_ARG_STRING, &doremi,
             "set base note type (-N cde / doremi )", "DOREMI" },
         { "reference_note", 'R', 0, G_OPTION_ARG_STRING, &reference_note,

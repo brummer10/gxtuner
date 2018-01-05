@@ -240,6 +240,7 @@ void TunerWidget::create_window() {
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale37chromatic");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scaleovertones");
     gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scale16limit");
+    gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(selectord), NULL, "scalegreekdorian");
     gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 1);
     gtk_widget_set_opacity(GTK_WIDGET(selectord), 0.4);
     // doremi
@@ -559,6 +560,8 @@ void TunerWidget::parse_cmd() {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 5);
         } else if(m == "scale16limit") {
             gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 6);
+        } else if(m == "scalegreekdorian") {
+            gtk_combo_box_set_active(GTK_COMBO_BOX(selectord), 7);
         }
     }
     if (!cptr->cv(10).empty()) { //#3
