@@ -14,6 +14,8 @@
 	NAME = gxtuner
 	LIBS = `pkg-config --libs jack gtk+-3.0 gthread-2.0 fftw3f x11` -lzita-resampler
 	CFLAGS += -Wall -ffast-math `pkg-config --cflags jack gtk+-3.0 gthread-2.0 fftw3f`
+	CFLAGS += -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_54
+	CFLAGS += -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_54
 	OBJS = resources.o jacktuner.o gxtuner.o cmdparser.o gx_pitch_tracker.o gtkknob.o \
            paintbox.o tuner.o deskpager.o main.o
 	DEBNAME = $(NAME)_$(VER)
