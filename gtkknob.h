@@ -24,13 +24,13 @@
 #ifndef __GTK_KNOB_H__
 #define __GTK_KNOB_H__
 
+#include <gtk/gtk.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #pragma once
-
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

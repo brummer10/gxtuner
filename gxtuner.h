@@ -26,15 +26,13 @@
 #ifndef _GX_TUNER_H_
 #define _GX_TUNER_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <string.h> 
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 G_BEGIN_DECLS
 

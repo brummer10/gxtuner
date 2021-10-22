@@ -21,11 +21,11 @@
 #ifndef __PAINT_BOX_H__
 #define __PAINT_BOX_H__
 
+#include <gtk/gtk.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
