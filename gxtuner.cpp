@@ -683,7 +683,7 @@ static void gx_tuner_set_property(GObject *object, guint prop_id,
     }
 }
 
-// the property get methode, return the current value
+// the property get method, return the current value
 
 static void gx_tuner_get_property(GObject *object, guint prop_id,
                                       GValue *value, GParamSpec *pspec) {
@@ -842,7 +842,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
     //setting the scale
     if (tuner->mode == 1){
         tuner->tempnumofnotes = numnotesscale3diatonic;
-        for (int n=0 ; n<tuner->tempnumofnotes /*notes of choosen scale */; n++){
+        for (int n=0 ; n<tuner->tempnumofnotes /*notes of chosen scale */; n++){
             for (int i=0; i<NRPRIMES; i++){
                 tuner->tempscale[n][i] = scale3diatonic[n][i];
             }
@@ -1202,7 +1202,7 @@ static gboolean gtk_tuner_expose_just(GtkWidget *widget, cairo_t *cr) {
                 }
          }
     percent = (freq_is/(ref_c/multiply));
-    // now we chould check which ratio we have
+    // now we should check which ratio we have
     // we split the range using log-average
     for (int n=0 ; n < tuner->tempnumofnotes ; ++n ){ 
          float ratiodiff = exp((log(tuner->tempscaleratios[n])+log(tuner->tempscaleratios[n+1]))/2) ;

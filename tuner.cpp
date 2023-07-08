@@ -780,7 +780,7 @@ void TunerWidget::parse_cmd() {
 }
 
 void TunerWidget::show() {
-    // finaly show the window with all widgets
+    // finally show the window with all widgets
     gtk_widget_show_all(window);
     if (desk) dp.move_window_to_desktop(desk, window);
 }

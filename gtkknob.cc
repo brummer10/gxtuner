@@ -476,7 +476,7 @@ static void gtk_knob_class_init (GtkKnobClass *klass)
 
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-//--------- connect the events with funktions
+//--------- connect the events with functions
 	widget_class->map = gtk_knob_map;
 	widget_class->unmap = gtk_knob_unmap;
 	widget_class->draw = gtk_knob_expose;
