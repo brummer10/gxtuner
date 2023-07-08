@@ -1,12 +1,51 @@
 # gxtuner
-A simple (linux) guitar  tuner for jack 
+A (linux) tuner for jack, with full jack session management support
 
 ![GxTuner](https://github.com/brummer10/gxtuner/raw/master/GxTuner.png)
 
+Besides a regular tuning option, it's possible to use GXtuner for extended Just Intonation.
 
-###### BUILD DEPENDENCY’S 
+A4 = 440 Hz 
 
-the following packages are needed to build gxtuner :
+A4 reference pitch can adjusted at command line and/or runtime
+in a half tone range: 200Hz <-> 600Hz
+
+gxtuner uses a default threshold level at 0.001.
+The threshold can be adjusted at command line and/or runtime
+in a range of 0.001 <-> 0.2
+
+### COMMANDLINE OPTIONS
+
+```
+Help Options:
+  -h, --help                    Show help options
+  --help-all                    Show all help options
+  --help-gtk                    GTK configuration options
+  --help-jack                   JACK configuration options
+  --help-engine                 ENGINE configuration options
+
+GTK configuration options
+  -x, --posx=POSITION_X         window position x-axis ( -x 1 . . .)
+  -y, --posy=POSITION_Y         window position y-axis ( -y 1 . . .)
+  -w, --wigth=WIDTH             'default' width ( -w 500 . . .)
+  -l, --height=HEIGHT           'default' height ( -l 300 . . .)
+  -d, --desktop=NUM             set to virtual desktop num ( -d 0 . . .)
+  -N doremi                     start with Latin notation
+
+JACK configuration options
+  -i, --jack-input=PORT         connect to JACK port name 
+                                    (-i system:capture_1)
+
+ENGINE configuration options
+  -p, --pitch=PITCH             set reference pitch (-p 200.0 <-> 600.0)
+  -t, --threshold=THRESHOLD     set threshold level (-t 0.001 <-> 0.2)
+```
+
+All settings are optional, they will be all restored by the jack session manager
+
+### BUILD DEPENDENCIES
+
+The following packages are needed to build gxtuner:
 
 - libc6-dev
 - libcairo2-dev
@@ -18,27 +57,40 @@ the following packages are needed to build gxtuner :
 - libzita-resampler0-dev
 - libjack-jackd2-0-dev or libjack-dev (>= 0.116)
 
-note that those packages could have different, but similar names 
-on different distributions. There is no configure script, 
-make will simply fail when one of those packages isn't found.
+**Note** above packages could have different, yet similar names 
+on different distributions. There is no configure script. 
+`make` will simply fail when one of those packages isn't found.
 
-to build gxtuner with jack_session support simply run
+To build gxtuner with jack_session support simply run
+```bash
 $ make
+```
+To build gxtuner **without jack_session support** run the following in the source directory
 
-to build gxtuner without jack_session support run 
+```bash
 $ make nosession
+```
 
-in the source directory.
-
-If you wish to install[1] gxtuner run
+If you wish to install[1] gxtuner
+```bash
 $ make install
+```
 
-to uninstall gxtuner run
+To uninstall gxtuner
+```bash
 $ make uninstall
+```
 
-to build a Debian package, run 
+To build a Debian package
+```bash
 $ make deb
+```
 
-you can run gxtuner from any location you choose without installation.
-[1] but to work propper with jack_session manager
+**Note:** one can run gxtuner from any location onc chooses without installation.
+
+[1] but to work proper with jack_session manager
 you need to install it
+
+### LICENSE
+
+GPLv2 ([LICENSE](LICENSE))
