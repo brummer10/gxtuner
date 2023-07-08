@@ -94,7 +94,7 @@ struct _GxTunerClass
 
 GType gx_tuner_get_type();
 
-// this are the calles which could be used from outside the widget
+// these are the calls which could be used from outside the widget
 // if you add a new property, add a call to set it here
 
 void gx_tuner_set_freq(GxTuner *tuner, double freq);

@@ -7,7 +7,7 @@
 
 gxtuner 3.0
 
-A (linux) tuner for jack, with full jack session managment support
+A (linux) tuner for jack, with full jack session management support
 
 Besides a regular tuning option, it's possible to use GXtuner for extended Just Intonation.
 
@@ -80,7 +80,7 @@ to uninstall gxtuner run
 $ make uninstall
 
 you can run gxtuner from any location you choose without installation.
-[1] but to work propper with jack_session manager
+[1] but to work proper with jack_session manager
 you need to install it
 
 ############## MORE MAKE OPTIONS #################

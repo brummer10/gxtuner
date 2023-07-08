@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     // init thread system
     tw.g_threads    = 0;
     
-    // process comandline options
+    // process commandline options
     cmd.process_cmdline_options(argc, argv);
     // set pointers to function pointer classes
     fptr            = new FuncPtr;
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
     // start thread to update the frequency
     tw.g_threads    = g_timeout_add(
         100, tw.gx_update_frequency, 0);
-    // run main programm
+    // run main program
     gtk_main ();
     // stop pitch tracker thread
     pitch_tracker.stop_thread();
