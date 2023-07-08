@@ -1,5 +1,5 @@
 # gxtuner
-A (linux) tuner for jack, with full jack session managment support
+A (linux) tuner for jack, with full jack session management support
 
 ![GxTuner](https://github.com/brummer10/gxtuner/raw/master/GxTuner.png)
 
@@ -88,7 +88,7 @@ $ make deb
 
 **Note:** one can run gxtuner from any location onc chooses without installation.
 
-[1] but to work propper with jack_session manager
+[1] but to work proper with jack_session manager
 you need to install it
 
 ### LICENSE
